@@ -435,7 +435,7 @@ st.markdown("""
     <a href='#features' class='nav-link' style='text-decoration:none;color:rgba(255,255,255,0.75);font-weight:600;font-size:15px'>Features</a>
     <a href='#pricing' class='nav-link' style='text-decoration:none;color:rgba(255,255,255,0.75);font-weight:600;font-size:15px'>Pricing</a>
     <a href='#contact' class='nav-link' style='text-decoration:none;color:rgba(255,255,255,0.75);font-weight:600;font-size:15px'>Contact</a>
-    <a href="https://hirelyzer-ch2pihnds3cktdxkvu84er.streamlit.app/" target="_blank" class='btn' style='text-decoration:none'>
+    <a href="https://hirelyzer-6ab7lqg7dy4r2r3rwafwcs.streamlit.app/" target="_blank" class='btn' style='text-decoration:none'>
       🚀 Open App
     </a>
   </div>
@@ -452,7 +452,7 @@ hero_html = """
     <div class='h-title'>Make Resumes that Pass — and People who Hire.</div>
     <div class='h-sub'><span class='typewriter'><span id='typewriter' class='typewriter-text'></span></span></div>
     <div class='cta-row'>
-      <a href="https://hirelyzer-ch2pihnds3cktdxkvu84er.streamlit.app/" target="_blank" class='btn'>
+      <a href="https://hirelyzer-6ab7lqg7dy4r2r3rwafwcs.streamlit.app/" target="_blank" class='btn'>
         ✨ Launch App
       </a>
       <a href='#pricing' class='btn secondary'>
@@ -627,13 +627,13 @@ contact_html = """
       <div class='feature-card' style='text-align:center;padding:24px'>
         <div style='font-size:32px;margin-bottom:12px'>🌐</div>
         <div style='font-weight:700;margin-bottom:8px'>Visit Website</div>
-        <a href='https://hirelyzer-ch2pihnds3cktdxkvu84er.streamlit.app/' target='_blank' style='color:#8ab4f8;text-decoration:none;font-weight:600'>https://hirelyzer-ijkfwqydjqz3wqyvjkhegw.streamlit.app/</a>
+        <a href='https://hirelyzer-6ab7lqg7dy4r2r3rwafwcs.streamlit.app/' target='_blank' style='color:#8ab4f8;text-decoration:none;font-weight:600'>https://hirelyzer-ijkfwqydjqz3wqyvjkhegw.streamlit.app/</a>
       </div>
     </div>
     <div style='padding:32px;background:linear-gradient(135deg,rgba(79,70,229,0.1),rgba(59,130,246,0.05));border-radius:16px;border:1px solid rgba(79,70,229,0.2)'>
       <div style='font-size:18px;font-weight:700;margin-bottom:12px;color:rgba(255,255,255,0.95)'>🚀 Ready to Transform Your Career?</div>
       <p style='color:rgba(255,255,255,0.8);margin-bottom:20px'>Join thousands of professionals who have already upgraded their resumes with HIRELYZER</p>
-      <a href="https://hirelyzer-ch2pihnds3cktdxkvu84er.streamlit.app/" target="_blank" class='btn' style='text-decoration:none'>
+      <a href="https://hirelyzer-6ab7lqg7dy4r2r3rwafwcs.streamlit.app/" target="_blank" class='btn' style='text-decoration:none'>
         ✨ Start Your Journey Now
       </a>
     </div>
