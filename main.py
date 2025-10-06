@@ -435,7 +435,7 @@ st.markdown("""
     <a href='#features' class='nav-link' style='text-decoration:none;color:rgba(255,255,255,0.75);font-weight:600;font-size:15px'>Features</a>
     <a href='#pricing' class='nav-link' style='text-decoration:none;color:rgba(255,255,255,0.75);font-weight:600;font-size:15px'>Pricing</a>
     <a href='#contact' class='nav-link' style='text-decoration:none;color:rgba(255,255,255,0.75);font-weight:600;font-size:15px'>Contact</a>
-    <a href="https://hirelyzer-6ab7lqg7dy4r2r3rwafwcs.streamlit.app/" target="_blank" class='btn' style='text-decoration:none'>
+    <a href="https://hirelyzer-6ebkwzigpyt6rnvsb39bjo.streamlit.app/" target="_blank" class='btn' style='text-decoration:none'>
       🚀 Open App
     </a>
   </div>
