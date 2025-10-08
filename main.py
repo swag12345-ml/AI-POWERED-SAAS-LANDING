@@ -410,20 +410,48 @@ html, body, [class*="css"]{
 .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
 .floating-element:nth-child(4) { bottom: 10%; right: 20%; animation-delay: 6s; }
 
-.preview-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.preview-slider {
   margin-top: 24px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79,70,229,0.3) rgba(255,255,255,0.05);
   animation: slide-up 0.8s ease-out 1s both;
+  -webkit-overflow-scrolling: touch;
+}
+
+.preview-slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+.preview-slider::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+}
+
+.preview-slider::-webkit-scrollbar-thumb {
+  background: rgba(79,70,229,0.3);
+  border-radius: 4px;
+}
+
+.preview-slider::-webkit-scrollbar-thumb:hover {
+  background: rgba(79,70,229,0.5);
+}
+
+.preview-slider-wrapper {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 12px;
 }
 
 .preview-card {
-  border-radius: 18px;
-  padding: 20px;
+  flex: 0 0 280px;
+  border-radius: 16px;
+  padding: 18px;
   background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(0,0,0,0.3));
   backdrop-filter: blur(20px);
-  box-shadow: 0 25px 80px rgba(0,0,0,0.7), 0 0 40px rgba(79,70,229,0.1);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 30px rgba(79,70,229,0.1);
   border: 1px solid rgba(255,255,255,0.06);
   transition: all 0.4s ease;
   animation: float 8s ease-in-out infinite;
@@ -435,21 +463,15 @@ html, body, [class*="css"]{
 
 .preview-card:hover {
   transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 30px 100px rgba(0,0,0,0.8), 0 0 60px rgba(79,70,229,0.2);
+  box-shadow: 0 25px 80px rgba(0,0,0,0.7), 0 0 50px rgba(79,70,229,0.2);
 }
 
 .preview-icon {
   fill: white;
   opacity: 0.9;
-  width: 32px;
-  height: 32px;
-  margin-bottom: 12px;
-}
-
-@media (max-width: 1024px) {
-  .preview-grid {
-    grid-template-columns: repeat(1, 1fr);
-  }
+  width: 28px;
+  height: 28px;
+  margin-bottom: 10px;
 }
 """)
 local_css(css)
@@ -524,67 +546,61 @@ hero_html = """
         </div>
       </div>
     </div>
-
-    <!-- New Preview Cards Grid -->
-    <div class='preview-grid'>
-      <!-- Resume Builder Preview -->
-      <div class='preview-card'>
-        <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M14 2V8H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M16 13H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M16 17H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M10 9H9H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div style='font-weight:800;font-size:14px;color:rgba(255,255,255,0.95);margin-bottom:8px'>📝 Resume Builder Preview</div>
-        <div style='font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:12px'>
-          <div style='margin-bottom:6px'><b>Template:</b> Modern</div>
-          <div style='margin-bottom:6px'><b>Sections:</b> Summary, Skills, Experience</div>
-          <div style='margin-bottom:6px'><b>Status:</b> Auto-Optimized ✅</div>
+    <div class='preview-slider'>
+      <div class='preview-slider-wrapper'>
+        <div class='preview-card'>
+          <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 2V8H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 13H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 17H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 9H9H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div style='font-weight:800;font-size:13px;color:rgba(255,255,255,0.95);margin-bottom:8px'>📝 Resume Builder</div>
+          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.4;margin-bottom:10px'>
+            <div style='margin-bottom:4px'><b>Template:</b> Modern</div>
+            <div style='margin-bottom:4px'><b>Sections:</b> Summary, Skills</div>
+            <div style='margin-bottom:4px'><b>Status:</b> Optimized ✅</div>
+          </div>
+          <div style='background:rgba(79,70,229,0.15);padding:6px 8px;border-radius:6px;border:1px solid rgba(79,70,229,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
+            🎨 ATS-Ready Templates
+          </div>
         </div>
-        <div style='background:rgba(79,70,229,0.15);padding:8px 10px;border-radius:8px;border:1px solid rgba(79,70,229,0.3);font-size:11px;font-weight:600;color:rgba(255,255,255,0.9)'>
-          🎨 ATS-Optimized Templates Ready for Export
+        <div class='preview-card'>
+          <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 21L16.65 16.65" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M11 8V14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 11H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div style='font-weight:800;font-size:13px;color:rgba(255,255,255,0.95);margin-bottom:8px'>🔍 Job Search</div>
+          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.4;margin-bottom:10px'>
+            <div style='margin-bottom:4px'><b>Searching:</b> Backend Dev</div>
+            <div style='margin-bottom:4px'><b>Results:</b> 145+ jobs</div>
+            <div style='margin-bottom:4px'><b>Sources:</b> LinkedIn, Naukri</div>
+          </div>
+          <div style='background:rgba(34,197,94,0.15);padding:6px 8px;border-radius:6px;border:1px solid rgba(34,197,94,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
+            ⚡ Real-time Results
+          </div>
         </div>
-      </div>
-
-      <!-- Job Search Preview -->
-      <div class='preview-card'>
-        <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="11" cy="11" r="8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M21 21L16.65 16.65" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M11 8V14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M8 11H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <div style='font-weight:800;font-size:14px;color:rgba(255,255,255,0.95);margin-bottom:8px'>🔍 Job Search Preview</div>
-        <div style='font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:12px'>
-          <div style='margin-bottom:6px'><b>Searching:</b> Backend Developer</div>
-          <div style='margin-bottom:6px'><b>Results:</b> 145+ jobs found</div>
-          <div style='margin-bottom:6px'><b>Sources:</b> LinkedIn, Naukri, FoundIt</div>
-        </div>
-        <div style='background:rgba(34,197,94,0.15);padding:8px 10px;border-radius:8px;border:1px solid rgba(34,197,94,0.3);font-size:11px;font-weight:600;color:rgba(255,255,255,0.9)'>
-          ⚡ Real-time Aggregated Results
-        </div>
-      </div>
-
-      <!-- AI Interview Coach Preview -->
-      <div class='preview-card'>
-        <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="12" cy="10" r="1.5" fill="white"/>
-          <circle cx="16" cy="10" r="1.5" fill="white"/>
-          <circle cx="8" cy="10" r="1.5" fill="white"/>
-        </svg>
-        <div style='font-weight:800;font-size:14px;color:rgba(255,255,255,0.95);margin-bottom:8px'>🤖 AI Interview Coach Preview</div>
-        <div style='font-size:12px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:12px'>
-          <div style='margin-bottom:6px'><b>Question:</b> Tell me about yourself</div>
-          <div style='margin-bottom:6px'><b>AI Feedback:</b> Highlight achievements confidently</div>
-        </div>
-        <div style='background:rgba(59,130,246,0.15);padding:8px 10px;border-radius:8px;border:1px solid rgba(59,130,246,0.3);font-size:11px;font-weight:600;color:rgba(255,255,255,0.9)'>
-          🧠 Confidence Score: 82%
+        <div class='preview-card'>
+          <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="10" r="1.5" fill="white"/>
+            <circle cx="16" cy="10" r="1.5" fill="white"/>
+            <circle cx="8" cy="10" r="1.5" fill="white"/>
+          </svg>
+          <div style='font-weight:800;font-size:13px;color:rgba(255,255,255,0.95);margin-bottom:8px'>🤖 AI Interview Coach</div>
+          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.4;margin-bottom:10px'>
+            <div style='margin-bottom:4px'><b>Question:</b> Tell me about you</div>
+            <div style='margin-bottom:4px'><b>AI:</b> Highlight achievements</div>
+          </div>
+          <div style='background:rgba(59,130,246,0.15);padding:6px 8px;border-radius:6px;border:1px solid rgba(59,130,246,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
+            🧠 Confidence: 82%
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 </div>
