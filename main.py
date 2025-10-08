@@ -525,30 +525,30 @@ hero_html = """
     </div>
   </div>
   <div class='hero-right'>
-    <div class='ats-preview'>
-      <div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:20px'>
-        <div style='font-weight:800;font-size:16px;color:rgba(255,255,255,0.95)'>🎯 Live ATS Preview</div>
-        <div style='font-size:12px;color:rgba(255,255,255,0.6);background:rgba(0,255,0,0.1);padding:4px 8px;border-radius:12px;border:1px solid rgba(0,255,0,0.2)'>● LIVE</div>
-      </div>
-      <div style='background:rgba(255,255,255,0.03);padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,0.05)'>
-        <div style='font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:12px'>📄 Resume: <b style='color:rgba(255,255,255,0.95)'>John Doe — Backend Engineer</b></div>
-        <div style='display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px'>
-          <div class='skill-tag' style='padding:8px 12px;border-radius:20px;background:rgba(79,70,229,0.2);font-size:12px;font-weight:600;border:1px solid rgba(79,70,229,0.3)'>Python</div>
-          <div class='skill-tag' style='padding:8px 12px;border-radius:20px;background:rgba(34,197,94,0.2);font-size:12px;font-weight:600;border:1px solid rgba(34,197,94,0.3)'>Django</div>
-          <div class='skill-tag' style='padding:8px 12px;border-radius:20px;background:rgba(59,130,246,0.2);font-size:12px;font-weight:600;border:1px solid rgba(59,130,246,0.3)'>PostgreSQL</div>
-        </div>
-        <div style='display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid rgba(255,255,255,0.05)'>
-          <div style='font-size:13px;color:rgba(255,255,255,0.7)'>🎯 ATS Score</div>
-          <div style='font-weight:900;font-size:24px;background:linear-gradient(135deg,#10b981,#3b82f6);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent'>78%</div>
-        </div>
-        <div style='width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-top:8px;overflow:hidden'>
-          <div style='width:78%;height:100%;background:linear-gradient(90deg,#10b981,#3b82f6);border-radius:3px;animation:pulse 2s ease-in-out infinite'></div>
-        </div>
-      </div>
-    </div>
     <div class='preview-slider'>
       <div class='preview-slider-wrapper'>
-        <div class='preview-card'>
+        <div class='preview-card' style='flex:0 0 320px'>
+          <div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:16px'>
+            <div style='font-weight:800;font-size:14px;color:rgba(255,255,255,0.95)'>🎯 Live ATS Preview</div>
+            <div style='font-size:11px;color:rgba(255,255,255,0.6);background:rgba(0,255,0,0.1);padding:4px 8px;border-radius:10px;border:1px solid rgba(0,255,0,0.2)'>● LIVE</div>
+          </div>
+          <div style='background:rgba(255,255,255,0.03);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.05)'>
+            <div style='font-size:12px;color:rgba(255,255,255,0.7);margin-bottom:10px'>📄 Resume: <b style='color:rgba(255,255,255,0.95)'>John Doe — Backend Engineer</b></div>
+            <div style='display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px'>
+              <div class='skill-tag' style='padding:6px 10px;border-radius:16px;background:rgba(79,70,229,0.2);font-size:11px;font-weight:600;border:1px solid rgba(79,70,229,0.3)'>Python</div>
+              <div class='skill-tag' style='padding:6px 10px;border-radius:16px;background:rgba(34,197,94,0.2);font-size:11px;font-weight:600;border:1px solid rgba(34,197,94,0.3)'>Django</div>
+              <div class='skill-tag' style='padding:6px 10px;border-radius:16px;background:rgba(59,130,246,0.2);font-size:11px;font-weight:600;border:1px solid rgba(59,130,246,0.3)'>PostgreSQL</div>
+            </div>
+            <div style='display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid rgba(255,255,255,0.05)'>
+              <div style='font-size:12px;color:rgba(255,255,255,0.7)'>🎯 ATS Score</div>
+              <div style='font-weight:900;font-size:22px;background:linear-gradient(135deg,#10b981,#3b82f6);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent'>78%</div>
+            </div>
+            <div style='width:100%;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;margin-top:6px;overflow:hidden'>
+              <div style='width:78%;height:100%;background:linear-gradient(90deg,#10b981,#3b82f6);border-radius:3px;animation:pulse 2s ease-in-out infinite'></div>
+            </div>
+          </div>
+        </div>
+        <div class='preview-card' style='flex:0 0 320px'>
           <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M14 2V8H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -556,47 +556,55 @@ hero_html = """
             <path d="M16 17H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M10 9H9H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <div style='font-weight:800;font-size:13px;color:rgba(255,255,255,0.95);margin-bottom:8px'>📝 Resume Builder</div>
-          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.4;margin-bottom:10px'>
-            <div style='margin-bottom:4px'><b>Template:</b> Modern</div>
-            <div style='margin-bottom:4px'><b>Sections:</b> Summary, Skills</div>
-            <div style='margin-bottom:4px'><b>Status:</b> Optimized ✅</div>
+          <div style='font-weight:800;font-size:14px;color:rgba(255,255,255,0.95);margin-bottom:10px'>📝 Smart Resume Builder</div>
+          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:12px'>
+            <div style='margin-bottom:5px'><b>Active Template:</b> Executive Modern</div>
+            <div style='margin-bottom:5px'><b>Sections:</b> Professional Summary, Technical Skills, Work Experience, Education, Certifications</div>
+            <div style='margin-bottom:5px'><b>AI Enhancements:</b> 12 bullet points rewritten</div>
+            <div style='margin-bottom:5px'><b>Export Formats:</b> PDF, DOCX, TXT</div>
+            <div style='margin-bottom:5px'><b>Status:</b> ATS-Optimized ✅</div>
           </div>
-          <div style='background:rgba(79,70,229,0.15);padding:6px 8px;border-radius:6px;border:1px solid rgba(79,70,229,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
-            🎨 ATS-Ready Templates
+          <div style='background:rgba(79,70,229,0.15);padding:7px 10px;border-radius:8px;border:1px solid rgba(79,70,229,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
+            🎨 15+ Professional Templates Available
           </div>
         </div>
-        <div class='preview-card'>
+        <div class='preview-card' style='flex:0 0 320px'>
           <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="11" cy="11" r="8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M21 21L16.65 16.65" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M11 8V14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M8 11H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <div style='font-weight:800;font-size:13px;color:rgba(255,255,255,0.95);margin-bottom:8px'>🔍 Job Search</div>
-          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.4;margin-bottom:10px'>
-            <div style='margin-bottom:4px'><b>Searching:</b> Backend Dev</div>
-            <div style='margin-bottom:4px'><b>Results:</b> 145+ jobs</div>
-            <div style='margin-bottom:4px'><b>Sources:</b> LinkedIn, Naukri</div>
+          <div style='font-weight:800;font-size:14px;color:rgba(255,255,255,0.95);margin-bottom:10px'>🔍 Advanced Job Search</div>
+          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:12px'>
+            <div style='margin-bottom:5px'><b>Current Search:</b> Senior Backend Developer</div>
+            <div style='margin-bottom:5px'><b>Location:</b> Remote, US, UK</div>
+            <div style='margin-bottom:5px'><b>Results Found:</b> 1,247 active jobs</div>
+            <div style='margin-bottom:5px'><b>Sources:</b> LinkedIn, Indeed, Glassdoor, Naukri, FoundIt, Monster</div>
+            <div style='margin-bottom:5px'><b>Salary Range:</b> $95K - $180K</div>
+            <div style='margin-bottom:5px'><b>Match Score:</b> 85% relevance</div>
           </div>
-          <div style='background:rgba(34,197,94,0.15);padding:6px 8px;border-radius:6px;border:1px solid rgba(34,197,94,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
-            ⚡ Real-time Results
+          <div style='background:rgba(34,197,94,0.15);padding:7px 10px;border-radius:8px;border:1px solid rgba(34,197,94,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
+            ⚡ Real-time Aggregated Multi-Platform Search
           </div>
         </div>
-        <div class='preview-card'>
+        <div class='preview-card' style='flex:0 0 320px'>
           <svg class='preview-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="12" cy="10" r="1.5" fill="white"/>
             <circle cx="16" cy="10" r="1.5" fill="white"/>
             <circle cx="8" cy="10" r="1.5" fill="white"/>
           </svg>
-          <div style='font-weight:800;font-size:13px;color:rgba(255,255,255,0.95);margin-bottom:8px'>🤖 AI Interview Coach</div>
-          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.4;margin-bottom:10px'>
-            <div style='margin-bottom:4px'><b>Question:</b> Tell me about you</div>
-            <div style='margin-bottom:4px'><b>AI:</b> Highlight achievements</div>
+          <div style='font-weight:800;font-size:14px;color:rgba(255,255,255,0.95);margin-bottom:10px'>🤖 AI Interview Coach</div>
+          <div style='font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5;margin-bottom:12px'>
+            <div style='margin-bottom:5px'><b>Current Question:</b> Tell me about a challenging project you led</div>
+            <div style='margin-bottom:5px'><b>AI Analysis:</b> Use STAR method, quantify impact</div>
+            <div style='margin-bottom:5px'><b>Tone Assessment:</b> Professional & Confident</div>
+            <div style='margin-bottom:5px'><b>Key Suggestions:</b> Emphasize leadership, mention team size, highlight measurable outcomes</div>
+            <div style='margin-bottom:5px'><b>Practice Score:</b> 82/100</div>
           </div>
-          <div style='background:rgba(59,130,246,0.15);padding:6px 8px;border-radius:6px;border:1px solid rgba(59,130,246,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
-            🧠 Confidence: 82%
+          <div style='background:rgba(59,130,246,0.15);padding:7px 10px;border-radius:8px;border:1px solid rgba(59,130,246,0.3);font-size:10px;font-weight:600;color:rgba(255,255,255,0.9)'>
+            🧠 AI-Powered Behavioral Interview Training
           </div>
         </div>
       </div>
