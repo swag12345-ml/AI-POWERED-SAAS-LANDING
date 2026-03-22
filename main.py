@@ -217,8 +217,8 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-panel { background: #0f0f10; border-radius: 20px; border: 1px solid rgba(255,255,255,0.07); padding: 24px; overflow: hidden; position: relative; }
 
 .hl-tmpl-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
-.hl-tmpl { border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); background: #141416; overflow: hidden; display: flex; flex-direction: column; min-height: 110px; position: relative; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
-.hl-tmpl:hover { border-color: rgba(255,255,255,0.18); }
+.hl-tmpl { border-radius: 8px; border: 1px solid rgba(255,255,255,0.07); background: #141416; overflow: hidden; display: flex; flex-direction: column; min-height: 110px; position: relative; cursor: pointer; }
+.hl-tmpl:hover { border-color: rgba(255,255,255,0.2) !important; }
 .hl-tmpl-act { border-color: #0a84ff !important; box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
 .hl-tmpl-hdr { height: 5px; border-radius: 2px; }
 .hl-tmpl-ln  { height: 3px; border-radius: 1.5px; background: rgba(255,255,255,0.13); }
@@ -315,168 +315,413 @@ def score_bars():
     data = [("Communication","85%","#0a84ff"),("Technical","79%","#bf5af2"),("Confidence","88%","#30d158"),("Structure","74%","#ff9f0a")]
     return "".join('<div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(245,245,247,0.54);margin-bottom:5px"><span>'+dim+'</span><span style="color:'+col+';font-weight:600">'+sc+'</span></div><div style="height:3px;background:rgba(255,255,255,0.07);border-radius:2px;margin-bottom:8px;overflow:hidden"><div style="width:'+sc+';height:100%;background:'+col+';border-radius:2px"></div></div>' for dim,sc,col in data)
 
-def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, header_style="bar"):
+def tmpl_gallery():
     """
-    Renders a tiny but faithful miniature of each resume template.
-    layout: "single" | "two-col" | "sidebar"
-    header_style: "bar" (coloured top bar) | "band" (dark full-width band) | "left-accent" (left border)
+    Renders the full interactive template gallery with:
+    - 15 faithful mini-resume thumbnails (all templates shown, 8 visible + scroll)
+    - Hover tooltip with larger preview + template details
+    - Click-to-select with animated info bar update
+    - Filter tabs: All / Single-col / Two-col
+    - ATS badge overlay on thumbnails
+    - Animated selection ring
     """
-    act = ' hl-tmpl-act' if active else ''
-    badge = ('<div class="hl-tmpl-badge">'+name+'</div>') if active else ''
 
-    # ── shared micro-line helper ──────────────────────────────────────────────
-    def ln(w, col="rgba(255,255,255,0.15)", h="2px", mt="3px"):
+    # ── per-template data ────────────────────────────────────────────────────
+    # fields: id, name, accent, layout, sidebar_bg, header_bg, ats_level, tags, font_hint
+    TEMPLATES = [
+        ("modern",      "Modern Minimal",       "#0a84ff", "single",  None,      None,      "★★★", ["Single-col","Blue","Minimal"], "Sora"),
+        ("classic",     "Classic Clean",        "#e5e5e5", "single",  None,      None,      "★★★", ["Single-col","B&W","ATS Top"], "Georgia"),
+        ("executive",   "Executive",            "#ff9f0a", "single",  None,      "#ff9f0a", "★★★", ["Single-col","Amber","Prestige"], "Playfair"),
+        ("timeline",    "Timeline",             "#30d158", "timeline",None,      None,      "★★☆", ["Single-col","Green","Visual"], "Sora"),
+        ("slate",       "Slate Gray",           "#6b7280", "single",  None,      None,      "★★★", ["Single-col","Gray","Minimal"], "DM Sans"),
+        ("burgundy",    "Burgundy Classic",     "#9b2335", "single",  None,      "#9b2335", "★★★", ["Single-col","Red","Classic"], "Merriweather"),
+        ("forest",      "Forest Green",         "#2d6a4f", "single",  None,      None,      "★★★", ["Single-col","Green","Elegant"], "Lato"),
+        ("corporate",   "Corporate Blue",       "#3b82f6", "sidebar", "#1a2744", None,      "★★☆", ["Two-col","Blue","Corporate"], "Segoe UI"),
+        ("creative",    "Creative Green",       "#22c55e", "sidebar", "#0f2018", None,      "★★☆", ["Two-col","Green","Creative"], "Nunito"),
+        ("terracotta",  "Warm Terracotta",      "#c2714f", "sidebar", "#2a1a14", None,      "★★☆", ["Two-col","Warm","Premium"], "Cormorant"),
+        ("navy",        "Navy Prestige",        "#e2b96a", "sidebar", "#0d1833", None,      "★★☆", ["Two-col","Gold","Prestige"], "Libre Baskerville"),
+        ("teal",        "Teal Impact",          "#0d9488", "sidebar", "#0d2420", None,      "★★☆", ["Two-col","Teal","Modern"], "Work Sans"),
+        ("indigo",      "Indigo Tech",          "#818cf8", "sidebar", "#1e1b4b", None,      "★★☆", ["Two-col","Indigo","Tech"], "Inter"),
+        ("default",     "Default Professional", "#9ca3af", "sidebar", "#374151", None,      "★★☆", ["Two-col","Gray","Professional"], "Segoe UI"),
+        ("sidebar_el",  "Elegant Sidebar",      "#38bdf8", "sidebar", "#0f172a", None,      "★★☆", ["Two-col","Sky","Elegant"], "Raleway"),
+    ]
+
+    # ── micro HTML builders ──────────────────────────────────────────────────
+    def ln(w, col="rgba(255,255,255,0.14)", h="2px", mt="3px"):
         return f'<div style="height:{h};width:{w};background:{col};border-radius:1px;margin-top:{mt}"></div>'
 
-    def name_block(col):
-        return (f'<div style="height:4px;width:55%;background:{col};border-radius:1px;margin-bottom:2px"></div>'
-                f'<div style="height:2px;width:38%;background:{col};opacity:.5;border-radius:1px"></div>')
+    def sl(col, w="38%"):  # section label
+        return f'<div style="height:1.5px;width:{w};background:{col};opacity:.8;border-radius:1px;margin-top:5px;margin-bottom:2px"></div>'
 
-    def section_lines(n=3, w_list=None, col="rgba(255,255,255,0.13)"):
-        ws = w_list or ["85%","70%","78%","60%","75%"]
-        return "".join(ln(ws[i % len(ws)], col) for i in range(n))
+    def avatar(col):
+        return f'<div style="width:14px;height:14px;border-radius:50%;background:{col};opacity:.75;margin:0 auto 3px;flex-shrink:0"></div>'
 
-    def section_label(col):
-        return f'<div style="height:2px;width:40%;background:{col};opacity:.7;border-radius:1px;margin-top:4px;margin-bottom:2px"></div>'
+    def pill_row(col):
+        return (f'<div style="display:flex;gap:2px;margin-top:3px">'
+                f'<div style="height:4px;width:22%;background:{col};opacity:.5;border-radius:3px"></div>'
+                f'<div style="height:4px;width:18%;background:{col};opacity:.35;border-radius:3px"></div>'
+                f'<div style="height:4px;width:24%;background:{col};opacity:.4;border-radius:3px"></div>'
+                f'</div>')
 
-    # ── layout compositions ───────────────────────────────────────────────────
-    body = ""
+    def skill_dots(col):
+        filled = f'<div style="width:4px;height:4px;border-radius:50%;background:{col};opacity:.8"></div>'
+        empty  = f'<div style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.15)"></div>'
+        return (f'<div style="display:flex;gap:2px;margin-top:3px">' + filled*4 + empty + f'</div>')
 
-    if layout == "sidebar":
-        sb = sidebar_bg or "#1e293b"
-        # Two-column: left sidebar (dark) + right main
-        body = (
-            f'<div style="display:flex;gap:0;flex:1;min-height:0">'
-            # sidebar
-            f'<div style="width:32%;background:{sb};padding:4px 3px;display:flex;flex-direction:column;gap:2px;">'
-            + (f'<div style="height:16px;width:16px;border-radius:50%;background:{accent};opacity:.7;margin:0 auto 3px"></div>' if not sidebar_bg else '')
-            + name_block(accent)
-            + ln("90%", "rgba(255,255,255,0.2)", "1px")
-            + section_label(accent)
-            + ln("80%", "rgba(255,255,255,0.18)")
-            + ln("65%", "rgba(255,255,255,0.18)")
-            + section_label(accent)
-            + ln("70%", "rgba(255,255,255,0.18)")
-            + ln("55%", "rgba(255,255,255,0.18)")
-            + f'</div>'
-            # main
-            f'<div style="flex:1;padding:4px 4px;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent)
-            + ln("90%") + ln("80%") + ln("70%")
-            + section_label(accent)
-            + ln("85%") + ln("75%") + ln("60%")
-            + f'</div>'
-            f'</div>'
-        )
+    def exp_entry(col, w1="80%", w2="65%"):
+        return (f'<div style="display:flex;align-items:flex-start;gap:2px;margin-top:3px">'
+                f'<div style="width:2px;height:12px;background:{col};opacity:.6;flex-shrink:0;border-radius:1px;margin-top:1px"></div>'
+                f'<div style="flex:1">{ln(w1)}{ln(w2)}</div></div>')
 
-    elif layout == "two-col":
-        # Side-by-side equal columns
-        body = (
-            f'<div style="display:flex;gap:4px;flex:1;min-height:0;padding:2px;">'
-            f'<div style="flex:1;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent)
-            + ln("90%") + ln("75%") + ln("80%")
-            + section_label(accent)
-            + ln("85%") + ln("70%") + ln("65%")
-            + f'</div>'
-            f'<div style="flex:1;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent)
-            + ln("80%") + ln("90%") + ln("70%")
-            + section_label(accent)
-            + ln("75%") + ln("60%") + ln("80%")
-            + f'</div>'
-            f'</div>'
-        )
+    def timeline_entry(col):
+        return (f'<div style="display:flex;align-items:flex-start;gap:2px;margin-top:3px">'
+                f'<div style="display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0">'
+                f'<div style="width:5px;height:5px;border-radius:50%;background:{col};margin-top:1px"></div>'
+                f'<div style="width:1px;height:10px;background:{col};opacity:.25"></div></div>'
+                f'<div style="flex:1;margin-top:1px">{ln("85%")}{ln("68%")}</div></div>')
 
-    elif layout == "timeline":
-        # Single column with left-border timeline dots
-        body = (
-            f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent)
-            + (
-                f'<div style="display:flex;align-items:flex-start;gap:3px;margin-top:2px">'
-                f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
-                f'<div style="flex:1">' + ln("85%") + ln("70%") + '</div></div>'
-                f'<div style="margin-left:3px;width:1px;height:5px;background:{accent};opacity:.3;margin-left:5px"></div>'
-                f'<div style="display:flex;align-items:flex-start;gap:3px">'
-                f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
-                f'<div style="flex:1">' + ln("78%") + ln("62%") + '</div></div>'
-            )
-            + section_label(accent)
-            + ln("90%") + ln("75%")
-            + f'</div>'
-        )
+    # ── render each thumbnail inner HTML ─────────────────────────────────────
+    def render_thumb(tid, accent, layout, sidebar_bg, header_bg):
+        body_content = ""
+        header = ""
 
-    else:  # single column
-        body = (
-            f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent)
-            + ln("90%") + ln("80%") + ln("72%")
-            + section_label(accent)
-            + ln("85%") + ln("68%") + ln("76%")
-            + section_label(accent)
-            + ln("70%") + ln("55%")
-            + f'</div>'
-        )
-
-    # ── header styles ─────────────────────────────────────────────────────────
-    if header_style == "band":
-        # Full-width dark band with name in it
-        hdr = (f'<div style="background:{accent};padding:4px 5px;border-radius:3px 3px 0 0;">'
-               f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.9);border-radius:1px;margin-bottom:1px"></div>'
-               f'<div style="height:2px;width:32%;background:rgba(255,255,255,0.55);border-radius:1px"></div></div>')
-    elif header_style == "left-accent":
-        # Centred name + left coloured border on the card itself
-        hdr = (f'<div style="border-left:2px solid {accent};padding:3px 5px;">'
-               f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:1px"></div>'
-               f'<div style="height:2px;width:30%;background:{accent};border-radius:1px"></div>'
-               f'<div style="margin-top:2px;display:flex;gap:3px">'
-               f'<div style="height:2px;width:22%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
-               f'<div style="height:2px;width:18%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
-               f'</div></div>')
-    elif header_style == "center":
-        # Centred, clean header
-        hdr = (f'<div style="text-align:center;padding:4px 3px;border-bottom:1px solid {accent};">'
-               f'<div style="height:3px;width:45%;background:rgba(255,255,255,0.75);border-radius:1px;margin:0 auto 2px"></div>'
-               f'<div style="height:2px;width:28%;background:{accent};border-radius:1px;margin:0 auto 2px"></div>'
-               f'<div style="display:flex;justify-content:center;gap:3px">'
-               f'<div style="height:1.5px;width:14%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
-               f'<div style="height:1.5px;width:14%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
-               f'</div></div>')
-    else:  # bar (thin top colour bar, name below)
         if layout == "sidebar":
-            hdr = ""  # sidebar handles its own header inside the left column
-        else:
-            hdr = (f'<div style="height:4px;background:{accent};border-radius:3px 3px 0 0;margin-bottom:3px"></div>'
-                   f'<div style="padding:0 4px 2px;">'
-                   f'<div style="height:3px;width:52%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:2px"></div>'
-                   f'<div style="height:2px;width:34%;background:{accent};opacity:.6;border-radius:1px"></div>'
-                   f'<div style="display:flex;gap:3px;margin-top:2px">'
-                   f'<div style="height:1.5px;width:16%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
-                   f'<div style="height:1.5px;width:16%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
-                   f'</div></div>')
+            sb = sidebar_bg or "#1e293b"
+            # avatar + name block
+            sb_inner = (
+                avatar(accent)
+                + f'<div style="height:3px;width:75%;background:rgba(255,255,255,0.65);border-radius:1px;margin:0 auto 1px"></div>'
+                + f'<div style="height:2px;width:50%;background:{accent};opacity:.6;border-radius:1px;margin:0 auto 2px"></div>'
+                + f'<div style="height:1px;width:80%;background:rgba(255,255,255,0.12);border-radius:1px;margin:0 auto 2px"></div>'
+                + sl(accent, "70%")
+                + pill_row(accent)
+                + sl(accent, "60%")
+                + skill_dots(accent)
+            )
+            body_content = (
+                f'<div style="display:flex;flex:1;min-height:0">'
+                f'<div style="width:34%;background:{sb};padding:4px 3px;display:flex;flex-direction:column;">'
+                + sb_inner +
+                f'</div>'
+                f'<div style="flex:1;padding:4px 4px;display:flex;flex-direction:column;">'
+                + sl(accent) + exp_entry(accent) + exp_entry(accent, "75%", "55%")
+                + sl(accent) + ln("90%") + ln("72%") + ln("82%")
+                + f'</div>'
+                f'</div>'
+            )
 
-    return (f'<div class="hl-tmpl{act}" style="display:flex;flex-direction:column;padding:0;overflow:hidden;">'
-            + hdr + body + badge +
-            f'</div>')
+        elif layout == "timeline":
+            hb = header_bg or accent
+            header = (
+                f'<div style="height:4px;background:{hb};border-radius:3px 3px 0 0"></div>'
+                f'<div style="padding:3px 5px 2px">'
+                f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:2px"></div>'
+                f'<div style="height:2px;width:30%;background:{accent};opacity:.6;border-radius:1px"></div>'
+                f'</div>'
+            )
+            body_content = (
+                f'<div style="flex:1;padding:2px 5px;display:flex;flex-direction:column;">'
+                + sl(accent) + timeline_entry(accent) + timeline_entry(accent)
+                + sl(accent) + ln("88%") + ln("70%")
+                + f'</div>'
+            )
 
+        elif header_bg:  # band header (Executive, Burgundy)
+            header = (
+                f'<div style="background:{header_bg};padding:5px 5px;border-radius:3px 3px 0 0">'
+                f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.9);border-radius:1px;margin-bottom:2px"></div>'
+                f'<div style="height:2px;width:32%;background:rgba(255,255,255,0.55);border-radius:1px"></div>'
+                f'<div style="display:flex;gap:3px;margin-top:2px">'
+                f'<div style="height:1.5px;width:15%;background:rgba(255,255,255,0.3);border-radius:1px"></div>'
+                f'<div style="height:1.5px;width:15%;background:rgba(255,255,255,0.3);border-radius:1px"></div>'
+                f'</div></div>'
+            )
+            body_content = (
+                f'<div style="flex:1;padding:3px 5px;display:flex;flex-direction:column;">'
+                + sl(accent) + exp_entry(accent) + exp_entry(accent, "70%", "55%")
+                + sl(accent) + ln("88%") + ln("72%") + ln("80%")
+                + f'</div>'
+            )
 
-def tmpl_gallery():
-    # Each entry: (display_name, accent_colour, layout, header_style, sidebar_bg_or_None, active)
-    templates = [
-        ("Modern",    "#0a84ff", "center",   "center",       None,      True),   # Modern Minimal — centred header, blue
-        ("Classic",   "#f5f5f7", "single",   "left-accent",  None,      False),  # Classic Clean — B&W, left accent
-        ("Executive", "#ff9f0a", "single",   "band",         None,      False),  # Executive — amber band header
-        ("Timeline",  "#30d158", "timeline", "bar",          None,      False),  # Timeline — green dots
-        ("Corporate", "#1d4ed8", "sidebar",  "bar",          "#1a2744", False),  # Corporate Blue — dark blue sidebar
-        ("Creative",  "#bf5af2", "sidebar",  "bar",          "#1e1030", False),  # Creative Green (purple here)
-        ("Navy",      "#e2b96a", "sidebar",  "bar",          "#0d1833", False),  # Navy Prestige — gold on navy
-        ("Teal",      "#0d9488", "sidebar",  "bar",          "#0d2420", False),  # Teal Impact
-    ]
-    out = ""
-    for name, accent, layout, hdr_style, sb_bg, active in templates:
-        out += _mini_resume(name, accent, layout, active, sb_bg, hdr_style)
-    return out
+        elif tid in ("modern",):  # centred header
+            header = (
+                f'<div style="text-align:center;padding:5px 4px 3px;border-bottom:1.5px solid {accent}">'
+                f'<div style="height:3px;width:46%;background:rgba(255,255,255,0.75);border-radius:1px;margin:0 auto 2px"></div>'
+                f'<div style="height:2px;width:28%;background:{accent};border-radius:1px;margin:0 auto 2px"></div>'
+                f'<div style="display:flex;justify-content:center;gap:3px">'
+                f'<div style="height:1.5px;width:13%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+                f'<div style="height:1.5px;width:13%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+                f'<div style="height:1.5px;width:13%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+                f'</div></div>'
+            )
+            body_content = (
+                f'<div style="flex:1;padding:3px 5px;display:flex;flex-direction:column;">'
+                + sl(accent) + ln("90%","rgba(255,255,255,0.16)") + ln("80%","rgba(255,255,255,0.12)") + ln("70%","rgba(255,255,255,0.10)")
+                + sl(accent) + exp_entry(accent) + exp_entry(accent, "75%", "58%")
+                + sl(accent) + pill_row(accent)
+                + f'</div>'
+            )
+
+        else:  # standard single-col with top bar
+            lc = accent if accent != "#e5e5e5" else "rgba(255,255,255,0.55)"
+            header = (
+                f'<div style="height:4px;background:{accent};border-radius:3px 3px 0 0"></div>'
+                f'<div style="padding:3px 5px 2px;border-bottom:1px solid rgba(255,255,255,0.06)">'
+                f'<div style="height:3px;width:52%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:2px"></div>'
+                f'<div style="height:2px;width:30%;background:{lc};opacity:.7;border-radius:1px"></div>'
+                f'<div style="display:flex;gap:3px;margin-top:2px">'
+                f'<div style="height:1.5px;width:15%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
+                f'<div style="height:1.5px;width:15%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
+                f'</div></div>'
+            )
+            body_content = (
+                f'<div style="flex:1;padding:3px 5px;display:flex;flex-direction:column;">'
+                + sl(lc) + exp_entry(accent if accent != "#e5e5e5" else "rgba(255,255,255,0.4)") + exp_entry(accent if accent != "#e5e5e5" else "rgba(255,255,255,0.4)", "70%", "55%")
+                + sl(lc) + ln("90%") + ln("74%") + ln("82%")
+                + sl(lc) + pill_row(accent if accent != "#e5e5e5" else "rgba(255,255,255,0.4)")
+                + f'</div>'
+            )
+
+        return header + body_content
+
+    # ── build the gallery HTML block with embedded JS ────────────────────────
+    # Build JSON-like data for each template (used by the JS)
+    import json as _json
+
+    tmpl_data = []
+    for tid, name, accent, layout, sidebar_bg, header_bg, ats, tags, font in TEMPLATES:
+        col_type = "Two-column" if layout == "sidebar" else "Single-column"
+        tmpl_data.append({
+            "id": tid, "name": name, "accent": accent,
+            "ats": ats, "tags": tags, "font": font,
+            "colType": col_type
+        })
+    tmpl_json = _json.dumps(tmpl_data)
+
+    # Build thumbnail HTML for each template
+    thumbs_html = ""
+    for i, (tid, name, accent, layout, sidebar_bg, header_bg, ats, tags, font) in enumerate(TEMPLATES):
+        inner = render_thumb(tid, accent, layout, sidebar_bg, header_bg)
+        act_style = f'border-color:{accent};box-shadow:0 0 0 2px {accent}33;' if i == 0 else ''
+        thumbs_html += (
+            f'<div class="hl-tmpl" id="tmpl-{tid}" data-idx="{i}" '
+            f'style="display:flex;flex-direction:column;padding:0;overflow:hidden;cursor:pointer;'
+            f'transition:border-color .18s,box-shadow .18s,transform .15s;{act_style}">'
+            + inner +
+            f'<div class="hl-tmpl-ats" style="position:absolute;top:4px;right:4px;'
+            f'background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);border-radius:3px;'
+            f'padding:1px 4px;font-size:7px;font-weight:700;letter-spacing:.4px;color:#30d158;'
+            f'opacity:0;transition:opacity .2s;">ATS</div>'
+            + f'</div>'
+        )
+
+    # Build the tooltip HTML
+    tooltip_html = (
+        '<div id="hl-tmpl-tooltip" style="display:none;position:fixed;z-index:9999;'
+        'background:#1a1a1e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;'
+        'padding:14px;width:200px;pointer-events:none;'
+        'box-shadow:0 24px 60px rgba(0,0,0,0.8);transition:opacity .15s;">'
+        '<div id="tt-preview" style="width:100%;height:130px;background:#141416;border-radius:8px;'
+        'overflow:hidden;margin-bottom:10px;border:1px solid rgba(255,255,255,0.07)"></div>'
+        '<div id="tt-name" style="font-size:12px;font-weight:700;color:#f5f5f7;margin-bottom:4px"></div>'
+        '<div id="tt-meta" style="font-size:10px;color:rgba(245,245,247,0.4);margin-bottom:6px"></div>'
+        '<div id="tt-tags" style="display:flex;flex-wrap:wrap;gap:4px"></div>'
+        '</div>'
+    )
+
+    # Build the JS that wires everything together
+    js = f"""
+<script>
+(function(){{
+  var DATA = {tmpl_json};
+  var active = 0;
+  var APP = '{APP_URL}';
+
+  // tooltip
+  var tip = document.getElementById('hl-tmpl-tooltip');
+  var ttPreview = document.getElementById('tt-preview');
+  var ttName = document.getElementById('tt-name');
+  var ttMeta = document.getElementById('tt-meta');
+  var ttTags = document.getElementById('tt-tags');
+  var infoName = document.getElementById('hl-info-name');
+  var infoMeta = document.getElementById('hl-info-meta');
+  var infoAts  = document.getElementById('hl-info-ats');
+  var infoFont = document.getElementById('hl-info-font');
+  var infoDot  = document.getElementById('hl-info-dot');
+  var filterBtns = document.querySelectorAll('.hl-filter-btn');
+  var allCards = document.querySelectorAll('.hl-tmpl[data-idx]');
+
+  function setActive(idx) {{
+    active = idx;
+    var d = DATA[idx];
+    allCards.forEach(function(c){{
+      var ci = parseInt(c.getAttribute('data-idx'));
+      if(ci === idx) {{
+        c.style.borderColor = d.accent;
+        c.style.boxShadow = '0 0 0 2px '+d.accent+'33';
+        c.style.transform = 'scale(1.04)';
+      }} else {{
+        c.style.borderColor = 'rgba(255,255,255,0.07)';
+        c.style.boxShadow = 'none';
+        c.style.transform = 'scale(1)';
+      }}
+    }});
+    if(infoName) {{
+      infoName.textContent = d.name + ' — ATS ' + (d.ats.length > 3 ? 'Certified' : 'Optimised');
+      infoName.style.color = d.accent;
+    }}
+    if(infoMeta) infoMeta.textContent = d.font + ' · ' + d.colType;
+    if(infoAts)  infoAts.textContent  = d.ats;
+    if(infoFont) infoFont.textContent = d.font;
+    if(infoDot)  infoDot.style.background = d.accent;
+  }}
+
+  function showTooltip(card, idx) {{
+    var d = DATA[idx];
+    ttName.textContent = d.name;
+    ttMeta.textContent = d.font + ' · ' + d.colType;
+    ttTags.innerHTML = d.tags.map(function(t){{
+      return '<span style="padding:2px 7px;border-radius:3px;font-size:9px;font-weight:700;'
+        + 'background:'+d.accent+'22;color:'+d.accent+';border:1px solid '+d.accent+'44">'+t+'</span>';
+    }}).join('');
+    // copy the card inner HTML into the tooltip preview
+    ttPreview.innerHTML = card.innerHTML;
+    ttPreview.style.transform = 'scale(1)';
+
+    var rect = card.getBoundingClientRect();
+    var tipW = 200, tipH = 220;
+    var left = rect.right + 8;
+    var top  = rect.top + (rect.height/2) - (tipH/2);
+    if(left + tipW > window.innerWidth - 8) left = rect.left - tipW - 8;
+    if(top < 8) top = 8;
+    if(top + tipH > window.innerHeight - 8) top = window.innerHeight - tipH - 8;
+    tip.style.left  = left + 'px';
+    tip.style.top   = top  + 'px';
+    tip.style.display = 'block';
+    tip.style.opacity = '1';
+  }}
+
+  function hideTooltip() {{
+    tip.style.opacity = '0';
+    setTimeout(function(){{ tip.style.display='none'; }}, 150);
+  }}
+
+  allCards.forEach(function(card) {{
+    var idx = parseInt(card.getAttribute('data-idx'));
+    var atsLabel = card.querySelector('.hl-tmpl-ats');
+
+    card.addEventListener('click', function() {{ setActive(idx); }});
+
+    card.addEventListener('mouseenter', function() {{
+      showTooltip(card, idx);
+      if(atsLabel) atsLabel.style.opacity = '1';
+    }});
+    card.addEventListener('mouseleave', function() {{
+      hideTooltip();
+      if(atsLabel) atsLabel.style.opacity = '0';
+    }});
+  }});
+
+  // filter tabs
+  filterBtns.forEach(function(btn) {{
+    btn.addEventListener('click', function() {{
+      var f = btn.getAttribute('data-filter');
+      filterBtns.forEach(function(b){{ b.classList.remove('active'); }});
+      btn.classList.add('active');
+      allCards.forEach(function(c) {{
+        var idx = parseInt(c.getAttribute('data-idx'));
+        var d = DATA[idx];
+        var show = f === 'all'
+          || (f === 'single' && d.colType === 'Single-column')
+          || (f === 'two'    && d.colType === 'Two-column');
+        c.style.display = show ? 'flex' : 'none';
+      }});
+    }});
+  }});
+
+  // scroll row hint
+  var grid = document.getElementById('hl-tmpl-grid-inner');
+  if(grid) {{
+    grid.addEventListener('scroll', function() {{
+      var fade = document.getElementById('hl-grid-fade');
+      if(fade) fade.style.opacity = grid.scrollLeft > 20 ? '0' : '1';
+    }});
+  }}
+
+  setActive(0);
+}})();
+</script>"""
+
+    # ── assemble the full widget ─────────────────────────────────────────────
+    filter_tabs = (
+        '<div style="display:flex;gap:6px;margin-bottom:12px;align-items:center">'
+        '<span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;'
+        'color:rgba(245,245,247,0.28);margin-right:4px">Filter</span>'
+        '<button class="hl-filter-btn active" data-filter="all" '
+        'style="padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.13);'
+        'background:rgba(255,255,255,0.08);color:rgba(245,245,247,0.7);font-size:10px;'
+        'font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.3px">All 15</button>'
+        '<button class="hl-filter-btn" data-filter="single" '
+        'style="padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);'
+        'background:transparent;color:rgba(245,245,247,0.4);font-size:10px;'
+        'font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.3px">Single-col</button>'
+        '<button class="hl-filter-btn" data-filter="two" '
+        'style="padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.07);'
+        'background:transparent;color:rgba(245,245,247,0.4);font-size:10px;'
+        'font-weight:600;cursor:pointer;transition:all .15s;letter-spacing:.3px">Two-col</button>'
+        '</div>'
+    )
+
+    grid_wrap = (
+        '<div style="position:relative">'
+        '<div id="hl-tmpl-grid-inner" '
+        'style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;'
+        'max-height:284px;overflow-y:auto;overflow-x:hidden;padding-right:4px;'
+        'scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;">'
+        + thumbs_html +
+        '</div>'
+        '<div id="hl-grid-fade" style="position:absolute;bottom:0;left:0;right:0;height:36px;'
+        'background:linear-gradient(to bottom,transparent,#0f0f10);pointer-events:none;'
+        'border-radius:0 0 10px 10px;transition:opacity .3s"></div>'
+        '</div>'
+    )
+
+    info_bar = (
+        '<div style="margin-top:12px;padding:12px 14px;background:rgba(10,132,255,0.06);'
+        'border-radius:12px;border:1px solid rgba(10,132,255,0.18);'
+        'display:flex;align-items:center;justify-content:space-between;gap:12px">'
+        '<div style="display:flex;align-items:center;gap:8px;min-width:0;">'
+        '<div id="hl-info-dot" style="width:7px;height:7px;border-radius:50%;background:#0a84ff;flex-shrink:0"></div>'
+        '<div style="min-width:0">'
+        '<div id="hl-info-name" style="font-size:12px;font-weight:700;color:#0a84ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Modern — ATS Certified</div>'
+        '<div style="display:flex;align-items:center;gap:8px;margin-top:2px">'
+        '<div id="hl-info-meta" style="font-size:10px;color:rgba(245,245,247,0.34)">Sora · Single-column</div>'
+        '<div id="hl-info-ats" style="font-size:10px;color:#30d158;letter-spacing:1px">★★★</div>'
+        '</div>'
+        '</div></div>'
+        '<a href="' + APP_URL + '" target="_blank" '
+        'style="padding:8px 18px;background:#0a84ff;color:#fff;border-radius:100px;'
+        'font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;flex-shrink:0">'
+        'Use this</a>'
+        '</div>'
+    )
+
+    return (
+        '<style>'
+        '.hl-filter-btn.active{background:rgba(255,255,255,0.1)!important;'
+        'border-color:rgba(255,255,255,0.25)!important;color:rgba(245,245,247,0.9)!important}'
+        '.hl-filter-btn:hover{background:rgba(255,255,255,0.06)!important;'
+        'color:rgba(245,245,247,0.6)!important}'
+        '#hl-tmpl-grid-inner::-webkit-scrollbar{width:3px}'
+        '#hl-tmpl-grid-inner::-webkit-scrollbar-track{background:transparent}'
+        '#hl-tmpl-grid-inner::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}'
+        '</style>'
+        + tooltip_html
+        + filter_tabs
+        + grid_wrap
+        + info_bar
+        + js
+    )
 
 def job_cards():
     jobs = [("SDE II","Google","Mountain View · Full-time","#4285f4","G",True),("ML Engineer","Anthropic","Remote · Full-time","#d97706","A",False),("Backend Dev","Razorpay","Bangalore · Full-time","#2563eb","R",False),("Data Analyst","Zepto","Mumbai · Hybrid","#7c3aed","Z",False)]
