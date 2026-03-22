@@ -187,21 +187,20 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 }
 .hl-btn-g:hover { border-color: rgba(255,255,255,0.25); background: #1e1e22; }
 
-/* ── Trusted by strip ── */
-.hl-trusted {
-  margin-top: 56px; animation: fadeUp 0.6s 0.4s ease both;
-  display: flex; flex-direction: column; align-items: center; gap: 14px;
+/* ── Hero feature strip ── */
+.hl-hero-features {
+  display: flex; align-items: center; gap: 0; flex-wrap: wrap; justify-content: center;
+  margin-top: 48px; padding: 14px 28px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 100px; animation: fadeUp 0.6s 0.4s ease both;
 }
-.hl-trusted-label {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
-  color: rgba(245,245,247,0.25);
+.hl-hf-item {
+  display: flex; align-items: center; gap: 7px; padding: 0 18px;
+  font-size: 12.5px; font-weight: 600; color: rgba(245,245,247,0.54);
+  white-space: nowrap;
 }
-.hl-trusted-logos {
-  display: flex; align-items: center; gap: 32px; flex-wrap: wrap; justify-content: center;
-}
-.hl-trusted-logo {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
-  color: rgba(245,245,247,0.18); font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
+.hl-hf-sep {
+  width: 1px; height: 14px; background: rgba(255,255,255,0.1); flex-shrink: 0;
 }
 
 /* ── Card ── */
@@ -693,7 +692,7 @@ def job_cards():
     return out
 
 def checklist():
-    items = ["ATS score in seconds","Bias detection & rewrite","16 resume templates","Cover letter generator","Live job search","AI Interview Coach"]
+    items = ["ATS score in seconds","Bias detection & rewrite","15 resume templates","Cover letter generator","Live job search","AI Interview Coach"]
     chk = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     return "".join('<div class="hl-check">'+chk+'<span>'+item+'</span></div>' for item in items)
 
@@ -761,19 +760,17 @@ def render_hero():
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       '</a></div>'
 
-      '<div class="hl-trusted">'
-      '<div class="hl-trusted-label">Trusted by candidates at</div>'
-      '<div class="hl-trusted-logos">'
-      '<span class="hl-trusted-logo">Google</span>'
-      '<span class="hl-trusted-logo" style="opacity:.12">&bull;</span>'
-      '<span class="hl-trusted-logo">Razorpay</span>'
-      '<span class="hl-trusted-logo" style="opacity:.12">&bull;</span>'
-      '<span class="hl-trusted-logo">Zepto</span>'
-      '<span class="hl-trusted-logo" style="opacity:.12">&bull;</span>'
-      '<span class="hl-trusted-logo">Anthropic</span>'
-      '<span class="hl-trusted-logo" style="opacity:.12">&bull;</span>'
-      '<span class="hl-trusted-logo">Swiggy</span>'
-      '</div></div>'
+      '<div class="hl-hero-features">'
+      '<div class="hl-hf-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>ATS Score in seconds</span></div>'
+      '<div class="hl-hf-sep"></div>'
+      '<div class="hl-hf-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Bias detection &amp; AI rewrite</span></div>'
+      '<div class="hl-hf-sep"></div>'
+      '<div class="hl-hf-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>15 ATS-certified templates</span></div>'
+      '<div class="hl-hf-sep"></div>'
+      '<div class="hl-hf-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>AI Interview Coach</span></div>'
+      '<div class="hl-hf-sep"></div>'
+      '<div class="hl-hf-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Live job search</span></div>'
+      '</div>'
 
       '<div class="hl-card">'
       '<div class="hl-card-bar">'
@@ -838,7 +835,7 @@ def render_hero():
       '</div></div></div>'
 
       '<div class="hl-stats">'
-      '<div class="hl-stat"><div class="hl-stat-n">16+</div><div class="hl-stat-l">Templates</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n">15+</div><div class="hl-stat-l">Templates</div></div>'
       '<div class="hl-stat"><div class="hl-stat-n">5</div><div class="hl-stat-l">Core Modules</div></div>'
       '<div class="hl-stat"><div class="hl-stat-n">AI</div><div class="hl-stat-l">LLM Powered</div></div>'
       '<div class="hl-stat"><div class="hl-stat-n">Free</div><div class="hl-stat-l">No Credit Card</div></div>'
@@ -865,7 +862,7 @@ def render_how():
       '<div class="hl-step"><span class="hl-step-n">03</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(191,90,242,0.1)"/><rect x="12" y="11" width="13" height="18" rx="2.5" stroke="#bf5af2" stroke-width="1.5" fill="none"/><rect x="19" y="16" width="14" height="18" rx="2.5" fill="rgba(191,90,242,0.08)" stroke="#bf5af2" stroke-width="1.5"/><path d="M22 21h8M22 24.5h8M22 28h5" stroke="#bf5af2" stroke-width="1.3" stroke-linecap="round"/><circle cx="32" cy="13" r="4" fill="#bf5af2"/><path d="M30.5 13l1 1 2-2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       '<div class="hl-step-title">Build or rewrite</div>'
-      '<div class="hl-step-desc">Use the AI rewriter or open the full Resume Builder. Choose from 16 templates, generate a cover letter, export to PDF or DOCX.</div></div>'
+      '<div class="hl-step-desc">Use the AI rewriter or open the full Resume Builder. Choose from 15 templates, generate a cover letter, export to PDF or DOCX.</div></div>'
 
       '<div class="hl-step"><span class="hl-step-n">04</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(255,159,10,0.1)"/><path d="M22 28c-3.31 0-6-2.69-6-6 0-4 3-8 6-9 3 1 6 5 6 9 0 3.31-2.69 6-6 6z" stroke="#ff9f0a" stroke-width="1.5" fill="none"/><circle cx="22" cy="22" r="2" fill="#ff9f0a"/><path d="M29 13l-2 2M15 13l2 2" stroke="#ff9f0a" stroke-width="1.4" stroke-linecap="round"/></svg>'
@@ -926,17 +923,17 @@ def render_story_bias():
 
 def render_story_builder():
     tmpl = tmpl_gallery()
-    p = pills(["16 Templates","DOCX + PDF Export","AI Cover Letter","Live Preview","ATS Single-Column"])
+    p = pills(["15 Templates","DOCX + PDF Export","AI Cover Letter","Live Preview","ATS Single-Column"])
     H('<div id="builder" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
       '<div>'
       '<div class="hl-story-num">Feature 03 &mdash; Resume Builder</div>'
       '<h2 class="hl-story-h">Build resumes that <span class="hl-green">look as good</span> as they parse</h2>'
-      '<p class="hl-story-p">Sixteen ATS-optimised templates &mdash; from understated minimal to executive prestige &mdash; all built on strict single-column structures that parse correctly in every major hiring platform.</p>'
+      '<p class="hl-story-p">Fifteen ATS-optimised templates &mdash; from understated minimal to executive prestige &mdash; all built on strict single-column structures that parse correctly in every major hiring platform.</p>'
       '<p class="hl-story-p">Export to DOCX (three ATS compliance levels) or PDF. One click generates a tailored cover letter for your target company, formatted and ready to send.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
       '<div><div class="hl-panel">'
-      '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5"/><rect x="11" y="7" width="10" height="14" rx="2" fill="rgba(48,209,88,.08)" stroke="#30d158" stroke-width="1.5"/><path d="M14 11h5M14 14h5M14 17h3" stroke="#30d158" stroke-width="1.3" stroke-linecap="round"/></svg>Template Gallery &mdash; 16 Designs</div>'
+      '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5"/><rect x="11" y="7" width="10" height="14" rx="2" fill="rgba(48,209,88,.08)" stroke="#30d158" stroke-width="1.5"/><path d="M14 11h5M14 14h5M14 17h3" stroke="#30d158" stroke-width="1.3" stroke-linecap="round"/></svg>Template Gallery &mdash; 15 Designs</div>'
       '<div class="hl-tmpl-grid">' + tmpl + '</div>'
       '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:space-between;gap:12px">'
       '<div><div style="font-size:12px;font-weight:700;color:#0a84ff">Modern &mdash; ATS Certified</div><div style="font-size:11px;color:rgba(245,245,247,0.34);margin-top:2px">Sora &middot; Navy headings &middot; Single-column</div></div>'
@@ -1001,7 +998,7 @@ def render_compare():
         ("6-Dimension Breakdown",        chk_y(),       chk_n(),          chk_n()),
         ("Gender Bias Detection",        chk_y(),       chk_n(),          chk_n()),
         ("AI Neutral Rewrite",           chk_y(),       chk_n(),          chk_n()),
-        ("16 Resume Templates",          chk_y(),       chk_p("3&ndash;5"),chk_p("Limited")),
+        ("15 Resume Templates",          chk_y(),       chk_p("3&ndash;5"),chk_p("Limited")),
         ("DOCX &amp; PDF Export",        chk_y(),       chk_p("PDF only"), chk_n()),
         ("AI Cover Letter Generator",    chk_y(),       chk_n(),          chk_n()),
         ("Live Job Search (4 platforms)",chk_y(),       chk_n(),          chk_p("1 only")),
@@ -1032,7 +1029,7 @@ def render_compare():
       '<div class="hl-divider">How we compare</div>'
       '<div style="text-align:center;margin-bottom:0">'
       '<h2 style="font-size:clamp(26px,3.5vw,42px);font-weight:800;letter-spacing:-1.8px;color:#f5f5f7;line-height:1.08">Everything in one place &mdash; <span style="color:#0a84ff">completely free</span></h2>'
-      '<p style="font-size:15px;color:rgba(245,245,247,0.44);margin-top:14px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7">No paywalls. No partial features. Hirelyzer gives you the complete career toolkit at zero cost.</p>'
+      '<div style="font-size:15px;color:rgba(245,245,247,0.6);margin-top:16px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7;text-align:center;">No paywalls. No partial features. Hirelyzer gives you the complete career toolkit at zero cost.</div>'
       '</div>'
       '<div class="hl-compare-wrap">' + header + body + '</div>'
       '</div></div>')
@@ -1047,7 +1044,7 @@ def render_highlights():
          "Bias Lexicon of 400+ Terms","A curated gender-coded word database flags masculine and feminine language patterns, then our AI rewrites every phrase to be impact-neutral and inclusive."),
         ("#30d158","rgba(48,209,88,0.1)",
          '<rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5" fill="none"/><rect x="11" y="7" width="10" height="14" rx="2" fill="none" stroke="#30d158" stroke-width="1.5"/>',
-         "16 ATS-Ready Templates","Every template is single-column, structured to parse in Greenhouse, Lever, Workday, and iCIMS. Export as DOCX (3 compliance tiers) or PDF in one click."),
+         "15 ATS-Ready Templates","Every template is single-column, structured to parse in Greenhouse, Lever, Workday, and iCIMS. Export as DOCX (3 compliance tiers) or PDF in one click."),
         ("#ff9f0a","rgba(255,159,10,0.1)",
          '<rect x="2" y="7" width="20" height="14" rx="2" stroke="#ff9f0a" stroke-width="1.5" fill="none"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M2 13h20" stroke="#ff9f0a" stroke-width="1.3" stroke-linecap="round"/>',
          "Live Job Intelligence","Pull live listings from LinkedIn, Naukri, Foundit, and Indeed with role, location, and remote filters — plus salary benchmarks and curated skill courses."),
