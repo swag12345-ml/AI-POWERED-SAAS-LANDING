@@ -165,6 +165,7 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-hero-sub {
   font-size: clamp(15px, 1.9vw, 19px); color: rgba(245,245,247,0.5); line-height: 1.7;
   max-width: 580px; margin: 26px auto 0; animation: fadeUp 0.6s 0.2s ease both;
+  text-align: center;
 }
 
 .hl-ctas {
@@ -293,6 +294,13 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-story-h .hl-green { color: #30d158; }
 .hl-story-h .hl-amber { color: #ff9f0a; }
 .hl-story-h .hl-purp  { color: #bf5af2; }
+/* ── Override Streamlit p reset inside HL sections ── */
+.hl-cta p, .hl-story p, .hl-story-alt p,
+.hl-hero p, .hl-compare p {
+  margin: 0 !important;
+  text-align: inherit !important;
+}
+
 .hl-story-p { font-size: 15px; color: rgba(245,245,247,0.48); line-height: 1.82; margin-bottom: 16px; }
 
 /* ── Pills ── */
@@ -407,7 +415,7 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-cta { margin: 0 0 120px; padding: 90px 56px; border-radius: 30px; background: #0a0a0b; border: 1px solid rgba(255,255,255,0.07); text-align: center; position: relative; overflow: hidden; }
 .hl-cta-glow { position: absolute; top: -300px; left: 50%; transform: translateX(-50%); width: 700px; height: 700px; background: radial-gradient(ellipse at center, rgba(10,132,255,0.1) 0%, rgba(48,209,88,0.04) 50%, transparent 70%); pointer-events: none; }
 .hl-cta-h { font-size: clamp(28px, 4.5vw, 54px); font-weight: 800; letter-spacing: -2.5px; color: #f5f5f7; line-height: 1.04; max-width: 680px; margin: 0 auto 22px; position: relative; z-index: 1; }
-.hl-cta-sub { font-size: 16px; color: rgba(245,245,247,0.48); margin-bottom: 40px; position: relative; z-index: 1; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.65; }
+.hl-cta-sub { font-size: 16px; color: rgba(245,245,247,0.48); margin: 0 auto 40px; position: relative; z-index: 1; max-width: 520px; line-height: 1.7; text-align: center; }
 .hl-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
 
 /* ── Checklist ── */
@@ -1096,7 +1104,9 @@ def render_cta():
       '<div id="contact" class="hl-cta"><div class="hl-cta-glow"></div>'
       '<div class="hl-eyebrow" style="margin:0 auto 28px"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#0a84ff"/></svg>Free to use &middot; No credit card required</div>'
       '<div class="hl-cta-h">Your next job starts with a better resume</div>'
-      '<p class="hl-cta-sub">Join professionals already using Hirelyzer to pass ATS filters, remove bias, and land more interviews.</p>'
+      '<div style="font-size:16px;color:rgba(245,245,247,0.48);text-align:center;max-width:520px;margin:0 auto 40px;line-height:1.72;position:relative;z-index:1;">'
+      'Join professionals already using Hirelyzer to pass ATS filters, remove bias, and land more interviews.'
+      '</div>'
       '<div class="hl-cta-btns">'
       '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p" style="font-size:16px;padding:16px 36px"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>Start for free</a>'
       '<a href="mailto:' + SUPPORT_EMAIL + '" class="hl-btn-g" style="font-size:16px;padding:16px 32px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>Contact us</a>'
@@ -1111,7 +1121,7 @@ def render_contact_section():
       '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#0a84ff" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="#0a84ff" stroke-width="1.5" fill="none"/></svg>'
       '</div>'
       '<h3>Get in touch</h3>'
-      '<p>Have questions, feedback, or want to report an issue? We typically respond within 24 hours.</p>'
+      '<div style="font-size:14px;color:rgba(245,245,247,0.44);line-height:1.7;margin-bottom:28px;text-align:center;">Have questions, feedback, or want to report an issue? We typically respond within 24 hours.</div>'
       '<a href="mailto:' + SUPPORT_EMAIL + '" class="hl-contact-email">'
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#4db3ff" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="#4db3ff" stroke-width="1.5" fill="none"/></svg>'
       + SUPPORT_EMAIL +
