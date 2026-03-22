@@ -217,8 +217,9 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-panel { background: #0f0f10; border-radius: 20px; border: 1px solid rgba(255,255,255,0.07); padding: 24px; overflow: hidden; position: relative; }
 
 .hl-tmpl-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
-.hl-tmpl { border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); background: #141416; padding: 10px; display: flex; flex-direction: column; gap: 5px; min-height: 90px; position: relative; }
-.hl-tmpl-act { border-color: #0a84ff; box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
+.hl-tmpl { border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); background: #141416; overflow: hidden; display: flex; flex-direction: column; min-height: 110px; position: relative; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+.hl-tmpl:hover { border-color: rgba(255,255,255,0.18); }
+.hl-tmpl-act { border-color: #0a84ff !important; box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
 .hl-tmpl-hdr { height: 5px; border-radius: 2px; }
 .hl-tmpl-ln  { height: 3px; border-radius: 1.5px; background: rgba(255,255,255,0.13); }
 .hl-tmpl-badge { position: absolute; bottom: 6px; left: 6px; right: 6px; background: rgba(10,132,255,0.15); border: 1px solid rgba(10,132,255,0.25); border-radius: 5px; padding: 3px 6px; font-size: 9px; font-weight: 700; color: #0a84ff; text-align: center; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -314,15 +315,167 @@ def score_bars():
     data = [("Communication","85%","#0a84ff"),("Technical","79%","#bf5af2"),("Confidence","88%","#30d158"),("Structure","74%","#ff9f0a")]
     return "".join('<div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(245,245,247,0.54);margin-bottom:5px"><span>'+dim+'</span><span style="color:'+col+';font-weight:600">'+sc+'</span></div><div style="height:3px;background:rgba(255,255,255,0.07);border-radius:2px;margin-bottom:8px;overflow:hidden"><div style="width:'+sc+';height:100%;background:'+col+';border-radius:2px"></div></div>' for dim,sc,col in data)
 
+def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, header_style="bar"):
+    """
+    Renders a tiny but faithful miniature of each resume template.
+    layout: "single" | "two-col" | "sidebar"
+    header_style: "bar" (coloured top bar) | "band" (dark full-width band) | "left-accent" (left border)
+    """
+    act = ' hl-tmpl-act' if active else ''
+    badge = ('<div class="hl-tmpl-badge">'+name+'</div>') if active else ''
+
+    # ── shared micro-line helper ──────────────────────────────────────────────
+    def ln(w, col="rgba(255,255,255,0.15)", h="2px", mt="3px"):
+        return f'<div style="height:{h};width:{w};background:{col};border-radius:1px;margin-top:{mt}"></div>'
+
+    def name_block(col):
+        return (f'<div style="height:4px;width:55%;background:{col};border-radius:1px;margin-bottom:2px"></div>'
+                f'<div style="height:2px;width:38%;background:{col};opacity:.5;border-radius:1px"></div>')
+
+    def section_lines(n=3, w_list=None, col="rgba(255,255,255,0.13)"):
+        ws = w_list or ["85%","70%","78%","60%","75%"]
+        return "".join(ln(ws[i % len(ws)], col) for i in range(n))
+
+    def section_label(col):
+        return f'<div style="height:2px;width:40%;background:{col};opacity:.7;border-radius:1px;margin-top:4px;margin-bottom:2px"></div>'
+
+    # ── layout compositions ───────────────────────────────────────────────────
+    body = ""
+
+    if layout == "sidebar":
+        sb = sidebar_bg or "#1e293b"
+        # Two-column: left sidebar (dark) + right main
+        body = (
+            f'<div style="display:flex;gap:0;flex:1;min-height:0">'
+            # sidebar
+            f'<div style="width:32%;background:{sb};padding:4px 3px;display:flex;flex-direction:column;gap:2px;">'
+            + (f'<div style="height:16px;width:16px;border-radius:50%;background:{accent};opacity:.7;margin:0 auto 3px"></div>' if not sidebar_bg else '')
+            + name_block(accent)
+            + ln("90%", "rgba(255,255,255,0.2)", "1px")
+            + section_label(accent)
+            + ln("80%", "rgba(255,255,255,0.18)")
+            + ln("65%", "rgba(255,255,255,0.18)")
+            + section_label(accent)
+            + ln("70%", "rgba(255,255,255,0.18)")
+            + ln("55%", "rgba(255,255,255,0.18)")
+            + f'</div>'
+            # main
+            f'<div style="flex:1;padding:4px 4px;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent)
+            + ln("90%") + ln("80%") + ln("70%")
+            + section_label(accent)
+            + ln("85%") + ln("75%") + ln("60%")
+            + f'</div>'
+            f'</div>'
+        )
+
+    elif layout == "two-col":
+        # Side-by-side equal columns
+        body = (
+            f'<div style="display:flex;gap:4px;flex:1;min-height:0;padding:2px;">'
+            f'<div style="flex:1;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent)
+            + ln("90%") + ln("75%") + ln("80%")
+            + section_label(accent)
+            + ln("85%") + ln("70%") + ln("65%")
+            + f'</div>'
+            f'<div style="flex:1;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent)
+            + ln("80%") + ln("90%") + ln("70%")
+            + section_label(accent)
+            + ln("75%") + ln("60%") + ln("80%")
+            + f'</div>'
+            f'</div>'
+        )
+
+    elif layout == "timeline":
+        # Single column with left-border timeline dots
+        body = (
+            f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent)
+            + (
+                f'<div style="display:flex;align-items:flex-start;gap:3px;margin-top:2px">'
+                f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
+                f'<div style="flex:1">' + ln("85%") + ln("70%") + '</div></div>'
+                f'<div style="margin-left:3px;width:1px;height:5px;background:{accent};opacity:.3;margin-left:5px"></div>'
+                f'<div style="display:flex;align-items:flex-start;gap:3px">'
+                f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
+                f'<div style="flex:1">' + ln("78%") + ln("62%") + '</div></div>'
+            )
+            + section_label(accent)
+            + ln("90%") + ln("75%")
+            + f'</div>'
+        )
+
+    else:  # single column
+        body = (
+            f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent)
+            + ln("90%") + ln("80%") + ln("72%")
+            + section_label(accent)
+            + ln("85%") + ln("68%") + ln("76%")
+            + section_label(accent)
+            + ln("70%") + ln("55%")
+            + f'</div>'
+        )
+
+    # ── header styles ─────────────────────────────────────────────────────────
+    if header_style == "band":
+        # Full-width dark band with name in it
+        hdr = (f'<div style="background:{accent};padding:4px 5px;border-radius:3px 3px 0 0;">'
+               f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.9);border-radius:1px;margin-bottom:1px"></div>'
+               f'<div style="height:2px;width:32%;background:rgba(255,255,255,0.55);border-radius:1px"></div></div>')
+    elif header_style == "left-accent":
+        # Centred name + left coloured border on the card itself
+        hdr = (f'<div style="border-left:2px solid {accent};padding:3px 5px;">'
+               f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:1px"></div>'
+               f'<div style="height:2px;width:30%;background:{accent};border-radius:1px"></div>'
+               f'<div style="margin-top:2px;display:flex;gap:3px">'
+               f'<div style="height:2px;width:22%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+               f'<div style="height:2px;width:18%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+               f'</div></div>')
+    elif header_style == "center":
+        # Centred, clean header
+        hdr = (f'<div style="text-align:center;padding:4px 3px;border-bottom:1px solid {accent};">'
+               f'<div style="height:3px;width:45%;background:rgba(255,255,255,0.75);border-radius:1px;margin:0 auto 2px"></div>'
+               f'<div style="height:2px;width:28%;background:{accent};border-radius:1px;margin:0 auto 2px"></div>'
+               f'<div style="display:flex;justify-content:center;gap:3px">'
+               f'<div style="height:1.5px;width:14%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+               f'<div style="height:1.5px;width:14%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+               f'</div></div>')
+    else:  # bar (thin top colour bar, name below)
+        if layout == "sidebar":
+            hdr = ""  # sidebar handles its own header inside the left column
+        else:
+            hdr = (f'<div style="height:4px;background:{accent};border-radius:3px 3px 0 0;margin-bottom:3px"></div>'
+                   f'<div style="padding:0 4px 2px;">'
+                   f'<div style="height:3px;width:52%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:2px"></div>'
+                   f'<div style="height:2px;width:34%;background:{accent};opacity:.6;border-radius:1px"></div>'
+                   f'<div style="display:flex;gap:3px;margin-top:2px">'
+                   f'<div style="height:1.5px;width:16%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
+                   f'<div style="height:1.5px;width:16%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
+                   f'</div></div>')
+
+    return (f'<div class="hl-tmpl{act}" style="display:flex;flex-direction:column;padding:0;overflow:hidden;">'
+            + hdr + body + badge +
+            f'</div>')
+
+
 def tmpl_gallery():
-    templates = [("Modern","#0a84ff"),("Minimal","#f5f5f7"),("Executive","#ff9f0a"),("Timeline","#30d158"),("Corporate","#1d4ed8"),("Creative","#bf5af2"),("Navy","#172554"),("Teal","#0d9488")]
-    widths = ["90%","60%","75%","85%","55%"]
+    # Each entry: (display_name, accent_colour, layout, header_style, sidebar_bg_or_None, active)
+    templates = [
+        ("Modern",    "#0a84ff", "center",   "center",       None,      True),   # Modern Minimal — centred header, blue
+        ("Classic",   "#f5f5f7", "single",   "left-accent",  None,      False),  # Classic Clean — B&W, left accent
+        ("Executive", "#ff9f0a", "single",   "band",         None,      False),  # Executive — amber band header
+        ("Timeline",  "#30d158", "timeline", "bar",          None,      False),  # Timeline — green dots
+        ("Corporate", "#1d4ed8", "sidebar",  "bar",          "#1a2744", False),  # Corporate Blue — dark blue sidebar
+        ("Creative",  "#bf5af2", "sidebar",  "bar",          "#1e1030", False),  # Creative Green (purple here)
+        ("Navy",      "#e2b96a", "sidebar",  "bar",          "#0d1833", False),  # Navy Prestige — gold on navy
+        ("Teal",      "#0d9488", "sidebar",  "bar",          "#0d2420", False),  # Teal Impact
+    ]
     out = ""
-    for i,(name,col) in enumerate(templates):
-        act = ' hl-tmpl-act' if i==0 else ''
-        badge = '<div class="hl-tmpl-badge">'+name+'</div>' if i==0 else ''
-        lines = "".join('<div class="hl-tmpl-ln" style="width:'+w+'"></div>' for w in widths)
-        out += '<div class="hl-tmpl'+act+'"><div class="hl-tmpl-hdr" style="background:'+col+'"></div>'+lines+badge+'</div>'
+    for name, accent, layout, hdr_style, sb_bg, active in templates:
+        out += _mini_resume(name, accent, layout, active, sb_bg, hdr_style)
     return out
 
 def job_cards():
