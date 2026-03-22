@@ -8,7 +8,6 @@ st.set_page_config(
 )
 
 APP_URL = "https://hirelyzer-career-based-saas-platform-rxzkspoyrtwfamm5ztkmcf.streamlit.app/"
-SUPPORT_EMAIL = "swagato_bmca2024@msit.edu.in"
 
 # ─── helpers ──────────────────────────────────────────────────────────────────
 def H(s):
@@ -45,41 +44,21 @@ section[data-testid="stAppViewContainer"] > div { padding: 0 !important; }
 .block-container { padding: 0 !important; max-width: 100% !important; }
 div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 
-/* ── Progress bar ── */
 #sp {
   position: fixed; top: 0; left: 0; right: 0; height: 2px; width: 0%;
-  background: linear-gradient(90deg, #0a84ff, #30d158, #bf5af2);
+  background: linear-gradient(90deg, #0a84ff, #30d158);
   z-index: 9999; transition: width 0.05s linear; pointer-events: none;
 }
 
-/* ── Announcement banner ── */
-.hl-banner {
-  background: linear-gradient(90deg, rgba(10,132,255,0.12), rgba(48,209,88,0.08), rgba(10,132,255,0.12));
-  border-bottom: 1px solid rgba(10,132,255,0.2);
-  padding: 10px 32px; text-align: center; position: relative; z-index: 901;
-  font-size: 12.5px; color: rgba(245,245,247,0.7); font-weight: 500;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  background-size: 200% 100%; animation: shimmerBg 4s linear infinite;
-}
-.hl-banner-badge {
-  padding: 2px 10px; border-radius: 100px; background: rgba(10,132,255,0.2);
-  border: 1px solid rgba(10,132,255,0.35); color: #0a84ff;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; flex-shrink: 0;
-}
-.hl-banner a { color: #0a84ff; font-weight: 600; text-decoration: none; }
-
-/* ── Nav ── */
 .hl-nav {
-  position: sticky; top: 0; left: 0; right: 0; z-index: 900;
-  height: 60px; display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.88);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  height: 58px; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.82);
   border-bottom: 1px solid rgba(255,255,255,0.07);
-  backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
-  transition: box-shadow 0.3s ease;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
 }
-.hl-nav.scrolled { box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
 .hl-nav-inner {
-  width: 100%; max-width: 1140px;
+  width: 100%; max-width: 1100px;
   display: flex; align-items: center; justify-content: space-between; padding: 0 32px;
 }
 .hl-logo {
@@ -87,54 +66,31 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   font-size: 14px; font-weight: 800; color: #f5f5f7; text-decoration: none; letter-spacing: 0.5px;
 }
 .hl-logo-icon {
-  width: 34px; height: 34px; border-radius: 10px;
-  background: linear-gradient(135deg, #0a84ff, #0055d4);
+  width: 32px; height: 32px; border-radius: 9px; background: #0a84ff;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(10,132,255,0.35);
 }
-.hl-nav-links { display: flex; align-items: center; gap: 30px; }
-.hl-nav-links a {
-  font-size: 13px; font-weight: 500; color: rgba(245,245,247,0.5); text-decoration: none;
-  transition: color 0.2s; position: relative;
-}
-.hl-nav-links a::after {
-  content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
-  background: #0a84ff; transform: scaleX(0); transition: transform 0.2s ease; transform-origin: left;
-}
-.hl-nav-links a:hover { color: #f5f5f7; }
-.hl-nav-links a:hover::after { transform: scaleX(1); }
-.hl-nav-right { display: flex; align-items: center; gap: 12px; }
+.hl-nav-links { display: flex; align-items: center; gap: 28px; }
+.hl-nav-links a { font-size: 13px; font-weight: 500; color: rgba(245,245,247,0.54); text-decoration: none; }
 .hl-nav-cta {
   display: inline-flex; align-items: center; gap: 7px;
-  padding: 8px 20px; border-radius: 100px;
-  background: linear-gradient(135deg, #0a84ff, #0065cc);
+  padding: 8px 20px; border-radius: 100px; background: #0a84ff;
   color: #fff; font-size: 13px; font-weight: 600; text-decoration: none;
-  box-shadow: 0 4px 16px rgba(10,132,255,0.3); transition: transform 0.15s, box-shadow 0.15s;
 }
-.hl-nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(10,132,255,0.4); }
 
-/* ── Hero ── */
 .hl-hero {
   min-height: 100vh; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  text-align: center; padding: 80px 32px 80px;
+  text-align: center; padding: 130px 32px 80px;
   position: relative; overflow: hidden; background: #000;
 }
 .hl-hero-glow {
-  position: absolute; top: -250px; left: 50%; transform: translateX(-50%);
-  width: 1100px; height: 800px;
-  background: radial-gradient(ellipse at center, rgba(10,132,255,0.13) 0%, rgba(48,209,88,0.04) 40%, transparent 68%);
+  position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 700px;
+  background: radial-gradient(ellipse at center, rgba(10,132,255,0.11) 0%, transparent 68%);
   pointer-events: none; z-index: 0;
 }
-.hl-hero-grid {
-  position: absolute; inset: 0; pointer-events: none; z-index: 0;
-  background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
-}
 .hl-hero-fade {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 240px;
+  position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
   background: linear-gradient(to bottom, transparent, #000);
   pointer-events: none; z-index: 0;
 }
@@ -151,20 +107,15 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 }
 
 .hl-h1 {
-  font-size: clamp(42px, 7vw, 88px); font-weight: 800; line-height: 1.02;
-  letter-spacing: -3.5px; color: #f5f5f7; max-width: 960px;
+  font-size: clamp(42px, 7vw, 84px); font-weight: 800; line-height: 1.03;
+  letter-spacing: -3px; color: #f5f5f7; max-width: 920px;
   animation: fadeUp 0.6s 0.1s ease both;
 }
 .hl-h1-blue { color: #0a84ff; font-style: normal; }
-.hl-h1-gradient {
-  background: linear-gradient(135deg, #0a84ff 0%, #30d158 60%, #0a84ff 100%);
-  background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; animation: gradientShift 4s ease infinite;
-}
 
 .hl-hero-sub {
-  font-size: clamp(15px, 1.9vw, 19px); color: rgba(245,245,247,0.5); line-height: 1.7;
-  max-width: 580px; margin: 26px auto 0; animation: fadeUp 0.6s 0.2s ease both;
+  font-size: clamp(15px, 1.9vw, 19px); color: rgba(245,245,247,0.54); line-height: 1.65;
+  max-width: 560px; margin: 24px auto 0; animation: fadeUp 0.6s 0.2s ease both;
 }
 
 .hl-ctas {
@@ -172,51 +123,29 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   animation: fadeUp 0.6s 0.3s ease both;
 }
 .hl-btn-p {
-  display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px;
-  border-radius: 100px; background: linear-gradient(135deg, #0a84ff, #0065cc); color: #fff;
+  display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px;
+  border-radius: 100px; background: #0a84ff; color: #fff;
   font-size: 15px; font-weight: 600; text-decoration: none; letter-spacing: -0.2px;
-  box-shadow: 0 8px 32px rgba(10,132,255,0.35); transition: transform 0.15s, box-shadow 0.15s;
 }
-.hl-btn-p:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(10,132,255,0.45); }
 .hl-btn-g {
   display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px;
-  border-radius: 100px; background: #141416; color: #f5f5f7;
+  border-radius: 100px; background: #1a1a1e; color: #f5f5f7;
   font-size: 15px; font-weight: 600; text-decoration: none; letter-spacing: -0.2px;
-  border: 1px solid rgba(255,255,255,0.12); transition: border-color 0.2s, background 0.2s;
-}
-.hl-btn-g:hover { border-color: rgba(255,255,255,0.25); background: #1e1e22; }
-
-/* ── Trusted by strip ── */
-.hl-trusted {
-  margin-top: 56px; animation: fadeUp 0.6s 0.4s ease both;
-  display: flex; flex-direction: column; align-items: center; gap: 14px;
-}
-.hl-trusted-label {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
-  color: rgba(245,245,247,0.25);
-}
-.hl-trusted-logos {
-  display: flex; align-items: center; gap: 32px; flex-wrap: wrap; justify-content: center;
-}
-.hl-trusted-logo {
-  font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
-  color: rgba(245,245,247,0.18); font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.13);
 }
 
-/* ── Card ── */
 .hl-card {
-  margin-top: 68px; width: 100%; max-width: 860px; background: #0d0d0f;
-  border-radius: 24px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden;
-  box-shadow: 0 60px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(10,132,255,0.06);
-  animation: fadeUp 0.6s 0.44s ease both;
+  margin-top: 72px; width: 100%; max-width: 840px; background: #0f0f10;
+  border-radius: 22px; border: 1px solid rgba(255,255,255,0.07); overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7); animation: fadeUp 0.6s 0.44s ease both;
 }
 .hl-card-bar {
-  height: 42px; background: #141416; border-bottom: 1px solid rgba(255,255,255,0.07);
+  height: 40px; background: #141416; border-bottom: 1px solid rgba(255,255,255,0.07);
   display: flex; align-items: center; padding: 0 16px; gap: 8px;
 }
 .hl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-.hl-card-tab { margin-left: 6px; font-size: 11px; color: rgba(245,245,247,0.3); font-family: 'JetBrains Mono', monospace; }
-.hl-card-body { padding: 26px; }
+.hl-card-tab { margin-left: 6px; font-size: 11px; color: rgba(245,245,247,0.34); font-family: 'JetBrains Mono', monospace; }
+.hl-card-body { padding: 24px; }
 .hl-card-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
 
 .hl-ptitle {
@@ -238,203 +167,97 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .wc-f { background: rgba(191,90,242,0.11);  color: #d07ef7; border: 1px solid rgba(191,90,242,0.2); }
 .wc-n { background: rgba(48,209,88,0.11);   color: #4cd964; border: 1px solid rgba(48,209,88,0.2); }
 
-/* ── Stats ── */
 .hl-stats {
-  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 32px 0 0;
+  display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 28px 0 0;
   animation: fadeUp 0.6s 0.55s ease both;
 }
 .hl-stat {
-  display: flex; flex-direction: column; align-items: center; padding: 20px 32px;
-  border-radius: 18px; background: #0d0d0f;
-  border: 1px solid rgba(255,255,255,0.07); min-width: 130px;
-  position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s;
+  display: flex; flex-direction: column; align-items: center; padding: 18px 28px;
+  border-radius: 18px; background: #0f0f10; border: 1px solid rgba(255,255,255,0.07); min-width: 128px;
 }
-.hl-stat::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(10,132,255,0.3), transparent);
-}
-.hl-stat-n { font-size: 28px; font-weight: 800; color: #f5f5f7; letter-spacing: -1.2px; }
-.hl-stat-l { font-size: 10px; color: rgba(245,245,247,0.3); font-weight: 600; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.9px; }
+.hl-stat-n { font-size: 26px; font-weight: 800; color: #f5f5f7; letter-spacing: -1px; }
+.hl-stat-l { font-size: 10px; color: rgba(245,245,247,0.34); font-weight: 600; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.9px; }
 
-/* ── Section ── */
-.hl-section { max-width: 1140px; margin: 0 auto; padding: 0 32px; }
+.hl-section { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
 
-/* ── Divider ── */
 .hl-divider {
   font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-  color: rgba(245,245,247,0.28); display: flex; align-items: center; gap: 18px; margin-bottom: 64px;
+  color: rgba(245,245,247,0.34); display: flex; align-items: center; gap: 18px; margin-bottom: 64px;
 }
 .hl-divider::before,
-.hl-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+.hl-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
 
-/* ── How it works ── */
 .hl-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
 .hl-step {
-  padding: 34px 26px; background: #0a0a0b;
-  border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden;
-  transition: background 0.2s, border-color 0.2s;
+  padding: 32px 24px; background: #0f0f10;
+  border: 1px solid rgba(255,255,255,0.07); position: relative; overflow: hidden;
 }
-.hl-step:hover { background: #0f0f11; border-color: rgba(255,255,255,0.1); }
 .hl-step:first-child { border-radius: 20px 0 0 20px; }
 .hl-step:last-child  { border-radius: 0 20px 20px 0; }
-.hl-step-n { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; color: rgba(245,245,247,0.28); margin-bottom: 16px; display: block; }
-.hl-step-icon { width: 46px; height: 46px; margin-bottom: 18px; }
-.hl-step-title { font-size: 14px; font-weight: 700; color: #f5f5f7; margin-bottom: 9px; letter-spacing: -0.3px; }
-.hl-step-desc  { font-size: 13px; color: rgba(245,245,247,0.48); line-height: 1.7; }
+.hl-step-n { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; color: rgba(245,245,247,0.34); margin-bottom: 16px; display: block; }
+.hl-step-icon { width: 44px; height: 44px; margin-bottom: 16px; }
+.hl-step-title { font-size: 14px; font-weight: 700; color: #f5f5f7; margin-bottom: 8px; letter-spacing: -0.3px; }
+.hl-step-desc  { font-size: 13px; color: rgba(245,245,247,0.54); line-height: 1.65; }
 
-/* ── Story sections ── */
-.hl-story     { padding: 110px 0; background: #000; }
-.hl-story-alt { padding: 110px 0; background: #050505; }
-.hl-story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: center; }
+.hl-story     { padding: 100px 0; background: #000; }
+.hl-story-alt { padding: 100px 0; background: #080808; }
+.hl-story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
 
-.hl-story-num { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; color: rgba(245,245,247,0.28); letter-spacing: 1px; margin-bottom: 18px; }
-.hl-story-h { font-size: clamp(28px, 3.8vw, 46px); font-weight: 800; letter-spacing: -2px; line-height: 1.07; color: #f5f5f7; margin-bottom: 22px; }
+.hl-story-num { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; color: rgba(245,245,247,0.34); letter-spacing: 1px; margin-bottom: 18px; }
+.hl-story-h { font-size: clamp(28px, 3.8vw, 44px); font-weight: 800; letter-spacing: -1.8px; line-height: 1.08; color: #f5f5f7; margin-bottom: 20px; }
 .hl-story-h .hl-blue  { color: #0a84ff; }
 .hl-story-h .hl-green { color: #30d158; }
 .hl-story-h .hl-amber { color: #ff9f0a; }
 .hl-story-h .hl-purp  { color: #bf5af2; }
-.hl-story-p { font-size: 15px; color: rgba(245,245,247,0.48); line-height: 1.82; margin-bottom: 16px; }
+.hl-story-p { font-size: 15px; color: rgba(245,245,247,0.54); line-height: 1.78; margin-bottom: 16px; }
 
-/* ── Pills ── */
-.hl-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.hl-pill { padding: 6px 14px; border-radius: 100px; font-size: 11.5px; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); color: rgba(245,245,247,0.48); background: #0a0a0b; transition: border-color 0.2s, color 0.2s; }
-.hl-pill:hover { border-color: rgba(255,255,255,0.2); color: rgba(245,245,247,0.7); }
+.hl-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.hl-pill { padding: 6px 14px; border-radius: 100px; font-size: 11.5px; font-weight: 600; border: 1px solid rgba(255,255,255,0.13); color: rgba(245,245,247,0.54); background: #0f0f10; }
 
-/* ── Panel ── */
-.hl-panel {
-  background: #0a0a0b; border-radius: 22px; border: 1px solid rgba(255,255,255,0.07);
-  padding: 26px; overflow: hidden; position: relative;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-}
-.hl-panel::before {
-  content: ''; position: absolute; top: 0; left: 20px; right: 20px; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-}
+.hl-panel { background: #0f0f10; border-radius: 20px; border: 1px solid rgba(255,255,255,0.07); padding: 24px; overflow: hidden; position: relative; }
 
-/* ── Templates ── */
 .hl-tmpl-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
-.hl-tmpl { border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); background: #141416; overflow: hidden; display: flex; flex-direction: column; min-height: 110px; position: relative; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; }
-.hl-tmpl:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.hl-tmpl { border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); background: #141416; overflow: hidden; display: flex; flex-direction: column; min-height: 110px; position: relative; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+.hl-tmpl:hover { border-color: rgba(255,255,255,0.18); }
 .hl-tmpl-act { border-color: #0a84ff !important; box-shadow: 0 0 0 2px rgba(10,132,255,0.2); }
 .hl-tmpl-hdr { height: 5px; border-radius: 2px; }
 .hl-tmpl-ln  { height: 3px; border-radius: 1.5px; background: rgba(255,255,255,0.13); }
 .hl-tmpl-badge { position: absolute; bottom: 6px; left: 6px; right: 6px; background: rgba(10,132,255,0.15); border: 1px solid rgba(10,132,255,0.25); border-radius: 5px; padding: 3px 6px; font-size: 9px; font-weight: 700; color: #0a84ff; text-align: center; letter-spacing: 0.5px; text-transform: uppercase; }
 
-/* ── Jobs ── */
-.hl-job { padding: 13px 15px; border-radius: 12px; background: #141416; border: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s; }
-.hl-job:hover { background: #181820; border-color: rgba(255,255,255,0.12); }
+.hl-job { padding: 13px 15px; border-radius: 12px; background: #141416; border: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .hl-job-logo { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
 .hl-job-title { font-size: 13px; font-weight: 600; color: #f5f5f7; }
 .hl-job-co    { font-size: 11px; color: rgba(245,245,247,0.34); margin-top: 2px; }
 .hl-job-badge { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
 
-/* ── Interview ── */
 .hl-radar-wrap { display: flex; flex-direction: column; align-items: center; }
+
 .hl-qa { margin-bottom: 14px; }
 .hl-q { font-size: 13px; font-weight: 600; color: #f5f5f7; margin-bottom: 7px; display: flex; gap: 8px; align-items: flex-start; }
-.hl-a { font-size: 12px; color: rgba(245,245,247,0.5); line-height: 1.68; padding-left: 22px; }
+.hl-a { font-size: 12px; color: rgba(245,245,247,0.54); line-height: 1.65; padding-left: 22px; }
 .hl-score-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; background: rgba(48,209,88,0.12); color: #30d158; border: 1px solid rgba(48,209,88,0.22); }
 
-/* ── Testimonials ── */
-.hl-testimonials { padding: 100px 0; background: #000; }
-.hl-testimonial-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 48px; }
-.hl-testimonial {
-  background: #0a0a0b; border-radius: 18px; border: 1px solid rgba(255,255,255,0.07);
-  padding: 26px; position: relative; overflow: hidden;
-}
-.hl-testimonial::before {
-  content: '\201C'; position: absolute; top: 12px; right: 20px;
-  font-size: 80px; color: rgba(10,132,255,0.08); font-family: Georgia, serif; line-height: 1;
-}
-.hl-t-stars { display: flex; gap: 3px; margin-bottom: 14px; }
-.hl-t-star { color: #ff9f0a; font-size: 12px; }
-.hl-t-text { font-size: 13.5px; color: rgba(245,245,247,0.62); line-height: 1.75; margin-bottom: 18px; }
-.hl-t-author { display: flex; align-items: center; gap: 10px; }
-.hl-t-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-.hl-t-name { font-size: 13px; font-weight: 600; color: #f5f5f7; }
-.hl-t-role { font-size: 11px; color: rgba(245,245,247,0.34); margin-top: 1px; }
-
-/* ── FAQ ── */
-.hl-faq { padding: 100px 0; background: #050505; }
-.hl-faq-list { max-width: 720px; margin: 48px auto 0; display: flex; flex-direction: column; gap: 2px; }
-.hl-faq-item {
-  background: #0a0a0b; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; overflow: hidden;
-  transition: border-color 0.2s;
-}
-.hl-faq-item:hover { border-color: rgba(255,255,255,0.12); }
-.hl-faq-q {
-  padding: 20px 24px; font-size: 14px; font-weight: 600; color: #f5f5f7;
-  display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 12px;
-}
-.hl-faq-q-icon { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; color: rgba(245,245,247,0.5); }
-.hl-faq-a { padding: 0 24px 20px; font-size: 14px; color: rgba(245,245,247,0.48); line-height: 1.78; }
-
-/* ── CTA ── */
-.hl-cta { margin: 0 0 120px; padding: 90px 56px; border-radius: 30px; background: #0a0a0b; border: 1px solid rgba(255,255,255,0.07); text-align: center; position: relative; overflow: hidden; }
-.hl-cta-glow { position: absolute; top: -300px; left: 50%; transform: translateX(-50%); width: 700px; height: 700px; background: radial-gradient(ellipse at center, rgba(10,132,255,0.1) 0%, rgba(48,209,88,0.04) 50%, transparent 70%); pointer-events: none; }
-.hl-cta-h { font-size: clamp(28px, 4.5vw, 54px); font-weight: 800; letter-spacing: -2.5px; color: #f5f5f7; line-height: 1.04; max-width: 680px; margin: 0 auto 22px; position: relative; z-index: 1; }
-.hl-cta-sub { font-size: 16px; color: rgba(245,245,247,0.48); margin-bottom: 40px; position: relative; z-index: 1; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.65; }
+.hl-cta { margin: 0 0 120px; padding: 80px 48px; border-radius: 28px; background: #0f0f10; border: 1px solid rgba(255,255,255,0.07); text-align: center; position: relative; overflow: hidden; }
+.hl-cta-glow { position: absolute; top: -300px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(ellipse at center, rgba(10,132,255,0.09) 0%, transparent 68%); pointer-events: none; }
+.hl-cta-h { font-size: clamp(28px, 4.5vw, 52px); font-weight: 800; letter-spacing: -2px; color: #f5f5f7; line-height: 1.06; max-width: 640px; margin: 0 auto 20px; position: relative; z-index: 1; }
+.hl-cta-sub { font-size: 16px; color: rgba(245,245,247,0.54); margin-bottom: 38px; position: relative; z-index: 1; }
 .hl-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
 
-/* ── Checklist ── */
-.hl-checks { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; margin-top: 38px; }
-.hl-check  { display: flex; align-items: center; gap: 7px; font-size: 13px; color: rgba(245,245,247,0.32); }
+.hl-checks { display: flex; justify-content: center; gap: 26px; flex-wrap: wrap; margin-top: 36px; }
+.hl-check  { display: flex; align-items: center; gap: 7px; font-size: 13px; color: rgba(245,245,247,0.34); }
 
-/* ── Contact section ── */
-.hl-contact-card {
-  background: #0a0a0b; border-radius: 22px; border: 1px solid rgba(255,255,255,0.07);
-  padding: 40px; max-width: 560px; margin: 0 auto 100px;
-  text-align: center;
-}
-.hl-contact-card h3 { font-size: 22px; font-weight: 800; color: #f5f5f7; letter-spacing: -0.8px; margin-bottom: 10px; }
-.hl-contact-card p { font-size: 14px; color: rgba(245,245,247,0.44); line-height: 1.7; margin-bottom: 28px; }
-.hl-contact-email {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 14px 28px; border-radius: 14px;
-  background: rgba(10,132,255,0.08); border: 1px solid rgba(10,132,255,0.22);
-  color: #4db3ff; font-size: 14px; font-weight: 600; text-decoration: none;
-  font-family: 'JetBrains Mono', monospace;
-  transition: background 0.2s, border-color 0.2s;
-  word-break: break-all;
-}
-.hl-contact-email:hover { background: rgba(10,132,255,0.14); border-color: rgba(10,132,255,0.4); }
-.hl-contact-meta { margin-top: 20px; font-size: 12px; color: rgba(245,245,247,0.26); }
-
-/* ── Footer ── */
-.hl-footer {
-  border-top: 1px solid rgba(255,255,255,0.06); padding: 44px 32px;
-  display: grid; grid-template-columns: 1fr auto; align-items: center;
-  max-width: 1140px; margin: 0 auto; gap: 20px;
-}
-.hl-footer-left { display: flex; flex-direction: column; gap: 10px; }
-.hl-footer-copy { font-size: 13px; font-weight: 600; color: rgba(245,245,247,0.28); }
-.hl-footer-tagline { font-size: 12px; color: rgba(245,245,247,0.18); }
+.hl-footer { border-top: 1px solid rgba(255,255,255,0.07); padding: 40px 32px; display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto; flex-wrap: wrap; gap: 18px; }
+.hl-footer-copy { font-size: 13px; font-weight: 600; color: rgba(245,245,247,0.34); }
 .hl-footer-links { display: flex; gap: 24px; }
-.hl-footer-links a { font-size: 13px; color: rgba(245,245,247,0.3); text-decoration: none; transition: color 0.2s; }
-.hl-footer-links a:hover { color: rgba(245,245,247,0.7); }
+.hl-footer-links a { font-size: 13px; color: rgba(245,245,247,0.34); text-decoration: none; }
 
-/* ── Keyframes ── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(28px); }
+  from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: none; }
 }
-@keyframes gradientShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-@keyframes shimmerBg {
-  0%   { background-position: 200% center; }
-  100% { background-position: -200% center; }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.5; }
-}
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
-  .hl-story-grid { grid-template-columns: 1fr; gap: 44px; }
+@media (max-width: 860px) {
+  .hl-story-grid { grid-template-columns: 1fr; gap: 40px; }
   .hl-steps { grid-template-columns: 1fr 1fr; }
   .hl-step:first-child  { border-radius: 20px 0 0 0; }
   .hl-step:nth-child(2) { border-radius: 0 20px 0 0; }
@@ -442,10 +265,8 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   .hl-step:last-child   { border-radius: 0 0 20px 0; }
   .hl-ctas { flex-direction: column; align-items: center; }
   .hl-nav-links { display: none; }
-  .hl-cta { padding: 52px 28px; }
+  .hl-cta { padding: 48px 24px; }
   .hl-card-grid { grid-template-columns: 1fr; }
-  .hl-testimonial-grid { grid-template-columns: 1fr; }
-  .hl-footer { grid-template-columns: 1fr; }
 }
 """)
 
@@ -495,9 +316,15 @@ def score_bars():
     return "".join('<div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(245,245,247,0.54);margin-bottom:5px"><span>'+dim+'</span><span style="color:'+col+';font-weight:600">'+sc+'</span></div><div style="height:3px;background:rgba(255,255,255,0.07);border-radius:2px;margin-bottom:8px;overflow:hidden"><div style="width:'+sc+';height:100%;background:'+col+';border-radius:2px"></div></div>' for dim,sc,col in data)
 
 def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, header_style="bar"):
+    """
+    Renders a tiny but faithful miniature of each resume template.
+    layout: "single" | "two-col" | "sidebar"
+    header_style: "bar" (coloured top bar) | "band" (dark full-width band) | "left-accent" (left border)
+    """
     act = ' hl-tmpl-act' if active else ''
     badge = ('<div class="hl-tmpl-badge">'+name+'</div>') if active else ''
 
+    # ── shared micro-line helper ──────────────────────────────────────────────
     def ln(w, col="rgba(255,255,255,0.15)", h="2px", mt="3px"):
         return f'<div style="height:{h};width:{w};background:{col};border-radius:1px;margin-top:{mt}"></div>'
 
@@ -512,63 +339,94 @@ def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, h
     def section_label(col):
         return f'<div style="height:2px;width:40%;background:{col};opacity:.7;border-radius:1px;margin-top:4px;margin-bottom:2px"></div>'
 
+    # ── layout compositions ───────────────────────────────────────────────────
     body = ""
+
     if layout == "sidebar":
         sb = sidebar_bg or "#1e293b"
+        # Two-column: left sidebar (dark) + right main
         body = (
             f'<div style="display:flex;gap:0;flex:1;min-height:0">'
+            # sidebar
             f'<div style="width:32%;background:{sb};padding:4px 3px;display:flex;flex-direction:column;gap:2px;">'
             + (f'<div style="height:16px;width:16px;border-radius:50%;background:{accent};opacity:.7;margin:0 auto 3px"></div>' if not sidebar_bg else '')
             + name_block(accent)
             + ln("90%", "rgba(255,255,255,0.2)", "1px")
-            + section_label(accent) + ln("80%", "rgba(255,255,255,0.18)") + ln("65%", "rgba(255,255,255,0.18)")
-            + section_label(accent) + ln("70%", "rgba(255,255,255,0.18)") + ln("55%", "rgba(255,255,255,0.18)")
+            + section_label(accent)
+            + ln("80%", "rgba(255,255,255,0.18)")
+            + ln("65%", "rgba(255,255,255,0.18)")
+            + section_label(accent)
+            + ln("70%", "rgba(255,255,255,0.18)")
+            + ln("55%", "rgba(255,255,255,0.18)")
             + f'</div>'
+            # main
             f'<div style="flex:1;padding:4px 4px;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent) + ln("90%") + ln("80%") + ln("70%")
-            + section_label(accent) + ln("85%") + ln("75%") + ln("60%")
-            + f'</div></div>'
+            + section_label(accent)
+            + ln("90%") + ln("80%") + ln("70%")
+            + section_label(accent)
+            + ln("85%") + ln("75%") + ln("60%")
+            + f'</div>'
+            f'</div>'
         )
+
     elif layout == "two-col":
+        # Side-by-side equal columns
         body = (
             f'<div style="display:flex;gap:4px;flex:1;min-height:0;padding:2px;">'
             f'<div style="flex:1;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent) + ln("90%") + ln("75%") + ln("80%")
-            + section_label(accent) + ln("85%") + ln("70%") + ln("65%")
+            + section_label(accent)
+            + ln("90%") + ln("75%") + ln("80%")
+            + section_label(accent)
+            + ln("85%") + ln("70%") + ln("65%")
             + f'</div>'
             f'<div style="flex:1;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent) + ln("80%") + ln("90%") + ln("70%")
-            + section_label(accent) + ln("75%") + ln("60%") + ln("80%")
-            + f'</div></div>'
+            + section_label(accent)
+            + ln("80%") + ln("90%") + ln("70%")
+            + section_label(accent)
+            + ln("75%") + ln("60%") + ln("80%")
+            + f'</div>'
+            f'</div>'
         )
+
     elif layout == "timeline":
+        # Single column with left-border timeline dots
         body = (
             f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
             + section_label(accent)
-            + (f'<div style="display:flex;align-items:flex-start;gap:3px;margin-top:2px">'
-               f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
-               f'<div style="flex:1">' + ln("85%") + ln("70%") + f'</div></div>'
-               f'<div style="margin-left:3px;width:1px;height:5px;background:{accent};opacity:.3;margin-left:5px"></div>'
-               f'<div style="display:flex;align-items:flex-start;gap:3px">'
-               f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
-               f'<div style="flex:1">' + ln("78%") + ln("62%") + f'</div></div>')
-            + section_label(accent) + ln("90%") + ln("75%")
-            + f'</div>'
-        )
-    else:
-        body = (
-            f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
-            + section_label(accent) + ln("90%") + ln("80%") + ln("72%")
-            + section_label(accent) + ln("85%") + ln("68%") + ln("76%")
-            + section_label(accent) + ln("70%") + ln("55%")
+            + (
+                f'<div style="display:flex;align-items:flex-start;gap:3px;margin-top:2px">'
+                f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
+                f'<div style="flex:1">' + ln("85%") + ln("70%") + '</div></div>'
+                f'<div style="margin-left:3px;width:1px;height:5px;background:{accent};opacity:.3;margin-left:5px"></div>'
+                f'<div style="display:flex;align-items:flex-start;gap:3px">'
+                f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
+                f'<div style="flex:1">' + ln("78%") + ln("62%") + '</div></div>'
+            )
+            + section_label(accent)
+            + ln("90%") + ln("75%")
             + f'</div>'
         )
 
+    else:  # single column
+        body = (
+            f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent)
+            + ln("90%") + ln("80%") + ln("72%")
+            + section_label(accent)
+            + ln("85%") + ln("68%") + ln("76%")
+            + section_label(accent)
+            + ln("70%") + ln("55%")
+            + f'</div>'
+        )
+
+    # ── header styles ─────────────────────────────────────────────────────────
     if header_style == "band":
+        # Full-width dark band with name in it
         hdr = (f'<div style="background:{accent};padding:4px 5px;border-radius:3px 3px 0 0;">'
                f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.9);border-radius:1px;margin-bottom:1px"></div>'
                f'<div style="height:2px;width:32%;background:rgba(255,255,255,0.55);border-radius:1px"></div></div>')
     elif header_style == "left-accent":
+        # Centred name + left coloured border on the card itself
         hdr = (f'<div style="border-left:2px solid {accent};padding:3px 5px;">'
                f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:1px"></div>'
                f'<div style="height:2px;width:30%;background:{accent};border-radius:1px"></div>'
@@ -577,6 +435,7 @@ def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, h
                f'<div style="height:2px;width:18%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
                f'</div></div>')
     elif header_style == "center":
+        # Centred, clean header
         hdr = (f'<div style="text-align:center;padding:4px 3px;border-bottom:1px solid {accent};">'
                f'<div style="height:3px;width:45%;background:rgba(255,255,255,0.75);border-radius:1px;margin:0 auto 2px"></div>'
                f'<div style="height:2px;width:28%;background:{accent};border-radius:1px;margin:0 auto 2px"></div>'
@@ -584,9 +443,9 @@ def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, h
                f'<div style="height:1.5px;width:14%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
                f'<div style="height:1.5px;width:14%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
                f'</div></div>')
-    else:
+    else:  # bar (thin top colour bar, name below)
         if layout == "sidebar":
-            hdr = ""
+            hdr = ""  # sidebar handles its own header inside the left column
         else:
             hdr = (f'<div style="height:4px;background:{accent};border-radius:3px 3px 0 0;margin-bottom:3px"></div>'
                    f'<div style="padding:0 4px 2px;">'
@@ -598,41 +457,29 @@ def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, h
                    f'</div></div>')
 
     return (f'<div class="hl-tmpl{act}" style="display:flex;flex-direction:column;padding:0;overflow:hidden;">'
-            + hdr + body + badge + f'</div>')
+            + hdr + body + badge +
+            f'</div>')
 
 
 def tmpl_gallery():
+    # Each entry: (display_name, accent_colour, layout, header_style, sidebar_bg_or_None, active)
     templates = [
-        ("Modern",    "#0a84ff", "center",   "center",       None,      True),
-        ("Classic",   "#f5f5f7", "single",   "left-accent",  None,      False),
-        ("Executive", "#ff9f0a", "single",   "band",         None,      False),
-        ("Timeline",  "#30d158", "timeline", "bar",          None,      False),
-        ("Corporate", "#1d4ed8", "sidebar",  "bar",          "#1a2744", False),
-        ("Slate",     "#64748b", "sidebar",  "bar",          "#1a1f2a", False),
-        ("Rose",      "#fb7185", "single",   "band",         None,      False),
-        ("Midnight",  "#a78bfa", "two-col",  "bar",          None,      False),
-        ("Sand",      "#d97706", "single",   "left-accent",  None,      False),
-        ("Forest",    "#059669", "sidebar",  "bar",          "#0a1f1a", False),
-        ("Crimson",   "#dc2626", "single",   "band",         None,      False),
-        ("Creative",  "#bf5af2", "sidebar",  "bar",          "#1e1030", False),
-        ("Navy",      "#e2b96a", "sidebar",  "bar",          "#0d1833", False),
-        ("Teal",      "#0d9488", "sidebar",  "bar",          "#0d2420", False),
-        ("Pro",       "#6366f1", "two-col",  "center",       None,      False),
-        ("Minimal",   "#94a3b8", "single",   "left-accent",  None,      False),
+        ("Modern",    "#0a84ff", "center",   "center",       None,      True),   # Modern Minimal — centred header, blue
+        ("Classic",   "#f5f5f7", "single",   "left-accent",  None,      False),  # Classic Clean — B&W, left accent
+        ("Executive", "#ff9f0a", "single",   "band",         None,      False),  # Executive — amber band header
+        ("Timeline",  "#30d158", "timeline", "bar",          None,      False),  # Timeline — green dots
+        ("Corporate", "#1d4ed8", "sidebar",  "bar",          "#1a2744", False),  # Corporate Blue — dark blue sidebar
+        ("Creative",  "#bf5af2", "sidebar",  "bar",          "#1e1030", False),  # Creative Green (purple here)
+        ("Navy",      "#e2b96a", "sidebar",  "bar",          "#0d1833", False),  # Navy Prestige — gold on navy
+        ("Teal",      "#0d9488", "sidebar",  "bar",          "#0d2420", False),  # Teal Impact
     ]
-    # Show only 8 in 4x2 grid for display
     out = ""
-    for name, accent, layout, hdr_style, sb_bg, active in templates[:8]:
+    for name, accent, layout, hdr_style, sb_bg, active in templates:
         out += _mini_resume(name, accent, layout, active, sb_bg, hdr_style)
     return out
 
 def job_cards():
-    jobs = [
-        ("SDE II","Google","Mountain View · Full-time","#4285f4","G",True),
-        ("ML Engineer","Anthropic","Remote · Full-time","#d97706","A",False),
-        ("Backend Dev","Razorpay","Bangalore · Full-time","#2563eb","R",False),
-        ("Data Analyst","Zepto","Mumbai · Hybrid","#7c3aed","Z",False)
-    ]
+    jobs = [("SDE II","Google","Mountain View · Full-time","#4285f4","G",True),("ML Engineer","Anthropic","Remote · Full-time","#d97706","A",False),("Backend Dev","Razorpay","Bangalore · Full-time","#2563eb","R",False),("Data Analyst","Zepto","Mumbai · Hybrid","#7c3aed","Z",False)]
     out = ""
     for title,co,meta,col,letter,featured in jobs:
         bb  = "rgba(10,132,255,0.12)" if featured else "rgba(255,255,255,0.05)"
@@ -642,27 +489,17 @@ def job_cards():
     return out
 
 def checklist():
-    items = ["ATS score in seconds","Bias detection & rewrite","16 resume templates","Cover letter generator","Live job search","AI Interview Coach"]
+    items = ["ATS score in seconds","Bias detection & rewrite","15 resume templates","Cover letter generator","Live job search","AI Interview Coach"]
     chk = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     return "".join('<div class="hl-check">'+chk+'<span>'+item+'</span></div>' for item in items)
 
 def pills(labels):
     return "".join('<span class="hl-pill">'+l+'</span>' for l in labels)
 
-def stars(n=5):
-    return "".join('<span class="hl-t-star">&#9733;</span>' for _ in range(n))
-
 # ─── SECTIONS ─────────────────────────────────────────────────────────────────
-def render_banner():
-    H('<div class="hl-banner">'
-      '<span class="hl-banner-badge">New</span>'
-      'AI Interview Coach is live &mdash; Practice with resume-based questions &amp; get instant scoring. '
-      '<a href="' + APP_URL + '" target="_blank">Try it free &rarr;</a>'
-      '</div>')
-
 def render_nav():
     H('<div id="sp"></div>'
-      '<div class="hl-nav" id="hl-nav"><div class="hl-nav-inner">'
+      '<div class="hl-nav"><div class="hl-nav-inner">'
       '<a href="#" class="hl-logo"><div class="hl-logo-icon">'
       '<svg width="18" height="18" viewBox="0 0 24 24" fill="none">'
       '<path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
@@ -672,14 +509,11 @@ def render_nav():
       '<a href="#analyzer">Analyzer</a>'
       '<a href="#builder">Builder</a>'
       '<a href="#career">Career Hub</a>'
-      '<a href="#testimonials">Reviews</a>'
       '<a href="#contact">Contact</a>'
       '</div>'
-      '<div class="hl-nav-right">'
       '<a href="' + APP_URL + '" target="_blank" class="hl-nav-cta">'
       '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
       'Open App</a>'
-      '</div>'
       '</div></div>')
 
 def render_hero():
@@ -687,14 +521,13 @@ def render_hero():
     bars = ats_bars()
     H('<div class="hl-hero">'
       '<div class="hl-hero-glow"></div>'
-      '<div class="hl-hero-grid"></div>'
       '<div class="hl-hero-fade"></div>'
       '<div class="hl-hero-content">'
       '<div class="hl-eyebrow">'
       '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#0a84ff"/></svg>'
       'AI-Powered Career Intelligence'
       '</div>'
-      '<h1 class="hl-h1">The last resume tool<br>you&rsquo;ll ever <em class="hl-h1-gradient">need</em></h1>'
+      '<h1 class="hl-h1">The last resume tool<br>you&rsquo;ll ever <em class="hl-h1-blue">need</em></h1>'
       '<p class="hl-hero-sub">Upload your resume. Hirelyzer instantly scores it for ATS compatibility, detects bias, rewrites with AI, and connects you to jobs &mdash; all in one place.</p>'
       '<div class="hl-ctas">'
       '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p">'
@@ -703,20 +536,6 @@ def render_hero():
       '<a href="#how" class="hl-btn-g">See how it works'
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       '</a></div>'
-
-      '<div class="hl-trusted">'
-      '<div class="hl-trusted-label">Trusted by candidates at</div>'
-      '<div class="hl-trusted-logos">'
-      '<span class="hl-trusted-logo">Google</span>'
-      '<span class="hl-trusted-logo" style="opacity:.12">&bull;</span>'
-      '<span class="hl-trusted-logo">Razorpay</span>'
-      '<span class="hl-trusted-logo" style="opacity:.12">&bull;</span>'
-      '<span class="hl-trusted-logo">Zepto</span>'
-      '<span class="hl-trusted-logo" style="opacity:.12">&bull;</span>'
-      '<span class="hl-trusted-logo">Anthropic</span>'
-      '<span class="hl-trusted-logo" style="opacity:.12">&bull;</span>'
-      '<span class="hl-trusted-logo">Swiggy</span>'
-      '</div></div>'
 
       '<div class="hl-card">'
       '<div class="hl-card-bar">'
@@ -765,7 +584,8 @@ def render_hero():
       '<div style="font-size:11px;color:rgba(245,245,247,0.54);line-height:1.6">'
       '<span style="text-decoration:line-through;opacity:.4">Aggressively drove</span>'
       ' &rarr; <span style="color:#30d158">Accelerated</span> delivery across 3 teams'
-      '</div></div></div>'
+      '</div></div>'
+      '</div>'
 
       # col 3 - Quick Actions
       '<div>'
@@ -778,16 +598,15 @@ def render_hero():
       '<div style="padding:9px 12px;background:rgba(255,69,58,0.07);border-radius:9px;border:1px solid rgba(255,69,58,0.18);display:flex;align-items:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#ff453a" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:12px;color:#ff453a;font-weight:600">Objective section outdated</span></div>'
       '</div></div>'
 
-      '</div></div></div>'
+      '</div></div></div>'  # close grid, card-body, card
 
       '<div class="hl-stats">'
-      '<div class="hl-stat"><div class="hl-stat-n">16+</div><div class="hl-stat-l">Templates</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n">15+</div><div class="hl-stat-l">Templates</div></div>'
       '<div class="hl-stat"><div class="hl-stat-n">5</div><div class="hl-stat-l">Core Modules</div></div>'
       '<div class="hl-stat"><div class="hl-stat-n">AI</div><div class="hl-stat-l">LLM Powered</div></div>'
       '<div class="hl-stat"><div class="hl-stat-n">Free</div><div class="hl-stat-l">No Credit Card</div></div>'
-      '<div class="hl-stat"><div class="hl-stat-n">10k+</div><div class="hl-stat-l">Resumes Scored</div></div>'
       '</div>'
-      '</div></div>')
+      '</div></div>')  # close hero-content, hero
 
 def render_how():
     H('<div id="how" style="padding:100px 0 60px;background:#000">'
@@ -808,7 +627,7 @@ def render_how():
       '<div class="hl-step"><span class="hl-step-n">03</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(191,90,242,0.1)"/><rect x="12" y="11" width="13" height="18" rx="2.5" stroke="#bf5af2" stroke-width="1.5" fill="none"/><rect x="19" y="16" width="14" height="18" rx="2.5" fill="rgba(191,90,242,0.08)" stroke="#bf5af2" stroke-width="1.5"/><path d="M22 21h8M22 24.5h8M22 28h5" stroke="#bf5af2" stroke-width="1.3" stroke-linecap="round"/><circle cx="32" cy="13" r="4" fill="#bf5af2"/><path d="M30.5 13l1 1 2-2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       '<div class="hl-step-title">Build or rewrite</div>'
-      '<div class="hl-step-desc">Use the AI rewriter or open the full Resume Builder. Choose from 16 templates, generate a cover letter, export to PDF or DOCX.</div></div>'
+      '<div class="hl-step-desc">Use the AI rewriter or open the full Resume Builder. Choose from 15 templates, generate a cover letter, export to PDF or DOCX.</div></div>'
 
       '<div class="hl-step"><span class="hl-step-n">04</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(255,159,10,0.1)"/><path d="M22 28c-3.31 0-6-2.69-6-6 0-4 3-8 6-9 3 1 6 5 6 9 0 3.31-2.69 6-6 6z" stroke="#ff9f0a" stroke-width="1.5" fill="none"/><circle cx="22" cy="22" r="2" fill="#ff9f0a"/><path d="M29 13l-2 2M15 13l2 2" stroke="#ff9f0a" stroke-width="1.4" stroke-linecap="round"/></svg>'
@@ -869,17 +688,17 @@ def render_story_bias():
 
 def render_story_builder():
     tmpl = tmpl_gallery()
-    p = pills(["16 Templates","DOCX + PDF Export","AI Cover Letter","Live Preview","ATS Single-Column"])
+    p = pills(["15 Templates","DOCX + PDF Export","AI Cover Letter","Live Preview","ATS Single-Column"])
     H('<div id="builder" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
       '<div>'
       '<div class="hl-story-num">Feature 03 &mdash; Resume Builder</div>'
       '<h2 class="hl-story-h">Build resumes that <span class="hl-green">look as good</span> as they parse</h2>'
-      '<p class="hl-story-p">Sixteen ATS-optimised templates &mdash; from understated minimal to executive prestige &mdash; all built on strict single-column structures that parse correctly in every major hiring platform.</p>'
+      '<p class="hl-story-p">Fifteen ATS-optimised templates &mdash; from understated minimal to executive prestige &mdash; all built on strict single-column structures that parse correctly in every major hiring platform.</p>'
       '<p class="hl-story-p">Export to DOCX (three ATS compliance levels) or PDF. One click generates a tailored cover letter for your target company, formatted and ready to send.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
       '<div><div class="hl-panel">'
-      '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5"/><rect x="11" y="7" width="10" height="14" rx="2" fill="rgba(48,209,88,.08)" stroke="#30d158" stroke-width="1.5"/><path d="M14 11h5M14 14h5M14 17h3" stroke="#30d158" stroke-width="1.3" stroke-linecap="round"/></svg>Template Gallery &mdash; 16 Designs</div>'
+      '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5"/><rect x="11" y="7" width="10" height="14" rx="2" fill="rgba(48,209,88,.08)" stroke="#30d158" stroke-width="1.5"/><path d="M14 11h5M14 14h5M14 17h3" stroke="#30d158" stroke-width="1.3" stroke-linecap="round"/></svg>Template Gallery &mdash; 15 Designs</div>'
       '<div class="hl-tmpl-grid">' + tmpl + '</div>'
       '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:space-between;gap:12px">'
       '<div><div style="font-size:12px;font-weight:700;color:#0a84ff">Modern &mdash; ATS Certified</div><div style="font-size:11px;color:rgba(245,245,247,0.34);margin-top:2px">Sora &middot; Navy headings &middot; Single-column</div></div>'
@@ -938,55 +757,6 @@ def render_story_interview():
       '</div></div>'
       '</div></div></div>')
 
-def render_testimonials():
-    testimonials = [
-        ("Got my Google SDE II offer after 3 weeks on Hirelyzer. The ATS analyzer caught formatting issues I'd had for months. The interview coach sessions were game-changing.", "Aryan Mehta", "SDE II @ Google", "#4285f4", "AM", 5),
-        ("The bias detection feature is something I never knew I needed. Rewrote my resume with neutral language and got 3x more callbacks in the same week.", "Priya Sharma", "ML Engineer @ Razorpay", "#2563eb", "PS", 5),
-        ("Clean, fast, and incredibly smart. The template gallery alone saved me hours. DOCX export with ATS compliance levels is a feature no other tool offers.", "Rahul Das", "Backend Dev @ Zepto", "#7c3aed", "RD", 5),
-    ]
-    tcs = "".join(
-        '<div class="hl-testimonial">'
-        '<div class="hl-t-stars">' + stars(n) + '</div>'
-        '<div class="hl-t-text">' + text + '</div>'
-        '<div class="hl-t-author">'
-        '<div class="hl-t-avatar" style="background:' + col + '22;color:' + col + '">' + init + '</div>'
-        '<div><div class="hl-t-name">' + name + '</div><div class="hl-t-role">' + role + '</div></div>'
-        '</div></div>'
-        for text, name, role, col, init, n in testimonials
-    )
-    H('<div id="testimonials" class="hl-testimonials">'
-      '<div class="hl-section">'
-      '<div class="hl-divider">What people say</div>'
-      '<div style="text-align:center;margin-bottom:16px">'
-      '<h2 style="font-size:clamp(26px,3.5vw,40px);font-weight:800;letter-spacing:-1.6px;color:#f5f5f7">Loved by professionals across India</h2>'
-      '</div>'
-      '<div class="hl-testimonial-grid">' + tcs + '</div>'
-      '</div></div>')
-
-def render_faq():
-    faqs = [
-        ("Is Hirelyzer completely free?", "Yes &mdash; the core features including ATS scoring, bias detection, and job search are fully free. No credit card required to get started."),
-        ("What file formats does Hirelyzer accept?", "PDF is the primary input format. Our parser handles standard, multi-column, and OCR-scanned PDFs. Export to DOCX or PDF is available from the Resume Builder."),
-        ("How accurate is the ATS scoring?", "Our scoring engine replicates how real ATS systems parse resumes across six dimensions. We test regularly against major platforms like Greenhouse, Lever, and Workday."),
-        ("Is my resume data private?", "Your resume is processed securely and never shared with third parties or recruiters. You control your data entirely."),
-        ("How does the AI Interview Coach work?", "Upload your resume and Hirelyzer extracts key experiences to generate tailored questions. You answer in free text and our AI scores you across five competency dimensions in real-time."),
-    ]
-    items = "".join(
-        '<div class="hl-faq-item">'
-        '<div class="hl-faq-q">' + q + '<div class="hl-faq-q-icon">+</div></div>'
-        '<div class="hl-faq-a">' + a + '</div>'
-        '</div>'
-        for q, a in faqs
-    )
-    H('<div class="hl-faq">'
-      '<div class="hl-section">'
-      '<div style="text-align:center;margin-bottom:0">'
-      '<div class="hl-divider">FAQ</div>'
-      '<h2 style="font-size:clamp(24px,3vw,38px);font-weight:800;letter-spacing:-1.5px;color:#f5f5f7;margin-bottom:0">Frequently asked questions</h2>'
-      '</div>'
-      '<div class="hl-faq-list">' + items + '</div>'
-      '</div></div>')
-
 def render_cta():
     chk = checklist()
     H('<div class="hl-section">'
@@ -996,79 +766,32 @@ def render_cta():
       '<p class="hl-cta-sub">Join professionals already using Hirelyzer to pass ATS filters, remove bias, and land more interviews.</p>'
       '<div class="hl-cta-btns">'
       '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p" style="font-size:16px;padding:16px 36px"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>Start for free</a>'
-      '<a href="mailto:' + SUPPORT_EMAIL + '" class="hl-btn-g" style="font-size:16px;padding:16px 32px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>Contact us</a>'
+      '<a href="mailto:support@hirelyzer.com" class="hl-btn-g" style="font-size:16px;padding:16px 32px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>Contact us</a>'
       '</div>'
       '<div class="hl-checks">' + chk + '</div>'
-      '</div></div>')
-
-def render_contact_section():
-    H('<div class="hl-section">'
-      '<div class="hl-contact-card">'
-      '<div style="width:48px;height:48px;border-radius:14px;background:rgba(10,132,255,0.1);border:1px solid rgba(10,132,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">'
-      '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#0a84ff" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="#0a84ff" stroke-width="1.5" fill="none"/></svg>'
-      '</div>'
-      '<h3>Get in touch</h3>'
-      '<p>Have questions, feedback, or want to report an issue? We typically respond within 24 hours.</p>'
-      '<a href="mailto:' + SUPPORT_EMAIL + '" class="hl-contact-email">'
-      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#4db3ff" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="#4db3ff" stroke-width="1.5" fill="none"/></svg>'
-      + SUPPORT_EMAIL +
-      '</a>'
-      '<div class="hl-contact-meta">Support &middot; Feedback &middot; Bug reports &middot; Partnership enquiries</div>'
       '</div></div>')
 
 def render_footer():
     H('<footer style="background:#000">'
       '<div class="hl-footer">'
-      '<div class="hl-footer-left">'
-      '<div style="display:flex;align-items:center;gap:9px;margin-bottom:2px">'
-      '<div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0a84ff,#0055d4);display:flex;align-items:center;justify-content:center">'
-      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-      '</div>'
-      '<span style="font-size:13px;font-weight:800;color:rgba(245,245,247,0.7);letter-spacing:0.5px">HIRELYZER</span>'
-      '</div>'
       '<div class="hl-footer-copy">&copy; 2025 HIRELYZER &middot; Intelligent Career Platform</div>'
-      '<div class="hl-footer-tagline">Built for the next generation of job seekers</div>'
-      '</div>'
       '<div class="hl-footer-links">'
       '<a href="#">Privacy</a>'
       '<a href="#">Terms</a>'
-      '<a href="mailto:' + SUPPORT_EMAIL + '">' + SUPPORT_EMAIL + '</a>'
+      '<a href="mailto:support@hirelyzer.com">support@hirelyzer.com</a>'
       '<a href="' + APP_URL + '" target="_blank">Open App &rarr;</a>'
       '</div></div></footer>')
 
 def render_js():
     H('<script>'
       '(function(){'
-      # Scroll progress bar
       'var sp=document.getElementById("sp");'
       'function u(){if(!sp)return;var p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;sp.style.width=Math.min(p,100)+"%";}'
       'window.addEventListener("scroll",u,{passive:true});'
-      # Nav scroll shadow
-      'var nav=document.getElementById("hl-nav");'
-      'window.addEventListener("scroll",function(){if(nav){nav.classList.toggle("scrolled",window.scrollY>20);}},{passive:true});'
-      # Smooth scroll for anchor links
-      'document.querySelectorAll("a[href^=\'#\']").forEach(function(a){'
-      'a.addEventListener("click",function(e){'
-      'var t=document.querySelector(this.getAttribute("href"));'
-      'if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth",block:"start"});}'
-      '});});'
-      # FAQ accordion
-      'document.querySelectorAll(".hl-faq-q").forEach(function(q){'
-      'q.addEventListener("click",function(){'
-      'var ans=this.nextElementSibling;'
-      'var icon=this.querySelector(".hl-faq-q-icon");'
-      'var open=ans.style.display==="block";'
-      'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
-      'document.querySelectorAll(".hl-faq-q-icon").forEach(function(i){i.textContent="+";});'
-      'if(!open){ans.style.display="block";icon.textContent="\u2212";}'
-      '});});'
-      # Init all FAQ closed
-      'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
       '})();'
       '</script>')
 
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
-render_banner()
 render_nav()
 render_hero()
 render_how()
@@ -1077,9 +800,6 @@ render_story_bias()
 render_story_builder()
 render_story_career()
 render_story_interview()
-render_testimonials()
-render_faq()
 render_cta()
-render_contact_section()
 render_footer()
 render_js()
