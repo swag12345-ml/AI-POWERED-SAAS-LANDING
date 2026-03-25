@@ -454,6 +454,136 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-footer-links a { font-size: 13px; color: rgba(245,245,247,0.3); text-decoration: none; transition: color 0.2s; }
 .hl-footer-links a:hover { color: rgba(245,245,247,0.7); }
 
+/* ── Sticky CTA bar ── */
+.hl-sticky-cta {
+  position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%);
+  z-index: 950; display: flex; align-items: center; gap: 14px;
+  padding: 12px 20px 12px 16px;
+  background: rgba(10,10,12,0.92); border: 1px solid rgba(10,132,255,0.25);
+  border-radius: 100px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(10,132,255,0.1);
+  transition: bottom 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  white-space: nowrap;
+}
+.hl-sticky-cta.visible { bottom: 28px; }
+.hl-sticky-cta-label {
+  font-size: 13px; font-weight: 600; color: rgba(245,245,247,0.6); padding: 0 4px;
+}
+.hl-sticky-cta-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 22px; border-radius: 100px;
+  background: linear-gradient(135deg,#0a84ff,#0065cc);
+  color: #fff; font-size: 13px; font-weight: 600; text-decoration: none;
+  box-shadow: 0 4px 16px rgba(10,132,255,0.3); transition: transform 0.15s, box-shadow 0.15s;
+}
+.hl-sticky-cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(10,132,255,0.45); }
+.hl-sticky-close {
+  width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.06);
+  border: none; cursor: pointer; color: rgba(245,245,247,0.4); font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s; flex-shrink: 0;
+}
+.hl-sticky-close:hover { background: rgba(255,255,255,0.12); color: rgba(245,245,247,0.7); }
+
+/* ── Nav active link ── */
+.hl-nav-links a.hl-nav-active { color: #f5f5f7; }
+.hl-nav-links a.hl-nav-active::after { transform: scaleX(1); }
+
+/* ── Scroll-reveal ── */
+.hl-reveal {
+  opacity: 0; transform: translateY(36px);
+  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.hl-reveal.in-view { opacity: 1; transform: none; }
+.hl-reveal-left {
+  opacity: 0; transform: translateX(-36px);
+  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.hl-reveal-left.in-view { opacity: 1; transform: none; }
+.hl-reveal-right {
+  opacity: 0; transform: translateX(36px);
+  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+.hl-reveal-right.in-view { opacity: 1; transform: none; }
+
+/* ── Stat counter ── */
+.hl-stat-n[data-target] { transition: none; }
+
+/* ── Radar draw animation ── */
+.hl-radar-poly {
+  stroke-dasharray: 600; stroke-dashoffset: 600;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1);
+}
+.hl-radar-poly.drawn { stroke-dashoffset: 0; }
+.hl-radar-dot {
+  opacity: 0; transform: scale(0);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.hl-radar-dot.drawn { opacity: 1; transform: scale(1); }
+
+/* ── Interview sampler ── */
+.hl-sampler {
+  margin-top: 32px; padding: 22px; border-radius: 18px;
+  background: rgba(10,132,255,0.04); border: 1px solid rgba(10,132,255,0.18);
+  position: relative;
+}
+.hl-sampler-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: #0a84ff; margin-bottom: 12px; display: flex; align-items: center; gap: 7px;
+}
+.hl-sampler-q {
+  font-size: 13.5px; font-weight: 600; color: #f5f5f7; margin-bottom: 12px; line-height: 1.55;
+  min-height: 42px;
+}
+.hl-sampler-input {
+  width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 10px 14px; color: #f5f5f7; font-size: 13px;
+  font-family: 'Sora', sans-serif; resize: none; outline: none;
+  transition: border-color 0.2s;
+  min-height: 72px;
+}
+.hl-sampler-input:focus { border-color: rgba(10,132,255,0.4); }
+.hl-sampler-input::placeholder { color: rgba(245,245,247,0.25); }
+.hl-sampler-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 10px; }
+.hl-sampler-btn {
+  display: inline-flex; align-items: center; gap: 7px; padding: 9px 20px;
+  border-radius: 100px; background: linear-gradient(135deg,#0a84ff,#0065cc);
+  color: #fff; font-size: 12px; font-weight: 600; border: none; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s; font-family: 'Sora', sans-serif;
+  box-shadow: 0 4px 14px rgba(10,132,255,0.3);
+}
+.hl-sampler-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,132,255,0.4); }
+.hl-sampler-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.hl-sampler-skip {
+  font-size: 12px; color: rgba(245,245,247,0.32); background: none; border: none;
+  cursor: pointer; font-family: 'Sora', sans-serif; transition: color 0.2s; padding: 0;
+}
+.hl-sampler-skip:hover { color: rgba(245,245,247,0.6); }
+.hl-sampler-result {
+  margin-top: 14px; padding: 14px; border-radius: 12px;
+  background: rgba(48,209,88,0.06); border: 1px solid rgba(48,209,88,0.2);
+  display: none;
+}
+.hl-sampler-result.show { display: block; }
+.hl-sampler-result-score {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.hl-sampler-result-num {
+  font-size: 28px; font-weight: 800; color: #30d158; letter-spacing: -1px; line-height: 1;
+}
+.hl-sampler-result-label { font-size: 11px; color: rgba(245,245,247,0.4); line-height: 1.5; }
+.hl-sampler-feedback { font-size: 12.5px; color: rgba(245,245,247,0.55); line-height: 1.72; }
+.hl-sampler-loading {
+  display: none; align-items: center; gap: 10px; margin-top: 14px;
+  font-size: 12px; color: rgba(245,245,247,0.4);
+}
+.hl-sampler-loading.show { display: flex; }
+.hl-sampler-spinner {
+  width: 16px; height: 16px; border: 2px solid rgba(10,132,255,0.2);
+  border-top-color: #0a84ff; border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ── Keyframes ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(28px); }
@@ -521,7 +651,7 @@ def ats_ring(score=78):
 def radar_svg():
     cats   = ["Communication","Technical","Confidence","Structure","Examples"]
     scores = [0.82, 0.74, 0.88, 0.70, 0.78]
-    cx = cy = 95; R = 65; n = len(cats)
+    cx = cy = 110; R = 62; n = len(cats)
     def pt(i, frac):
         angle = math.pi/2 + 2*math.pi*i/n
         return cx + R*frac*math.cos(angle), cy - R*frac*math.sin(angle)
@@ -531,9 +661,9 @@ def radar_svg():
         grid += '<polygon points="'+pts+'" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>'
     axes = "".join('<line x1="'+str(cx)+'" y1="'+str(cy)+'" x2="'+str(round(pt(i,1)[0],1))+'" y2="'+str(round(pt(i,1)[1],1))+'" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>' for i in range(n))
     poly = " ".join(str(round(pt(i,scores[i])[0],1))+","+str(round(pt(i,scores[i])[1],1)) for i in range(n))
-    dots = "".join('<circle cx="'+str(round(pt(i,scores[i])[0],1))+'" cy="'+str(round(pt(i,scores[i])[1],1))+'" r="3.5" fill="#0a84ff"/>' for i in range(n))
-    labels = "".join('<text x="'+str(round(pt(i,1.27)[0],1))+'" y="'+str(round(pt(i,1.27)[1],1))+'" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,245,247,0.4)" font-size="8.5" font-family="Sora,sans-serif" font-weight="500">'+cats[i]+'</text>' for i in range(n))
-    return ('<svg width="190" height="190" viewBox="0 0 190 190" fill="none">'+grid+axes+'<polygon points="'+poly+'" fill="rgba(10,132,255,0.14)" stroke="#0a84ff" stroke-width="1.5"/>'+dots+labels+'</svg>')
+    dots = "".join('<circle class="hl-radar-dot" cx="'+str(round(pt(i,scores[i])[0],1))+'" cy="'+str(round(pt(i,scores[i])[1],1))+'" r="3.5" fill="#0a84ff"/>' for i in range(n))
+    labels = "".join('<text x="'+str(round(pt(i,1.30)[0],1))+'" y="'+str(round(pt(i,1.30)[1],1))+'" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,245,247,0.4)" font-size="8.5" font-family="Sora,sans-serif" font-weight="500">'+cats[i]+'</text>' for i in range(n))
+    return ('<svg width="220" height="220" viewBox="0 0 220 220" fill="none">'+grid+axes+'<polygon id="hl-radar-poly" class="hl-radar-poly" points="'+poly+'" fill="rgba(10,132,255,0.14)" stroke="#0a84ff" stroke-width="1.5"/>'+dots+labels+'</svg>')
 
 # ─── fragment builders ────────────────────────────────────────────────────────
 def ats_bars():
@@ -709,7 +839,17 @@ def chk_p(t):
     return '<span class="hl-chk-p">' + t + '</span>'
 
 # ─── SECTIONS ─────────────────────────────────────────────────────────────────
-def render_banner():
+def render_sticky_cta():
+    H('<div id="hl-sticky-cta" class="hl-sticky-cta">'
+      '<span class="hl-sticky-cta-label">Free &mdash; no sign-up required</span>'
+      '<a href="' + APP_URL + '" target="_blank" class="hl-sticky-cta-btn">'
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
+      'Try Hirelyzer free'
+      '</a>'
+      '<button class="hl-sticky-close" id="hl-sticky-close" aria-label="Dismiss">&times;</button>'
+      '</div>')
+
+
     H('<div class="hl-banner">'
       '<span class="hl-banner-badge">New</span>'
       'AI Interview Coach is live &mdash; Practice with resume-based questions &amp; get instant scoring. '
@@ -876,14 +1016,14 @@ def render_story_ats():
     bars = ats_bars()
     p = pills(["ATS Score","6-Dimension Breakdown","Keyword Gap","Grammar Check","Downloadable Report"])
     H('<div id="analyzer" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
-      '<div>'
+      '<div class="hl-reveal hl-reveal-left">'
       '<div class="hl-story-num">Feature 01 &mdash; Resume Analyzer</div>'
       '<h2 class="hl-story-h">Your resume, <span class="hl-blue">scored like a machine</span> reads it</h2>'
       '<p class="hl-story-p">Most resumes never reach a human. Applicant Tracking Systems silently filter them on format, missing keywords, or structural issues. Hirelyzer&rsquo;s analyzer replicates how ATS parsers actually read your document &mdash; not just a surface keyword match.</p>'
       '<p class="hl-story-p">You get a score across six dimensions, a prioritised fix list, grammar and readability signals, and a full keyword-gap report mapped to the roles you care about.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div><div class="hl-panel">'
+      '<div class="hl-reveal hl-reveal-right"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" fill="#30d158"/></svg>ATS Analysis Report</div>'
       '<div style="display:flex;align-items:center;gap:18px;margin-bottom:22px">'
       + ring +
@@ -899,14 +1039,14 @@ def render_story_ats():
 def render_story_bias():
     p = pills(["Gender-coded Detection","AI Neutral Rewrite","Lexicon of 400+ Words","One-click Apply"])
     H('<div class="hl-story-alt"><div class="hl-section"><div class="hl-story-grid">'
-      '<div style="order:2">'
+      '<div style="order:2" class="hl-reveal hl-reveal-right">'
       '<div class="hl-story-num">Feature 02 &mdash; Bias Detection</div>'
       '<h2 class="hl-story-h">Bias-free language that <span class="hl-purp">opens every door</span></h2>'
       '<p class="hl-story-p">Gender-coded words can unconsciously signal culture fit to recruiters. Hirelyzer scans every verb, adjective, and phrase against a curated bias lexicon of 400+ terms.</p>'
       '<p class="hl-story-p">The AI rewriter suggests impact-neutral alternatives, preserving your achievements while broadening appeal across hiring contexts.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div style="order:1"><div class="hl-panel">'
+      '<div style="order:1" class="hl-reveal hl-reveal-left"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" fill="#bf5af2"/></svg>Bias Analysis Report</div>'
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">'
       '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.15)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:6px">Masculine</div><div style="font-size:26px;font-weight:800;color:#4db3ff">8</div><div style="font-size:11px;color:rgba(245,245,247,0.34)">words flagged</div></div>'
@@ -925,14 +1065,14 @@ def render_story_builder():
     tmpl = tmpl_gallery()
     p = pills(["15 Templates","DOCX + PDF Export","AI Cover Letter","Live Preview","ATS Single-Column"])
     H('<div id="builder" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
-      '<div>'
+      '<div class="hl-reveal hl-reveal-left">'
       '<div class="hl-story-num">Feature 03 &mdash; Resume Builder</div>'
       '<h2 class="hl-story-h">Build resumes that <span class="hl-green">look as good</span> as they parse</h2>'
       '<p class="hl-story-p">Fifteen ATS-optimised templates &mdash; from understated minimal to executive prestige &mdash; all built on strict single-column structures that parse correctly in every major hiring platform.</p>'
       '<p class="hl-story-p">Export to DOCX (three ATS compliance levels) or PDF. One click generates a tailored cover letter for your target company, formatted and ready to send.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div><div class="hl-panel">'
+      '<div class="hl-reveal hl-reveal-right"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5"/><rect x="11" y="7" width="10" height="14" rx="2" fill="rgba(48,209,88,.08)" stroke="#30d158" stroke-width="1.5"/><path d="M14 11h5M14 14h5M14 17h3" stroke="#30d158" stroke-width="1.3" stroke-linecap="round"/></svg>Template Gallery &mdash; 15 Designs</div>'
       '<div class="hl-tmpl-grid">' + tmpl + '</div>'
       '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:space-between;gap:12px">'
@@ -946,14 +1086,14 @@ def render_story_career():
     cards = job_cards()
     p = pills(["Live Job Listings","Salary Benchmarks","Course Recommendations","Skills Radar","Remote Filter"])
     H('<div id="career" class="hl-story-alt"><div class="hl-section"><div class="hl-story-grid">'
-      '<div style="order:2">'
+      '<div style="order:2" class="hl-reveal hl-reveal-right">'
       '<div class="hl-story-num">Feature 04 &mdash; Career Intelligence</div>'
       '<h2 class="hl-story-h">Jobs, salaries, courses &mdash; <span class="hl-amber">one place</span></h2>'
       '<p class="hl-story-p">The Job Search Hub pulls live listings from LinkedIn, Naukri, Foundit, and Indeed &mdash; or uses the JSearch/RapidAPI engine with remote and employment-type filters.</p>'
       '<p class="hl-story-p">Hirelyzer surfaces salary benchmarks by role and market, curated courses mapped to skill gaps in your resume, and prep videos &mdash; all linked to your career profile.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div style="order:1"><div class="hl-panel">'
+      '<div style="order:1" class="hl-reveal hl-reveal-left"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M2 13h20" stroke="#ff9f0a" stroke-width="1.3" stroke-linecap="round"/></svg>Job Search Hub</div>'
       + cards +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">'
@@ -967,30 +1107,122 @@ def render_story_interview():
     sbars = score_bars()
     radar = radar_svg()
     p = pills(["Resume-based Questions","Real-time AI Scoring","Radar Chart","Session History","Downloadable Report"])
-    H('<div class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
-      '<div>'
-      '<div class="hl-story-num">Feature 05 &mdash; AI Interview Coach</div>'
-      '<h2 class="hl-story-h">Practice until <span class="hl-blue">every answer</span> lands</h2>'
-      '<p class="hl-story-p">Upload your resume and Hirelyzer generates interview questions derived directly from your actual experience &mdash; not generic prompts. Answer in free text; the AI coach scores you on communication, technical depth, confidence, structure, and use of concrete examples.</p>'
-      '<p class="hl-story-p">Every session ends with a performance radar chart, a detailed Q&amp;A review, and course recommendations tied to your weakest dimensions.</p>'
-      '<div class="hl-pills">' + p + '</div>'
-      '</div>'
-      '<div><div class="hl-panel">'
-      '<div class="hl-ptitle" style="justify-content:space-between">'
-      '<div style="display:flex;align-items:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#ff453a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>Mock Interview &middot; Session 3</div>'
-      '<div class="hl-score-badge"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#30d158"/></svg>82 / 100</div>'
-      '</div>'
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">'
-      '<div>'
-      '<div class="hl-qa"><div class="hl-q"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="#0a84ff" stroke-width="1.5"/><path d="M12 16v-4M12 8h.01" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/></svg>Describe your most complex backend system.</div><div class="hl-a">Built a multi-tenant microservices platform handling 2M events/day using Kafka, Redis, and PostgreSQL with 40% lower P99 latency.</div></div>'
-      '<div class="hl-qa"><div class="hl-q"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="#bf5af2" stroke-width="1.5"/><path d="M12 16v-4M12 8h.01" stroke="#bf5af2" stroke-width="1.8" stroke-linecap="round"/></svg>How do you handle technical debt?</div><div class="hl-a">I prioritise tech debt as a first-class roadmap item, quantifying velocity cost before pitching refactors to stakeholders.</div></div>'
-      '<div style="margin-top:12px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:8px">Score breakdown</div>'
-      + sbars +
-      '</div></div>'
-      '<div class="hl-radar-wrap">' + radar + '<div style="font-size:11px;color:rgba(245,245,247,0.34);margin-top:6px;text-align:center">Performance radar</div></div>'
-      '</div>'
-      '</div></div>'
-      '</div></div></div>')
+    sampler_qs = (
+        '"Tell me about a time you solved a complex technical problem under pressure.",'
+        '"Describe a project where you had to learn something new quickly.",'
+        '"How do you prioritise tasks when everything feels urgent?",'
+        '"Walk me through a situation where you disagreed with your manager.",'
+        '"What\'s the most impactful thing you\'ve shipped, and how did you measure success?",'
+        '"Tell me about a failure and what you learned from it."'
+    )
+    left_col = (
+        '<div class="hl-reveal hl-reveal-left">'
+        '<div class="hl-story-num">Feature 05 &mdash; AI Interview Coach</div>'
+        '<h2 class="hl-story-h">Practice until <span class="hl-blue">every answer</span> lands</h2>'
+        '<p class="hl-story-p">Upload your resume and Hirelyzer generates interview questions derived directly from your actual experience &mdash; not generic prompts. Answer in free text; the AI coach scores you on communication, technical depth, confidence, structure, and use of concrete examples.</p>'
+        '<p class="hl-story-p">Every session ends with a performance radar chart, a detailed Q&amp;A review, and course recommendations tied to your weakest dimensions.</p>'
+        '<div class="hl-pills">' + p + '</div>'
+        '<div class="hl-sampler">'
+        '<div class="hl-sampler-label">'
+        '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#0a84ff"/></svg>'
+        'Try it live &mdash; get a real AI score'
+        '</div>'
+        '<div class="hl-sampler-q" id="hl-sq">Tell me about a time you solved a complex technical problem under pressure.</div>'
+        '<textarea class="hl-sampler-input" id="hl-sa" placeholder="Type your answer here&hellip; (2&ndash;4 sentences is plenty)" rows="3"></textarea>'
+        '<div class="hl-sampler-row"><div style="display:flex;gap:8px">'
+        '<button class="hl-sampler-btn" id="hl-score-btn" onclick="hlScoreAnswer()">'
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z" fill="#fff"/></svg>'
+        'Score my answer</button>'
+        '<button class="hl-sampler-skip" onclick="hlNextQ()">Next question &rarr;</button>'
+        '</div></div>'
+        '<div class="hl-sampler-loading" id="hl-loading"><div class="hl-sampler-spinner"></div>Scoring your answer&hellip;</div>'
+        '<div class="hl-sampler-result" id="hl-result">'
+        '<div class="hl-sampler-result-score">'
+        '<div class="hl-sampler-result-num" id="hl-result-score">\u2014</div>'
+        '<div class="hl-sampler-result-label">out of 100<br><span style="color:#30d158;font-weight:700" id="hl-result-grade"></span></div>'
+        '</div>'
+        '<div class="hl-sampler-feedback" id="hl-result-fb"></div>'
+        '</div>'
+        '</div>'
+        '</div>'
+    )
+    right_col = (
+        '<div class="hl-reveal hl-reveal-right"><div class="hl-panel">'
+        '<div class="hl-ptitle" style="justify-content:space-between">'
+        '<div style="display:flex;align-items:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#ff453a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>Mock Interview &middot; Session 3</div>'
+        '<div class="hl-score-badge"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#30d158"/></svg>82 / 100</div>'
+        '</div>'
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">'
+        '<div>'
+        '<div class="hl-qa"><div class="hl-q"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="#0a84ff" stroke-width="1.5"/><path d="M12 16v-4M12 8h.01" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/></svg>Describe your most complex backend system.</div><div class="hl-a">Built a multi-tenant microservices platform handling 2M events/day using Kafka, Redis, and PostgreSQL with 40% lower P99 latency.</div></div>'
+        '<div class="hl-qa"><div class="hl-q"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="#bf5af2" stroke-width="1.5"/><path d="M12 16v-4M12 8h.01" stroke="#bf5af2" stroke-width="1.8" stroke-linecap="round"/></svg>How do you handle technical debt?</div><div class="hl-a">I prioritise tech debt as a first-class roadmap item, quantifying velocity cost before pitching refactors to stakeholders.</div></div>'
+        '<div style="margin-top:12px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:8px">Score breakdown</div>'
+        + sbars +
+        '</div></div>'
+        '<div class="hl-radar-wrap">' + radar + '<div style="font-size:11px;color:rgba(245,245,247,0.34);margin-top:6px;text-align:center">Performance radar</div></div>'
+        '</div>'
+        '</div></div>'
+    )
+    sampler_js = (
+        '<script>'
+        'var hlQs=[' + sampler_qs + '];'
+        'var hlQi=0;'
+        'function hlNextQ(){'
+        'hlQi=(hlQi+1)%hlQs.length;'
+        'document.getElementById("hl-sq").textContent=hlQs[hlQi];'
+        'document.getElementById("hl-sa").value="";'
+        'document.getElementById("hl-result").classList.remove("show");'
+        'document.getElementById("hl-loading").classList.remove("show");'
+        '}'
+        'async function hlScoreAnswer(){'
+        'var ans=document.getElementById("hl-sa").value.trim();'
+        'if(!ans||ans.length<10){document.getElementById("hl-sa").style.borderColor="rgba(255,69,58,0.5)";setTimeout(function(){document.getElementById("hl-sa").style.borderColor="";},1500);return;}'
+        'var q=document.getElementById("hl-sq").textContent;'
+        'var btn=document.getElementById("hl-score-btn");'
+        'btn.disabled=true;'
+        'document.getElementById("hl-result").classList.remove("show");'
+        'document.getElementById("hl-loading").classList.add("show");'
+        'try{'
+        'var res=await fetch("https://api.anthropic.com/v1/messages",{'
+        'method:"POST",'
+        'headers:{"Content-Type":"application/json"},'
+        'body:JSON.stringify({'
+        'model:"claude-sonnet-4-20250514",'
+        'max_tokens:300,'
+        'system:"You are an expert interview coach. Score the candidate answer strictly and helpfully. Respond ONLY with valid JSON, no extra text, no markdown: {\\\"score\\\": number 0-100, \\\"grade\\\": string Excellent or Good or Needs Work or Weak, \\\"feedback\\\": string max 2 sentences}",'
+        'messages:[{role:"user",content:"Question: "+q+"\\n\\nAnswer: "+ans}]'
+        '})'
+        '});'
+        'var d=await res.json();'
+        'var txt=(d.content&&d.content[0]&&d.content[0].text)||"{}";'
+        'var obj=JSON.parse(txt.replace(/```json|```/g,"").trim());'
+        'document.getElementById("hl-result-score").textContent=obj.score||"?";'
+        'document.getElementById("hl-result-grade").textContent=obj.grade||"";'
+        'document.getElementById("hl-result-fb").textContent=obj.feedback||"";'
+        'var rc=document.getElementById("hl-result");'
+        'var sc=parseInt(obj.score)||0;'
+        'rc.style.borderColor=sc>=70?"rgba(48,209,88,0.25)":sc>=50?"rgba(255,159,10,0.25)":"rgba(255,69,58,0.25)";'
+        'rc.style.background=sc>=70?"rgba(48,209,88,0.06)":sc>=50?"rgba(255,159,10,0.06)":"rgba(255,69,58,0.06)";'
+        'document.getElementById("hl-result-score").style.color=sc>=70?"#30d158":sc>=50?"#ff9f0a":"#ff453a";'
+        'document.getElementById("hl-result-grade").style.color=sc>=70?"#30d158":sc>=50?"#ff9f0a":"#ff453a";'
+        'rc.classList.add("show");'
+        '}catch(err){'
+        'document.getElementById("hl-result-score").textContent="?";'
+        'document.getElementById("hl-result-grade").textContent="Error";'
+        'document.getElementById("hl-result-fb").textContent="Could not reach scoring API. Check your connection and try again.";'
+        'document.getElementById("hl-result").classList.add("show");'
+        '}'
+        'document.getElementById("hl-loading").classList.remove("show");'
+        'btn.disabled=false;'
+        '}'
+        '</script>'
+    )
+    H('<div id="interview" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
+      + left_col + right_col +
+      '</div></div></div>'
+      + sampler_js)
+
+
 
 def render_compare():
     rows = [
@@ -1149,20 +1381,24 @@ def render_footer():
 def render_js():
     H('<script>'
       '(function(){'
-      # Scroll progress bar
+
+      # ── Scroll progress bar ──
       'var sp=document.getElementById("sp");'
-      'function u(){if(!sp)return;var p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;sp.style.width=Math.min(p,100)+"%";}'
-      'window.addEventListener("scroll",u,{passive:true});'
-      # Nav scroll shadow
+      'function updateProgress(){if(!sp)return;var p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;sp.style.width=Math.min(p,100)+"%";}'
+      'window.addEventListener("scroll",updateProgress,{passive:true});'
+
+      # ── Nav scroll shadow ──
       'var nav=document.getElementById("hl-nav");'
       'window.addEventListener("scroll",function(){if(nav){nav.classList.toggle("scrolled",window.scrollY>20);}},{passive:true});'
-      # Smooth scroll for anchor links
+
+      # ── Smooth scroll for anchor links ──
       'document.querySelectorAll("a[href^=\'#\']").forEach(function(a){'
       'a.addEventListener("click",function(e){'
       'var t=document.querySelector(this.getAttribute("href"));'
       'if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth",block:"start"});}'
       '});});'
-      # FAQ accordion
+
+      # ── FAQ accordion ──
       'document.querySelectorAll(".hl-faq-q").forEach(function(q){'
       'q.addEventListener("click",function(){'
       'var ans=this.nextElementSibling;'
@@ -1172,12 +1408,105 @@ def render_js():
       'document.querySelectorAll(".hl-faq-q-icon").forEach(function(i){i.textContent="+";});'
       'if(!open){ans.style.display="block";icon.textContent="\u2212";}'
       '});});'
-      # Init all FAQ closed
       'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
+
+      # ── 1. Sticky CTA bar ──
+      'var stickyDismissed=false;'
+      'var stickyCta=document.getElementById("hl-sticky-cta");'
+      'var stickyClose=document.getElementById("hl-sticky-close");'
+      'if(stickyClose){stickyClose.addEventListener("click",function(){stickyDismissed=true;if(stickyCta){stickyCta.classList.remove("visible");}});}'
+      'function checkSticky(){'
+      'if(stickyDismissed||!stickyCta)return;'
+      'var pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight);'
+      'stickyCta.classList.toggle("visible",pct>0.30);'
+      '}'
+      'window.addEventListener("scroll",checkSticky,{passive:true});'
+
+      # ── 2. Active nav highlight via IntersectionObserver ──
+      'var navLinks=document.querySelectorAll(".hl-nav-links a[href^=\'#\']");'
+      'var sectIds=[];'
+      'navLinks.forEach(function(a){var id=a.getAttribute("href").slice(1);if(id)sectIds.push(id);});'
+      'if("IntersectionObserver" in window){'
+      'var navObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){'
+      'var id=e.target.id;'
+      'navLinks.forEach(function(a){a.classList.toggle("hl-nav-active",a.getAttribute("href")==="#"+id);});'
+      '}'
+      '});'
+      '},{threshold:0.35});'
+      'sectIds.forEach(function(id){var el=document.getElementById(id);if(el)navObs.observe(el);});'
+      '}'
+
+      # ── 3. Scroll-reveal via IntersectionObserver ──
+      'if("IntersectionObserver" in window){'
+      'var revealObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){e.target.classList.add("in-view");revealObs.unobserve(e.target);}'
+      '});'
+      '},{threshold:0.12,rootMargin:"0px 0px -40px 0px"});'
+      'document.querySelectorAll(".hl-reveal,.hl-reveal-left,.hl-reveal-right").forEach(function(el){'
+      'revealObs.observe(el);'
+      '});'
+      '}'
+
+      # ── 4. Stat counter animation ──
+      'function animateCounter(el,target,duration){'
+      'var start=0,startTime=null;'
+      'var isK=String(target).indexOf("k")!==-1||String(target).indexOf("K")!==-1;'
+      'var isPlus=String(el.dataset.target).indexOf("+")!==-1;'
+      'var num=parseInt(String(target).replace(/[^0-9]/g,""));'
+      'function step(ts){'
+      'if(!startTime)startTime=ts;'
+      'var prog=Math.min((ts-startTime)/duration,1);'
+      'var ease=1-Math.pow(1-prog,3);'
+      'var cur=Math.round(ease*num);'
+      'el.textContent=cur+(isK?"k":"")+(isPlus?"+":"");'
+      'if(prog<1)requestAnimationFrame(step);'
+      'else el.textContent=el.dataset.target;'
+      '}'
+      'requestAnimationFrame(step);'
+      '}'
+      'if("IntersectionObserver" in window){'
+      'var statObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){'
+      'var el=e.target;'
+      'var raw=el.textContent.trim();'
+      'if(raw==="AI"||raw==="Free")return;'
+      'el.dataset.target=raw;'
+      'animateCounter(el,raw,1400);'
+      'statObs.unobserve(el);'
+      '}'
+      '});'
+      '},{threshold:0.8});'
+      'document.querySelectorAll(".hl-stat-n").forEach(function(el){statObs.observe(el);});'
+      '}'
+
+      # ── 5. Radar draw animation ──
+      'if("IntersectionObserver" in window){'
+      'var radarEl=document.getElementById("hl-radar-poly");'
+      'if(radarEl){'
+      'var radarObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){'
+      'radarEl.classList.add("drawn");'
+      'document.querySelectorAll(".hl-radar-dot").forEach(function(d,i){'
+      'd.style.transitionDelay=(0.8+i*0.1)+"s";d.classList.add("drawn");'
+      '});'
+      'radarObs.disconnect();'
+      '}'
+      '});'
+      '},{threshold:0.5});'
+      'radarObs.observe(radarEl);'
+      '}'
+      '}'
+
       '})();'
       '</script>')
 
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
+render_sticky_cta()
 render_banner()
 render_nav()
 render_hero()
