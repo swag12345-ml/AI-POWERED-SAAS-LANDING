@@ -45,11 +45,87 @@ section[data-testid="stAppViewContainer"] > div { padding: 0 !important; }
 .block-container { padding: 0 !important; max-width: 100% !important; }
 div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 
-/* ── Progress bar ── */
+/* ── Scroll progress bar ── */
 #sp {
   position: fixed; top: 0; left: 0; right: 0; height: 2px; width: 0%;
   background: linear-gradient(90deg, #0a84ff, #30d158, #bf5af2);
   z-index: 9999; transition: width 0.05s linear; pointer-events: none;
+}
+
+/* ── Toast notification ── */
+#hl-toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #1a1a1e; border: 1px solid rgba(255,255,255,0.12); border-radius: 100px;
+  padding: 12px 22px; font-size: 13px; font-weight: 600; color: #f5f5f7;
+  display: flex; align-items: center; gap: 8px; z-index: 9998;
+  opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+#hl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#hl-toast-dot { width: 7px; height: 7px; border-radius: 50%; background: #30d158; flex-shrink: 0; }
+
+/* ── Sticky bottom CTA ── */
+#hl-sticky-cta {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 890;
+  background: rgba(0,0,0,0.92); border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  padding: 14px 32px; display: flex; align-items: center; justify-content: space-between;
+  transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  max-width: 100%;
+}
+#hl-sticky-cta.visible { transform: translateY(0); }
+.hl-sticky-inner { max-width: 1140px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.hl-sticky-text { font-size: 14px; font-weight: 600; color: rgba(245,245,247,0.7); }
+.hl-sticky-text span { color: #f5f5f7; }
+.hl-sticky-btns { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+#hl-sticky-dismiss { background: none; border: none; color: rgba(245,245,247,0.3); font-size: 20px; cursor: pointer; padding: 4px 8px; line-height: 1; transition: color 0.2s; }
+#hl-sticky-dismiss:hover { color: rgba(245,245,247,0.7); }
+
+/* ── Section dot nav ── */
+#hl-dots {
+  position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px; z-index: 800;
+}
+.hl-dot-nav {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); cursor: pointer;
+  transition: background 0.3s, transform 0.3s; border: none; padding: 0;
+}
+.hl-dot-nav.active { background: #0a84ff; transform: scale(1.5); }
+.hl-dot-nav:hover { background: rgba(255,255,255,0.5); }
+@media (max-width: 900px) { #hl-dots { display: none; } }
+
+/* ── Mobile hamburger ── */
+.hl-hamburger {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer;
+  background: none; border: none; padding: 6px;
+}
+.hl-hamburger span {
+  display: block; width: 22px; height: 2px; background: rgba(245,245,247,0.7);
+  border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.hl-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hl-hamburger.open span:nth-child(2) { opacity: 0; }
+.hl-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile drawer ── */
+#hl-drawer {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 850;
+  background: rgba(0,0,0,0.97); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 32px;
+  transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none;
+}
+#hl-drawer.open { transform: translateY(0); pointer-events: all; }
+#hl-drawer a {
+  font-size: 28px; font-weight: 700; color: rgba(245,245,247,0.6);
+  text-decoration: none; letter-spacing: -1px; transition: color 0.2s;
+}
+#hl-drawer a:hover { color: #f5f5f7; }
+#hl-drawer-close {
+  position: absolute; top: 24px; right: 24px;
+  background: none; border: none; color: rgba(245,245,247,0.5);
+  font-size: 28px; cursor: pointer; line-height: 1;
 }
 
 /* ── Announcement banner ── */
@@ -103,6 +179,8 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 }
 .hl-nav-links a:hover { color: #f5f5f7; }
 .hl-nav-links a:hover::after { transform: scaleX(1); }
+.hl-nav-links a.hl-nav-active { color: #f5f5f7; }
+.hl-nav-links a.hl-nav-active::after { transform: scaleX(1); }
 .hl-nav-right { display: flex; align-items: center; gap: 12px; }
 .hl-nav-cta {
   display: inline-flex; align-items: center; gap: 7px;
@@ -119,6 +197,14 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   align-items: center; justify-content: center;
   text-align: center; padding: 80px 32px 80px;
   position: relative; overflow: hidden; background: #000;
+}
+/* Cursor spotlight */
+#hl-spotlight {
+  position: absolute; pointer-events: none; z-index: 0;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(10,132,255,0.08) 0%, transparent 65%);
+  transform: translate(-50%, -50%); transition: left 0.08s ease, top 0.08s ease;
+  left: 50%; top: 50%;
 }
 .hl-hero-glow {
   position: absolute; top: -250px; left: 50%; transform: translateX(-50%);
@@ -162,6 +248,16 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   background-clip: text; animation: gradientShift 4s ease infinite;
 }
 
+/* Typewriter target word */
+#hl-typewriter {
+  display: inline-block; min-width: 120px;
+  background: linear-gradient(135deg, #0a84ff 0%, #30d158 60%, #0a84ff 100%);
+  background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; animation: gradientShift 4s ease infinite;
+}
+.hl-cursor { display: inline-block; width: 3px; height: 0.85em; background: #0a84ff; margin-left: 2px; vertical-align: middle; animation: blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
 .hl-hero-sub {
   font-size: clamp(15px, 1.9vw, 19px); color: rgba(245,245,247,0.5); line-height: 1.7;
   max-width: 580px; margin: 26px auto 0; animation: fadeUp 0.6s 0.2s ease both;
@@ -177,8 +273,14 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   border-radius: 100px; background: linear-gradient(135deg, #0a84ff, #0065cc); color: #fff;
   font-size: 15px; font-weight: 600; text-decoration: none; letter-spacing: -0.2px;
   box-shadow: 0 8px 32px rgba(10,132,255,0.35); transition: transform 0.15s, box-shadow 0.15s;
+  position: relative; overflow: hidden;
+}
+.hl-btn-p::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: rgba(255,255,255,0); transition: background 0.15s;
 }
 .hl-btn-p:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(10,132,255,0.45); }
+.hl-btn-p:active { transform: scale(0.97); }
 .hl-btn-g {
   display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px;
   border-radius: 100px; background: #141416; color: #f5f5f7;
@@ -186,6 +288,7 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   border: 1px solid rgba(255,255,255,0.12); transition: border-color 0.2s, background 0.2s;
 }
 .hl-btn-g:hover { border-color: rgba(255,255,255,0.25); background: #1e1e22; }
+.hl-btn-g:active { transform: scale(0.97); }
 
 /* ── Hero feature strip ── */
 .hl-hero-features {
@@ -249,6 +352,7 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   border: 1px solid rgba(255,255,255,0.07); min-width: 130px;
   position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s;
 }
+.hl-stat:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.14); }
 .hl-stat::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(10,132,255,0.3), transparent);
@@ -287,19 +391,28 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-story-alt { padding: 110px 0; background: #050505; }
 .hl-story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: center; }
 
+/* ── Scroll-reveal ── */
+/* Elements are ALWAYS visible. JS adds .hl-animate to trigger a subtle entrance animation. */
+.hl-reveal.hl-animate { animation: revealUp 0.7s ease both; }
+.hl-reveal-delay-1.hl-animate { animation-delay: 0.1s; }
+.hl-reveal-delay-2.hl-animate { animation-delay: 0.2s; }
+.hl-reveal-delay-3.hl-animate { animation-delay: 0.3s; }
+@keyframes revealUp {
+  from { opacity: 0.4; transform: translateY(22px); }
+  to   { opacity: 1;   transform: none; }
+}
+
 .hl-story-num { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 600; color: rgba(245,245,247,0.28); letter-spacing: 1px; margin-bottom: 18px; }
 .hl-story-h { font-size: clamp(28px, 3.8vw, 46px); font-weight: 800; letter-spacing: -2px; line-height: 1.07; color: #f5f5f7; margin-bottom: 22px; }
 .hl-story-h .hl-blue  { color: #0a84ff; }
 .hl-story-h .hl-green { color: #30d158; }
 .hl-story-h .hl-amber { color: #ff9f0a; }
 .hl-story-h .hl-purp  { color: #bf5af2; }
-/* ── Override Streamlit p reset inside HL sections ── */
 .hl-cta p, .hl-story p, .hl-story-alt p,
 .hl-hero p, .hl-compare p {
   margin: 0 !important;
   text-align: inherit !important;
 }
-
 .hl-story-p { font-size: 15px; color: rgba(245,245,247,0.48); line-height: 1.82; margin-bottom: 16px; }
 
 /* ── Pills ── */
@@ -312,11 +425,26 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   background: #0a0a0b; border-radius: 22px; border: 1px solid rgba(255,255,255,0.07);
   padding: 26px; overflow: hidden; position: relative;
   box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
+.hl-panel:hover { border-color: rgba(255,255,255,0.12); box-shadow: 0 50px 100px rgba(0,0,0,0.6); }
 .hl-panel::before {
   content: ''; position: absolute; top: 0; left: 20px; right: 20px; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
 }
+
+/* ── Radar animation ── */
+.hl-radar-polygon {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1);
+}
+.hl-radar-polygon.drawn { stroke-dashoffset: 0; }
+.hl-radar-dot {
+  opacity: 0; transform: scale(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.hl-radar-dot.drawn { opacity: 1; transform: scale(1); }
 
 /* ── Templates ── */
 .hl-tmpl-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
@@ -342,7 +470,7 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-a { font-size: 12px; color: rgba(245,245,247,0.5); line-height: 1.68; padding-left: 22px; }
 .hl-score-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; background: rgba(48,209,88,0.12); color: #30d158; border: 1px solid rgba(48,209,88,0.22); }
 
-/* ── Comparison / Why Hirelyzer ── */
+/* ── Comparison ── */
 .hl-compare { padding: 100px 0; background: #000; }
 .hl-compare-wrap { margin-top: 52px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.07); overflow: hidden; }
 .hl-compare-head {
@@ -375,18 +503,18 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 .hl-chk-n { color: rgba(245,245,247,0.18); font-size: 18px; }
 .hl-chk-p { color: #ff9f0a; font-size: 11px; font-weight: 700; }
 
-/* ── Feature Highlights (icon cards) ── */
+/* ── Feature Highlights ── */
 .hl-highlights { padding: 0 0 100px; background: #000; }
 .hl-highlight-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 48px; }
 .hl-highlight {
   padding: 32px 28px; background: #0a0a0b; border: 1px solid rgba(255,255,255,0.06);
-  position: relative; overflow: hidden; transition: background 0.2s, border-color 0.2s;
+  position: relative; overflow: hidden; transition: background 0.2s, border-color 0.2s, transform 0.2s;
 }
 .hl-highlight:first-child { border-radius: 20px 0 0 0; }
 .hl-highlight:nth-child(3) { border-radius: 0 20px 0 0; }
 .hl-highlight:nth-child(4) { border-radius: 0 0 0 20px; }
 .hl-highlight:last-child { border-radius: 0 0 20px 0; }
-.hl-highlight:hover { background: #0f0f11; border-color: rgba(255,255,255,0.1); }
+.hl-highlight:hover { background: #0f0f11; border-color: rgba(255,255,255,0.1); transform: translateY(-2px); }
 .hl-highlight::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
@@ -472,111 +600,32 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.5; }
 }
-
-/* ── Scroll-reveal ── */
-.hl-reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.hl-reveal.hl-visible { opacity: 1; transform: none; }
-.hl-reveal-d1 { transition-delay: 0.1s; }
-.hl-reveal-d2 { transition-delay: 0.2s; }
-.hl-reveal-d3 { transition-delay: 0.3s; }
-
-/* ── Radar animation ── */
-.hl-rpoly { stroke-dasharray: 900; stroke-dashoffset: 900; transition: stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1); }
-.hl-rpoly.hl-drawn { stroke-dashoffset: 0; }
-.hl-rdot { opacity: 0; transform-origin: center; transform: scale(0); transition: opacity 0.4s ease, transform 0.4s ease; }
-.hl-rdot.hl-drawn { opacity: 1; transform: scale(1); }
-
-/* ── Active nav link ── */
-.hl-nav-links a.hl-active { color: #f5f5f7; }
-.hl-nav-links a.hl-active::after { transform: scaleX(1); }
-
-/* ── Mobile hamburger ── */
-.hl-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px 4px; }
-.hl-hamburger span { display: block; width: 22px; height: 2px; background: rgba(245,245,247,0.7); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
-.hl-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hl-hamburger.open span:nth-child(2) { opacity: 0; }
-.hl-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-/* ── Mobile fullscreen drawer ── */
-#hl-drawer {
-  position: fixed; inset: 0; z-index: 950; background: rgba(0,0,0,0.97);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
-  transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); pointer-events: none;
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
-#hl-drawer.open { transform: translateY(0); pointer-events: all; }
-#hl-drawer a { font-size: 26px; font-weight: 700; color: rgba(245,245,247,0.55); text-decoration: none; transition: color 0.2s; }
-#hl-drawer a:hover { color: #f5f5f7; }
-#hl-drawer-close { position: absolute; top: 22px; right: 24px; background: none; border: none; color: rgba(245,245,247,0.4); font-size: 28px; cursor: pointer; line-height: 1; }
-
-/* ── Section dot nav ── */
-#hl-dots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 800; }
-.hl-dot-btn { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); border: none; cursor: pointer; padding: 0; transition: background 0.3s, transform 0.3s; }
-.hl-dot-btn:hover { background: rgba(255,255,255,0.5); }
-.hl-dot-btn.active { background: #0a84ff; transform: scale(1.6); }
-
-/* ── Sticky CTA bar ── */
-#hl-sticky {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 880;
-  background: rgba(0,0,0,0.93); border-top: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  padding: 14px 32px; transform: translateY(100%);
-  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
-}
-#hl-sticky.show { transform: translateY(0); }
-.hl-sticky-inner { max-width: 1140px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.hl-sticky-text { font-size: 14px; font-weight: 600; color: rgba(245,245,247,0.6); }
-.hl-sticky-text span { color: #f5f5f7; }
-.hl-sticky-x { background: none; border: none; color: rgba(245,245,247,0.3); font-size: 22px; cursor: pointer; line-height: 1; padding: 2px 6px; transition: color 0.2s; }
-.hl-sticky-x:hover { color: rgba(245,245,247,0.7); }
-
-/* ── Toast ── */
-#hl-toast {
-  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(16px);
-  background: #18181c; border: 1px solid rgba(255,255,255,0.12); border-radius: 100px;
-  padding: 11px 20px; font-size: 13px; font-weight: 600; color: #f5f5f7;
-  display: flex; align-items: center; gap: 8px; z-index: 9990;
-  opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-#hl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-#hl-toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-
-/* ── Cursor spotlight ── */
-#hl-spot {
-  position: absolute; width: 560px; height: 560px; border-radius: 50%; pointer-events: none; z-index: 0;
-  background: radial-gradient(circle, rgba(10,132,255,0.09) 0%, transparent 65%);
-  transform: translate(-50%,-50%); left: 50%; top: 50%;
-  transition: left 0.08s ease, top 0.08s ease;
-}
-
-/* ── Typewriter cursor ── */
-.hl-tw-cursor { display: inline-block; width: 3px; height: 0.85em; background: #0a84ff; margin-left: 3px; vertical-align: middle; animation: twBlink 1s step-end infinite; }
-@keyframes twBlink { 0%,100%{opacity:1} 50%{opacity:0} }
 
 /* ── Testimonial ticker ── */
 .hl-ticker-wrap {
-  padding: 48px 0; background: #000;
-  border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);
-  overflow: hidden;
-  mask-image: linear-gradient(90deg,transparent,black 10%,black 90%,transparent);
-  -webkit-mask-image: linear-gradient(90deg,transparent,black 10%,black 90%,transparent);
+  overflow: hidden; padding: 40px 0; background: #000;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
 }
-.hl-ticker-track { display: flex; gap: 20px; width: max-content; animation: hlTicker 36s linear infinite; }
+.hl-ticker-track {
+  display: flex; gap: 28px; width: max-content;
+  animation: tickerScroll 32s linear infinite;
+}
 .hl-ticker-track:hover { animation-play-state: paused; }
-@keyframes hlTicker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-.hl-tcard { background: #0d0d0f; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 20px 24px; width: 300px; flex-shrink: 0; }
-.hl-tcard-q { font-size: 13px; color: rgba(245,245,247,0.58); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
-.hl-tcard-author { display: flex; align-items: center; gap: 10px; }
-.hl-tcard-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-.hl-tcard-name { font-size: 12px; font-weight: 700; color: #f5f5f7; }
-.hl-tcard-role { font-size: 11px; color: rgba(245,245,247,0.34); margin-top: 1px; }
-
-/* ── Stat hover ── */
-.hl-stat:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.14); }
-
-/* ── Panel hover ── */
-.hl-panel { transition: border-color 0.3s, box-shadow 0.3s; }
-.hl-panel:hover { border-color: rgba(255,255,255,0.12); box-shadow: 0 50px 100px rgba(0,0,0,0.6); }
+.hl-ticker-item {
+  background: #0d0d0f; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 18px 24px; min-width: 300px; max-width: 340px; flex-shrink: 0;
+}
+.hl-ticker-quote { font-size: 13px; color: rgba(245,245,247,0.6); line-height: 1.7; margin-bottom: 14px; font-style: italic; }
+.hl-ticker-author { display: flex; align-items: center; gap: 10px; }
+.hl-ticker-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.hl-ticker-name { font-size: 12px; font-weight: 700; color: #f5f5f7; }
+.hl-ticker-role { font-size: 11px; color: rgba(245,245,247,0.34); margin-top: 1px; }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
@@ -589,8 +638,6 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   .hl-ctas { flex-direction: column; align-items: center; }
   .hl-nav-links { display: none; }
   .hl-hamburger { display: flex; }
-  #hl-dots { display: none; }
-  .hl-sticky-text { display: none; }
   .hl-cta { padding: 52px 28px; }
   .hl-card-grid { grid-template-columns: 1fr; }
   .hl-compare-head, .hl-compare-row { grid-template-columns: 1.4fr 1fr; }
@@ -604,6 +651,7 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   .hl-highlight:nth-child(5) { border-radius: 0 0 0 20px; }
   .hl-highlight:last-child { border-radius: 0 0 20px 0; }
   .hl-footer { grid-template-columns: 1fr; }
+  .hl-sticky-text { display: none; }
 }
 """)
 
@@ -639,11 +687,12 @@ def radar_svg():
         grid += '<polygon points="'+pts+'" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>'
     axes = "".join('<line x1="'+str(cx)+'" y1="'+str(cy)+'" x2="'+str(round(pt(i,1)[0],1))+'" y2="'+str(round(pt(i,1)[1],1))+'" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>' for i in range(n))
     poly = " ".join(str(round(pt(i,scores[i])[0],1))+","+str(round(pt(i,scores[i])[1],1)) for i in range(n))
-    dots = "".join('<circle class="hl-rdot" cx="'+str(round(pt(i,scores[i])[0],1))+'" cy="'+str(round(pt(i,scores[i])[1],1))+'" r="3.5" fill="#0a84ff" style="transition-delay:'+str(round(1.1+i*0.1,1))+'s"/>' for i in range(n))
+    # dots with animation class
+    dots = "".join('<circle class="hl-radar-dot" cx="'+str(round(pt(i,scores[i])[0],1))+'" cy="'+str(round(pt(i,scores[i])[1],1))+'" r="3.5" fill="#0a84ff" style="transition-delay:'+str(1.2+i*0.08)+'s"/>' for i in range(n))
     labels = "".join('<text x="'+str(round(pt(i,1.30)[0],1))+'" y="'+str(round(pt(i,1.30)[1],1))+'" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,245,247,0.4)" font-size="8.5" font-family="Sora,sans-serif" font-weight="500">'+cats[i]+'</text>' for i in range(n))
     return ('<svg id="hl-radar-svg" width="220" height="220" viewBox="0 0 220 220" fill="none">'
             +grid+axes
-            +'<polygon id="hl-radar-poly" class="hl-rpoly" points="'+poly+'" fill="rgba(10,132,255,0.14)" stroke="#0a84ff" stroke-width="1.5"/>'
+            +'<polygon id="hl-radar-poly" class="hl-radar-polygon" points="'+poly+'" fill="rgba(10,132,255,0.14)" stroke="#0a84ff" stroke-width="1.5"/>'
             +dots+labels+'</svg>')
 
 # ─── fragment builders ────────────────────────────────────────────────────────
@@ -658,21 +707,16 @@ def score_bars():
 def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, header_style="bar"):
     act = ' hl-tmpl-act' if active else ''
     badge = ('<div class="hl-tmpl-badge">'+name+'</div>') if active else ''
-
     def ln(w, col="rgba(255,255,255,0.15)", h="2px", mt="3px"):
         return f'<div style="height:{h};width:{w};background:{col};border-radius:1px;margin-top:{mt}"></div>'
-
     def name_block(col):
         return (f'<div style="height:4px;width:55%;background:{col};border-radius:1px;margin-bottom:2px"></div>'
                 f'<div style="height:2px;width:38%;background:{col};opacity:.5;border-radius:1px"></div>')
-
     def section_lines(n=3, w_list=None, col="rgba(255,255,255,0.13)"):
         ws = w_list or ["85%","70%","78%","60%","75%"]
         return "".join(ln(ws[i % len(ws)], col) for i in range(n))
-
     def section_label(col):
         return f'<div style="height:2px;width:40%;background:{col};opacity:.7;border-radius:1px;margin-top:4px;margin-bottom:2px"></div>'
-
     body = ""
     if layout == "sidebar":
         sb = sidebar_bg or "#1e293b"
@@ -724,7 +768,6 @@ def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, h
             + section_label(accent) + ln("70%") + ln("55%")
             + f'</div>'
         )
-
     if header_style == "band":
         hdr = (f'<div style="background:{accent};padding:4px 5px;border-radius:3px 3px 0 0;">'
                f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.9);border-radius:1px;margin-bottom:1px"></div>'
@@ -757,10 +800,8 @@ def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, h
                    f'<div style="height:1.5px;width:16%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
                    f'<div style="height:1.5px;width:16%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
                    f'</div></div>')
-
     return (f'<div class="hl-tmpl{act}" style="display:flex;flex-direction:column;padding:0;overflow:hidden;">'
             + hdr + body + badge + f'</div>')
-
 
 def tmpl_gallery():
     templates = [
@@ -772,16 +813,7 @@ def tmpl_gallery():
         ("Slate",     "#64748b", "sidebar",  "bar",          "#1a1f2a", False),
         ("Rose",      "#fb7185", "single",   "band",         None,      False),
         ("Midnight",  "#a78bfa", "two-col",  "bar",          None,      False),
-        ("Sand",      "#d97706", "single",   "left-accent",  None,      False),
-        ("Forest",    "#059669", "sidebar",  "bar",          "#0a1f1a", False),
-        ("Crimson",   "#dc2626", "single",   "band",         None,      False),
-        ("Creative",  "#bf5af2", "sidebar",  "bar",          "#1e1030", False),
-        ("Navy",      "#e2b96a", "sidebar",  "bar",          "#0d1833", False),
-        ("Teal",      "#0d9488", "sidebar",  "bar",          "#0d2420", False),
-        ("Pro",       "#6366f1", "two-col",  "center",       None,      False),
-        ("Minimal",   "#94a3b8", "single",   "left-accent",  None,      False),
     ]
-    # Show only 8 in 4x2 grid for display
     out = ""
     for name, accent, layout, hdr_style, sb_bg, active in templates[:8]:
         out += _mini_resume(name, accent, layout, active, sb_bg, hdr_style)
@@ -828,72 +860,69 @@ def render_banner():
       '</div>')
 
 def render_nav():
-    H(
-      # ── Toast ──
-      '<div id="hl-toast"><div id="hl-toast-dot"></div><span id="hl-toast-msg">Copied!</span></div>'
-      # ── Sticky CTA ──
-      '<div id="hl-sticky">'
-      '<div class="hl-sticky-inner">'
-      '<div class="hl-sticky-text">Ready to land your next role? <span>Hirelyzer is 100% free.</span></div>'
-      '<div style="display:flex;align-items:center;gap:10px">'
-      '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p" style="padding:10px 22px;font-size:13px">'
-      '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
-      'Analyse free</a>'
-      '<button class="hl-sticky-x" onclick="(function(){document.getElementById(\'hl-sticky\').classList.remove(\'show\');window.__hlSticky=true;})()">&times;</button>'
-      '</div></div></div>'
-      # ── Section dot nav ──
-      '<div id="hl-dots">'
-      '<button class="hl-dot-btn" data-sid="hl-hero" title="Hero"></button>'
-      '<button class="hl-dot-btn" data-sid="how" title="How it works"></button>'
-      '<button class="hl-dot-btn" data-sid="analyzer" title="Analyzer"></button>'
-      '<button class="hl-dot-btn" data-sid="builder" title="Builder"></button>'
-      '<button class="hl-dot-btn" data-sid="career" title="Career Hub"></button>'
-      '<button class="hl-dot-btn" data-sid="compare" title="Compare"></button>'
-      '<button class="hl-dot-btn" data-sid="contact" title="Contact"></button>'
-      '</div>'
-      # ── Mobile full-screen drawer ──
+    H('<div id="sp"></div>'
+      # Mobile drawer
       '<div id="hl-drawer">'
-      '<button id="hl-drawer-close" onclick="hlCloseDrawer()">&times;</button>'
-      '<a href="#how"     onclick="hlCloseDrawer()">How it works</a>'
-      '<a href="#analyzer" onclick="hlCloseDrawer()">Analyzer</a>'
-      '<a href="#builder" onclick="hlCloseDrawer()">Builder</a>'
-      '<a href="#career"  onclick="hlCloseDrawer()">Career Hub</a>'
-      '<a href="#compare" onclick="hlCloseDrawer()">Compare</a>'
-      '<a href="#contact" onclick="hlCloseDrawer()">Contact</a>'
+      '<button id="hl-drawer-close" onclick="closeDrawer()">&times;</button>'
+      '<a href="#how" onclick="closeDrawer()">How it works</a>'
+      '<a href="#analyzer" onclick="closeDrawer()">Analyzer</a>'
+      '<a href="#builder" onclick="closeDrawer()">Builder</a>'
+      '<a href="#career" onclick="closeDrawer()">Career Hub</a>'
+      '<a href="#compare" onclick="closeDrawer()">Compare</a>'
+      '<a href="#contact" onclick="closeDrawer()">Contact</a>'
       '<a href="' + APP_URL + '" target="_blank" style="color:#0a84ff!important">Open App &rarr;</a>'
       '</div>'
-      # ── Scroll progress bar ──
-      '<div id="sp"></div>'
-      # ── Nav ──
+      # Toast
+      '<div id="hl-toast"><div id="hl-toast-dot"></div><span id="hl-toast-msg"></span></div>'
+      # Sticky CTA
+      '<div id="hl-sticky-cta">'
+      '<div class="hl-sticky-inner">'
+      '<div class="hl-sticky-text">Ready to land your next role? <span>Hirelyzer is 100% free.</span></div>'
+      '<div class="hl-sticky-btns">'
+      '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p" style="padding:10px 22px;font-size:13px">'
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
+      'Analyse my resume free</a>'
+      '<button id="hl-sticky-dismiss" onclick="dismissSticky()" title="Dismiss">&times;</button>'
+      '</div></div></div>'
+      # Section dot nav
+      '<div id="hl-dots">'
+      '<button class="hl-dot-nav" data-section="hl-hero-anchor" title="Hero"></button>'
+      '<button class="hl-dot-nav" data-section="how" title="How it works"></button>'
+      '<button class="hl-dot-nav" data-section="analyzer" title="Analyzer"></button>'
+      '<button class="hl-dot-nav" data-section="builder" title="Builder"></button>'
+      '<button class="hl-dot-nav" data-section="career" title="Career"></button>'
+      '<button class="hl-dot-nav" data-section="compare" title="Compare"></button>'
+      '<button class="hl-dot-nav" data-section="contact" title="Contact"></button>'
+      '</div>'
+      # Nav
       '<div class="hl-nav" id="hl-nav"><div class="hl-nav-inner">'
       '<a href="#" class="hl-logo"><div class="hl-logo-icon">'
       '<svg width="18" height="18" viewBox="0 0 24 24" fill="none">'
       '<path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
       '</svg></div>HIRELYZER</a>'
       '<div class="hl-nav-links" id="hl-nav-links">'
-      '<a href="#how"      data-nav="how">How it works</a>'
+      '<a href="#how" data-nav="how">How it works</a>'
       '<a href="#analyzer" data-nav="analyzer">Analyzer</a>'
-      '<a href="#builder"  data-nav="builder">Builder</a>'
-      '<a href="#career"   data-nav="career">Career Hub</a>'
-      '<a href="#compare"  data-nav="compare">Compare</a>'
-      '<a href="#contact"  data-nav="contact">Contact</a>'
+      '<a href="#builder" data-nav="builder">Builder</a>'
+      '<a href="#career" data-nav="career">Career Hub</a>'
+      '<a href="#compare" data-nav="compare">Compare</a>'
+      '<a href="#contact" data-nav="contact">Contact</a>'
       '</div>'
       '<div class="hl-nav-right">'
       '<a href="' + APP_URL + '" target="_blank" class="hl-nav-cta">'
       '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
       'Open App</a>'
-      '<button class="hl-hamburger" id="hl-ham" onclick="hlOpenDrawer()" aria-label="Menu">'
+      '<button class="hl-hamburger" id="hl-hamburger" onclick="openDrawer()" aria-label="Menu">'
       '<span></span><span></span><span></span>'
       '</button>'
       '</div>'
-      '</div></div>'
-    )
+      '</div></div>')
 
 def render_hero():
     ring = ats_ring(78)
     bars = ats_bars()
-    H('<div id="hl-hero" class="hl-hero">'
-      '<div id="hl-spot"></div>'
+    H('<div id="hl-hero-anchor" class="hl-hero" id="hl-hero">'
+      '<div id="hl-spotlight"></div>'
       '<div class="hl-hero-glow"></div>'
       '<div class="hl-hero-grid"></div>'
       '<div class="hl-hero-fade"></div>'
@@ -902,7 +931,7 @@ def render_hero():
       '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#0a84ff"/></svg>'
       'AI-Powered Career Intelligence'
       '</div>'
-      '<h1 class="hl-h1">The last resume tool<br>you&rsquo;ll ever <em id="hl-tw" class="hl-h1-gradient">need</em><span class="hl-tw-cursor"></span></h1>'
+      '<h1 class="hl-h1">The last resume tool<br>you&rsquo;ll ever <span id="hl-typewriter">need</span><span class="hl-cursor"></span></h1>'
       '<p class="hl-hero-sub">Upload your resume. Hirelyzer instantly scores it for ATS compatibility, detects bias, rewrites with AI, and connects you to jobs &mdash; all in one place.</p>'
       '<div class="hl-ctas">'
       '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p">'
@@ -933,7 +962,6 @@ def render_hero():
       '</div>'
       '<div class="hl-card-body"><div class="hl-card-grid">'
 
-      # col 1 - ATS
       '<div>'
       '<div class="hl-ptitle"><svg width="9" height="9" viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="4.5" fill="#30d158"/></svg>ATS Score</div>'
       '<div style="display:flex;align-items:center;gap:16px;margin-bottom:18px">'
@@ -945,7 +973,6 @@ def render_hero():
       + bars +
       '</div>'
 
-      # col 2 - Bias
       '<div>'
       '<div class="hl-ptitle"><svg width="9" height="9" viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="4.5" fill="#bf5af2"/></svg>Bias Analysis</div>'
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'
@@ -973,7 +1000,6 @@ def render_hero():
       ' &rarr; <span style="color:#30d158">Accelerated</span> delivery across 3 teams'
       '</div></div></div>'
 
-      # col 3 - Quick Actions
       '<div>'
       '<div class="hl-ptitle"><svg width="9" height="9" viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="4.5" fill="#ff9f0a"/></svg>Quick Actions</div>'
       '<div style="display:flex;flex-direction:column;gap:8px">'
@@ -998,25 +1024,25 @@ def render_hero():
 def render_how():
     H('<div id="how" style="padding:100px 0 60px;background:#000">'
       '<div class="hl-section">'
-      '<div class="hl-divider">How it works</div>'
+      '<div class="hl-divider hl-reveal">How it works</div>'
       '<div class="hl-steps">'
 
-      '<div class="hl-step hl-reveal hl-reveal-d1"><span class="hl-step-n">01</span>'
+      '<div class="hl-step hl-reveal hl-reveal-delay-1"><span class="hl-step-n">01</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(10,132,255,0.1)"/><path d="M22 28V20M22 20L19 23M22 20L25 23" stroke="#0a84ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 30h14" stroke="#0a84ff" stroke-width="1.6" stroke-linecap="round"/><rect x="14" y="13" width="16" height="19" rx="3" stroke="#0a84ff" stroke-width="1.4" stroke-dasharray="3 2" fill="none"/></svg>'
       '<div class="hl-step-title">Upload your resume</div>'
       '<div class="hl-step-desc">Drop any PDF. Our parser handles messy formats, multi-column layouts, and scanned documents via OCR fallback.</div></div>'
 
-      '<div class="hl-step hl-reveal hl-reveal-d2"><span class="hl-step-n">02</span>'
+      '<div class="hl-step hl-reveal hl-reveal-delay-2"><span class="hl-step-n">02</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(48,209,88,0.1)"/><circle cx="20" cy="20" r="7" stroke="#30d158" stroke-width="1.5" fill="none"/><path d="M20 17v3l2 1.5" stroke="#30d158" stroke-width="1.5" stroke-linecap="round"/><path d="M25.2 25.2l3.5 3.5" stroke="#30d158" stroke-width="1.7" stroke-linecap="round"/></svg>'
       '<div class="hl-step-title">Instant AI analysis</div>'
       '<div class="hl-step-desc">ATS scoring, bias detection, grammar check, keyword matching &mdash; all computed in seconds with detailed feedback.</div></div>'
 
-      '<div class="hl-step hl-reveal hl-reveal-d2"><span class="hl-step-n">03</span>'
+      '<div class="hl-step hl-reveal hl-reveal-delay-3"><span class="hl-step-n">03</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(191,90,242,0.1)"/><rect x="12" y="11" width="13" height="18" rx="2.5" stroke="#bf5af2" stroke-width="1.5" fill="none"/><rect x="19" y="16" width="14" height="18" rx="2.5" fill="rgba(191,90,242,0.08)" stroke="#bf5af2" stroke-width="1.5"/><path d="M22 21h8M22 24.5h8M22 28h5" stroke="#bf5af2" stroke-width="1.3" stroke-linecap="round"/><circle cx="32" cy="13" r="4" fill="#bf5af2"/><path d="M30.5 13l1 1 2-2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       '<div class="hl-step-title">Build or rewrite</div>'
       '<div class="hl-step-desc">Use the AI rewriter or open the full Resume Builder. Choose from 15 templates, generate a cover letter, export to PDF or DOCX.</div></div>'
 
-      '<div class="hl-step hl-reveal hl-reveal-d3"><span class="hl-step-n">04</span>'
+      '<div class="hl-step hl-reveal hl-reveal-delay-3"><span class="hl-step-n">04</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(255,159,10,0.1)"/><path d="M22 28c-3.31 0-6-2.69-6-6 0-4 3-8 6-9 3 1 6 5 6 9 0 3.31-2.69 6-6 6z" stroke="#ff9f0a" stroke-width="1.5" fill="none"/><circle cx="22" cy="22" r="2" fill="#ff9f0a"/><path d="M29 13l-2 2M15 13l2 2" stroke="#ff9f0a" stroke-width="1.4" stroke-linecap="round"/></svg>'
       '<div class="hl-step-title">Apply with confidence</div>'
       '<div class="hl-step-desc">Discover live job listings, salary benchmarks, curated courses, and practice with the AI Interview Coach before applying.</div></div>'
@@ -1035,7 +1061,7 @@ def render_story_ats():
       '<p class="hl-story-p">You get a score across six dimensions, a prioritised fix list, grammar and readability signals, and a full keyword-gap report mapped to the roles you care about.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div class="hl-reveal hl-reveal-d2"><div class="hl-panel">'
+      '<div class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" fill="#30d158"/></svg>ATS Analysis Report</div>'
       '<div style="display:flex;align-items:center;gap:18px;margin-bottom:22px">'
       + ring +
@@ -1058,7 +1084,7 @@ def render_story_bias():
       '<p class="hl-story-p">The AI rewriter suggests impact-neutral alternatives, preserving your achievements while broadening appeal across hiring contexts.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div style="order:1" class="hl-reveal hl-reveal-d2"><div class="hl-panel">'
+      '<div style="order:1" class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" fill="#bf5af2"/></svg>Bias Analysis Report</div>'
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">'
       '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.15)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:6px">Masculine</div><div style="font-size:26px;font-weight:800;color:#4db3ff">8</div><div style="font-size:11px;color:rgba(245,245,247,0.34)">words flagged</div></div>'
@@ -1084,7 +1110,7 @@ def render_story_builder():
       '<p class="hl-story-p">Export to DOCX (three ATS compliance levels) or PDF. One click generates a tailored cover letter for your target company, formatted and ready to send.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div><div class="hl-panel">'
+      '<div class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5"/><rect x="11" y="7" width="10" height="14" rx="2" fill="rgba(48,209,88,.08)" stroke="#30d158" stroke-width="1.5"/><path d="M14 11h5M14 14h5M14 17h3" stroke="#30d158" stroke-width="1.3" stroke-linecap="round"/></svg>Template Gallery &mdash; 15 Designs</div>'
       '<div class="hl-tmpl-grid">' + tmpl + '</div>'
       '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:space-between;gap:12px">'
@@ -1105,7 +1131,7 @@ def render_story_career():
       '<p class="hl-story-p">Hirelyzer surfaces salary benchmarks by role and market, curated courses mapped to skill gaps in your resume, and prep videos &mdash; all linked to your career profile.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div style="order:1" class="hl-reveal hl-reveal-d2"><div class="hl-panel">'
+      '<div style="order:1" class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M2 13h20" stroke="#ff9f0a" stroke-width="1.3" stroke-linecap="round"/></svg>Job Search Hub</div>'
       + cards +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">'
@@ -1121,12 +1147,13 @@ def render_story_interview():
     p = pills(["Resume-based Questions","Real-time AI Scoring","Radar Chart","Session History","Downloadable Report"])
     H('<div class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
       '<div class="hl-reveal">'
+      '<div class="hl-story-num">Feature 05 &mdash; AI Interview Coach</div>'
       '<h2 class="hl-story-h">Practice until <span class="hl-blue">every answer</span> lands</h2>'
       '<p class="hl-story-p">Upload your resume and Hirelyzer generates interview questions derived directly from your actual experience &mdash; not generic prompts. Answer in free text; the AI coach scores you on communication, technical depth, confidence, structure, and use of concrete examples.</p>'
       '<p class="hl-story-p">Every session ends with a performance radar chart, a detailed Q&amp;A review, and course recommendations tied to your weakest dimensions.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div class="hl-reveal hl-reveal-d2"><div class="hl-panel">'
+      '<div class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
       '<div class="hl-ptitle" style="justify-content:space-between">'
       '<div style="display:flex;align-items:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#ff453a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>Mock Interview &middot; Session 3</div>'
       '<div class="hl-score-badge"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#30d158"/></svg>82 / 100</div>'
@@ -1144,27 +1171,34 @@ def render_story_interview():
       '</div></div></div>')
 
 def render_testimonials():
-    tdata = [
-        ("&ldquo;Got my ATS score from 52 to 88 in one session. Landed 3 interviews the next week.&rdquo;", "Arjun M.", "SWE &mdash; Google", "#0a84ff"),
-        ("&ldquo;The bias rewriter caught words I had no idea were gendered. Total game changer.&rdquo;", "Priya S.", "PM &mdash; Razorpay", "#bf5af2"),
-        ("&ldquo;Interview Coach is scary accurate. It read my actual resume and asked about my internship.&rdquo;", "Rahul D.", "Data Analyst &mdash; Zepto", "#30d158"),
-        ("&ldquo;Went from zero callbacks to four offers. The keyword gap report was the unlock.&rdquo;", "Sneha K.", "ML Eng &mdash; Swiggy", "#ff9f0a"),
-        ("&ldquo;Best free tool I&rsquo;ve used. Templates are beautiful and genuinely ATS-safe.&rdquo;", "Amit R.", "Backend Dev &mdash; Freshworks", "#ff453a"),
-        ("&ldquo;Spotted I had no skills section. Fixed in 5 min. Callback rate tripled after that.&rdquo;", "Nisha T.", "Frontend Dev &mdash; Meesho", "#4db3ff"),
+    testimonials = [
+        ("&ldquo;Got my ATS score up from 52 to 88 in one session. Landed 3 interviews in a week.&rdquo;", "Arjun M.", "SWE &mdash; Google", "#0a84ff"),
+        ("&ldquo;The bias rewriter caught words I had no idea were gendered. Game changer.&rdquo;", "Priya S.", "PM &mdash; Razorpay", "#bf5af2"),
+        ("&ldquo;Interview Coach is scary good. It read my actual resume and asked about my internship.&rdquo;", "Rahul D.", "Data Analyst &mdash; Zepto", "#30d158"),
+        ("&ldquo;Went from zero callbacks to 4 offers. The keyword gap report was the unlock.&rdquo;", "Sneha K.", "ML Engineer &mdash; Swiggy", "#ff9f0a"),
+        ("&ldquo;Best free tool I&rsquo;ve used. The templates are actually beautiful and ATS-safe.&rdquo;", "Amit R.", "Backend Dev &mdash; Freshworks", "#ff453a"),
+        ("&ldquo;Spotted that my resume had no skills section. Fixed in 5 min. Callback rate tripled.&rdquo;", "Nisha T.", "Frontend Dev &mdash; Meesho", "#4db3ff"),
     ]
-    def card(q, name, role, col):
+    colors = [t[3] for t in testimonials]
+    initials = [t[1][0] for t in testimonials]
+
+    def card(quote, name, role, color):
+        init = name[0]
         return (
-            '<div class="hl-tcard">'
-            '<div class="hl-tcard-q">' + q + '</div>'
-            '<div class="hl-tcard-author">'
-            '<div class="hl-tcard-av" style="background:' + col + '20;color:' + col + '">' + name[0] + '</div>'
-            '<div><div class="hl-tcard-name">' + name + '</div><div class="hl-tcard-role">' + role + '</div></div>'
+            '<div class="hl-ticker-item">'
+            '<div class="hl-ticker-quote">' + quote + '</div>'
+            '<div class="hl-ticker-author">'
+            '<div class="hl-ticker-avatar" style="background:' + color + '22;color:' + color + '">' + init + '</div>'
+            '<div><div class="hl-ticker-name">' + name + '</div><div class="hl-ticker-role">' + role + '</div></div>'
             '</div></div>'
         )
-    inner = "".join(card(*t) for t in tdata)
+
+    cards_html = "".join(card(*t[:4]) for t in testimonials)
+    # Duplicate for seamless loop
     H('<div class="hl-ticker-wrap">'
-      '<div class="hl-ticker-track">' + inner + inner + '</div>'
-      '</div>')
+      '<div class="hl-ticker-track">'
+      + cards_html + cards_html +
+      '</div></div>')
 
 def render_compare():
     rows = [
@@ -1200,12 +1234,12 @@ def render_compare():
     )
     H('<div id="compare" class="hl-compare">'
       '<div class="hl-section">'
-      '<div class="hl-divider">How we compare</div>'
-      '<div style="text-align:center;margin-bottom:0">'
+      '<div class="hl-divider hl-reveal">How we compare</div>'
+      '<div style="text-align:center;margin-bottom:0" class="hl-reveal">'
       '<h2 style="font-size:clamp(26px,3.5vw,42px);font-weight:800;letter-spacing:-1.8px;color:#f5f5f7;line-height:1.08">Everything in one place &mdash; <span style="color:#0a84ff">completely free</span></h2>'
       '<div style="font-size:15px;color:rgba(245,245,247,0.6);margin-top:16px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7;text-align:center;">No paywalls. No partial features. Hirelyzer gives you the complete career toolkit at zero cost.</div>'
       '</div>'
-      '<div class="hl-compare-wrap">' + header + body + '</div>'
+      '<div class="hl-compare-wrap hl-reveal hl-reveal-delay-2">' + header + body + '</div>'
       '</div></div>')
 
 def render_highlights():
@@ -1230,7 +1264,7 @@ def render_highlights():
          "Instant &mdash; No Sign-up","Upload a PDF and get your full ATS report, bias analysis, keyword gaps, and fix list in under 2 seconds. No account, no email, no credit card."),
     ]
     items = "".join(
-        '<div class="hl-highlight">'
+        '<div class="hl-highlight hl-reveal">'
         '<div class="hl-hi-icon" style="background:' + bg + '">'
         '<svg width="20" height="20" viewBox="0 0 24 24" fill="none">' + icon + '</svg>'
         '</div>'
@@ -1241,7 +1275,7 @@ def render_highlights():
     )
     H('<div class="hl-highlights">'
       '<div class="hl-section">'
-      '<div class="hl-divider">Why Hirelyzer</div>'
+      '<div class="hl-divider hl-reveal">Why Hirelyzer</div>'
       '<div class="hl-highlight-grid">' + items + '</div>'
       '</div></div>')
 
@@ -1254,7 +1288,7 @@ def render_faq():
         ("How does the AI Interview Coach work?", "Upload your resume and Hirelyzer extracts key experiences to generate tailored questions. You answer in free text and our AI scores you across five competency dimensions in real-time."),
     ]
     items = "".join(
-        '<div class="hl-faq-item">'
+        '<div class="hl-faq-item hl-reveal">'
         '<div class="hl-faq-q">' + q + '<div class="hl-faq-q-icon">+</div></div>'
         '<div class="hl-faq-a">' + a + '</div>'
         '</div>'
@@ -1263,8 +1297,8 @@ def render_faq():
     H('<div class="hl-faq">'
       '<div class="hl-section">'
       '<div style="text-align:center;margin-bottom:0">'
-      '<div class="hl-divider">FAQ</div>'
-      '<h2 style="font-size:clamp(24px,3vw,38px);font-weight:800;letter-spacing:-1.5px;color:#f5f5f7;margin-bottom:0">Frequently asked questions</h2>'
+      '<div class="hl-divider hl-reveal">FAQ</div>'
+      '<h2 style="font-size:clamp(24px,3vw,38px);font-weight:800;letter-spacing:-1.5px;color:#f5f5f7;margin-bottom:0" class="hl-reveal">Frequently asked questions</h2>'
       '</div>'
       '<div class="hl-faq-list">' + items + '</div>'
       '</div></div>')
@@ -1272,7 +1306,7 @@ def render_faq():
 def render_cta():
     chk = checklist()
     H('<div class="hl-section">'
-      '<div id="contact" class="hl-cta"><div class="hl-cta-glow"></div>'
+      '<div id="contact" class="hl-cta hl-reveal"><div class="hl-cta-glow"></div>'
       '<div class="hl-eyebrow" style="margin:0 auto 28px"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#0a84ff"/></svg>Free to use &middot; No credit card required</div>'
       '<div class="hl-cta-h">Your next job starts with a better resume</div>'
       '<div style="font-size:16px;color:rgba(245,245,247,0.48);text-align:center;max-width:520px;margin:0 auto 40px;line-height:1.72;position:relative;z-index:1;">'
@@ -1287,7 +1321,7 @@ def render_cta():
 
 def render_contact_section():
     H('<div class="hl-section">'
-      '<div class="hl-contact-card">'
+      '<div class="hl-contact-card hl-reveal">'
       '<div style="width:48px;height:48px;border-radius:14px;background:rgba(10,132,255,0.1);border:1px solid rgba(10,132,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 18px">'
       '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#0a84ff" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="#0a84ff" stroke-width="1.5" fill="none"/></svg>'
       '</div>'
@@ -1326,12 +1360,12 @@ def render_js():
 
       # ── Scroll progress bar ──
       'var sp=document.getElementById("sp");'
-      'function upProg(){if(!sp)return;var pct=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;sp.style.width=Math.min(pct,100)+"%";}'
-      'window.addEventListener("scroll",upProg,{passive:true});'
+      'function updateProgress(){if(!sp)return;var p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;sp.style.width=Math.min(p,100)+"%";}'
+      'window.addEventListener("scroll",updateProgress,{passive:true});'
 
       # ── Nav scroll shadow ──
       'var nav=document.getElementById("hl-nav");'
-      'window.addEventListener("scroll",function(){if(nav)nav.classList.toggle("scrolled",window.scrollY>20);},{passive:true});'
+      'window.addEventListener("scroll",function(){if(nav){nav.classList.toggle("scrolled",window.scrollY>20);}},{passive:true});'
 
       # ── Smooth scroll ──
       'document.querySelectorAll("a[href^=\'#\']").forEach(function(a){'
@@ -1343,100 +1377,161 @@ def render_js():
       # ── FAQ accordion ──
       'document.querySelectorAll(".hl-faq-q").forEach(function(q){'
       'q.addEventListener("click",function(){'
-      'var ans=this.nextElementSibling,icon=this.querySelector(".hl-faq-q-icon"),open=ans.style.display==="block";'
+      'var ans=this.nextElementSibling;'
+      'var icon=this.querySelector(".hl-faq-q-icon");'
+      'var open=ans.style.display==="block";'
       'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
       'document.querySelectorAll(".hl-faq-q-icon").forEach(function(i){i.textContent="+";});'
       'if(!open){ans.style.display="block";icon.textContent="\u2212";}'
       '});});'
       'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
 
-      # ── Scroll-reveal via IntersectionObserver ──
-      'var revObs=new IntersectionObserver(function(entries){'
-      'entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add("hl-visible");revObs.unobserve(e.target);}});'
-      '},{threshold:0.12});'
-      'document.querySelectorAll(".hl-reveal").forEach(function(el){revObs.observe(el);});'
+      # ── Scroll-reveal (IntersectionObserver) — never hides elements ──
+      'function initReveal(){'
+      'var revealObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){e.target.classList.add("hl-animate");revealObs.unobserve(e.target);}'
+      '});},{threshold:0.08,rootMargin:"0px 0px -40px 0px"});'
+      'document.querySelectorAll(".hl-reveal").forEach(function(el){revealObs.observe(el);});'
+      '}'
+      'setTimeout(initReveal,400);'
 
       # ── Radar draw animation ──
       'var radarObs=new IntersectionObserver(function(entries){'
       'entries.forEach(function(e){'
       'if(e.isIntersecting){'
-      'var poly=document.getElementById("hl-radar-poly");if(poly)poly.classList.add("hl-drawn");'
-      'document.querySelectorAll(".hl-rdot").forEach(function(d){d.classList.add("hl-drawn");});'
+      'var poly=document.getElementById("hl-radar-poly");'
+      'if(poly){poly.classList.add("drawn");}'
+      'document.querySelectorAll(".hl-radar-dot").forEach(function(d){d.classList.add("drawn");});'
       'radarObs.unobserve(e.target);'
-      '}});},{threshold:0.3});'
-      'var rsvg=document.getElementById("hl-radar-svg");if(rsvg)radarObs.observe(rsvg);'
+      '}'
+      '});},{threshold:0.3});'
+      'var radarEl=document.getElementById("hl-radar-svg");'
+      'if(radarEl){radarObs.observe(radarEl);}'
 
       # ── Animated stat counters ──
-      'function animCount(el,target,suffix){'
-      'var s=0,dur=1500,t0=null;'
-      'function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/dur,1);el.textContent=Math.round(p*target)+(suffix||"");if(p<1)requestAnimationFrame(step);}'
-      'requestAnimationFrame(step);}'
-      'var cntObs=new IntersectionObserver(function(entries){'
+      'function animateCount(el,target,suffix){'
+      'var start=0;var dur=1600;var startTime=null;'
+      'function step(ts){'
+      'if(!startTime)startTime=ts;'
+      'var progress=Math.min((ts-startTime)/dur,1);'
+      'var val=Math.round(progress*target);'
+      'el.textContent=val+(suffix||"");'
+      'if(progress<1)requestAnimationFrame(step);'
+      '}'
+      'requestAnimationFrame(step);'
+      '}'
+      'var statObs=new IntersectionObserver(function(entries){'
       'entries.forEach(function(e){'
-      'if(e.isIntersecting){var el=e.target,n=parseInt(el.getAttribute("data-count")),s=el.getAttribute("data-suffix")||"";if(n)animCount(el,n,s);cntObs.unobserve(el);}});},{threshold:0.5});'
-      'document.querySelectorAll("[data-count]").forEach(function(el){cntObs.observe(el);});'
+      'if(e.isIntersecting){'
+      'var el=e.target;var count=parseInt(el.getAttribute("data-count"));var suf=el.getAttribute("data-suffix")||"";'
+      'if(count){animateCount(el,count,suf);}'
+      'statObs.unobserve(el);'
+      '}'
+      '});},{threshold:0.5});'
+      'document.querySelectorAll("[data-count]").forEach(function(el){statObs.observe(el);});'
 
-      # ── Sticky CTA (shows after 30% scroll, dismissable) ──
-      'var sticky=document.getElementById("hl-sticky"),stickyGone=false;'
-      'window.addEventListener("scroll",function(){'
-      'if(stickyGone||!sticky)return;'
-      'var pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight);'
-      'sticky.classList.toggle("show",pct>0.3);'
-      '},{passive:true});'
+      # ── Sticky CTA bar (shows after 30% scroll) ──
+      'var stickyCTA=document.getElementById("hl-sticky-cta");'
+      'var stickyDismissed=false;'
+      'function checkSticky(){'
+      'if(stickyDismissed||!stickyCTA)return;'
+      'var scrollPct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight);'
+      'stickyCTA.classList.toggle("visible",scrollPct>0.3);'
+      '}'
+      'window.addEventListener("scroll",checkSticky,{passive:true});'
 
-      # ── Active nav highlight + dot nav via IntersectionObserver ──
-      'var sections=["hl-hero","how","analyzer","builder","career","compare","contact"];'
+      # ── Sticky dismiss ──
+      'window.dismissSticky=function(){'
+      'stickyDismissed=true;'
+      'if(stickyCTA){stickyCTA.classList.remove("visible");}'
+      '};'
+
+      # ── Toast system ──
+      'var toastTimer;'
+      'window.showToast=function(msg,color){'
+      'var t=document.getElementById("hl-toast");'
+      'var m=document.getElementById("hl-toast-msg");'
+      'var d=document.getElementById("hl-toast-dot");'
+      'if(!t||!m)return;'
+      'm.textContent=msg;'
+      'if(d&&color){d.style.background=color;}'
+      't.classList.add("show");'
+      'clearTimeout(toastTimer);'
+      'toastTimer=setTimeout(function(){t.classList.remove("show");},3000);'
+      '};'
+
+      # ── Active nav highlight ──
+      'var sections=["hl-hero-anchor","how","analyzer","builder","career","compare","contact"];'
+      'var navLinks=document.querySelectorAll("[data-nav]");'
       'var navObs=new IntersectionObserver(function(entries){'
       'entries.forEach(function(e){'
-      'if(!e.isIntersecting)return;'
+      'if(e.isIntersecting){'
       'var id=e.target.id;'
-      'document.querySelectorAll("[data-nav]").forEach(function(a){a.classList.toggle("hl-active",a.getAttribute("data-nav")===id);});'
-      'document.querySelectorAll(".hl-dot-btn").forEach(function(d){d.classList.toggle("active",d.getAttribute("data-sid")===id);});'
-      '});},{threshold:0.35});'
-      'sections.forEach(function(id){var el=document.getElementById(id);if(el)navObs.observe(el);});'
+      'navLinks.forEach(function(a){a.classList.toggle("hl-nav-active",a.getAttribute("data-nav")===id);});'
+      'var dots=document.querySelectorAll(".hl-dot-nav");'
+      'dots.forEach(function(d){d.classList.toggle("active",d.getAttribute("data-section")===id);});'
+      '}'
+      '});},{threshold:0.4});'
+      'sections.forEach(function(id){'
+      'var el=document.getElementById(id);'
+      'if(el){navObs.observe(el);}'
+      '});'
 
-      # ── Dot nav click ──
-      'document.querySelectorAll(".hl-dot-btn").forEach(function(btn){'
+      # ── Section dot nav click ──
+      'document.querySelectorAll(".hl-dot-nav").forEach(function(btn){'
       'btn.addEventListener("click",function(){'
-      'var el=document.getElementById(this.getAttribute("data-sid"));'
-      'if(el)el.scrollIntoView({behavior:"smooth",block:"start"});'
+      'var id=this.getAttribute("data-section");'
+      'var target=document.getElementById(id);'
+      'if(target){target.scrollIntoView({behavior:"smooth",block:"start"});}'
       '});});'
 
       # ── Mobile drawer ──
-      'window.hlOpenDrawer=function(){'
+      'window.openDrawer=function(){'
       'document.getElementById("hl-drawer").classList.add("open");'
-      'document.getElementById("hl-ham").classList.add("open");'
-      'document.body.style.overflow="hidden";};'
-      'window.hlCloseDrawer=function(){'
+      'document.getElementById("hl-hamburger").classList.add("open");'
+      'document.body.style.overflow="hidden";'
+      '};'
+      'window.closeDrawer=function(){'
       'document.getElementById("hl-drawer").classList.remove("open");'
-      'document.getElementById("hl-ham").classList.remove("open");'
-      'document.body.style.overflow="";};'
+      'document.getElementById("hl-hamburger").classList.remove("open");'
+      'document.body.style.overflow="";'
+      '};'
 
       # ── Cursor spotlight on hero ──
-      'var heroEl=document.getElementById("hl-hero"),spot=document.getElementById("hl-spot");'
-      'if(heroEl&&spot){'
+      'var heroEl=document.querySelector(".hl-hero");'
+      'var spotlight=document.getElementById("hl-spotlight");'
+      'if(heroEl&&spotlight){'
       'heroEl.addEventListener("mousemove",function(e){'
-      'var r=heroEl.getBoundingClientRect();spot.style.left=(e.clientX-r.left)+"px";spot.style.top=(e.clientY-r.top)+"px";});'
-      'heroEl.addEventListener("mouseleave",function(){spot.style.left="50%";spot.style.top="50%";});}'
+      'var rect=heroEl.getBoundingClientRect();'
+      'spotlight.style.left=(e.clientX-rect.left)+"px";'
+      'spotlight.style.top=(e.clientY-rect.top)+"px";'
+      '});'
+      'heroEl.addEventListener("mouseleave",function(){'
+      'spotlight.style.left="50%";spotlight.style.top="50%";'
+      '});'
+      '}'
 
       # ── Typewriter headline ──
       'var words=["need","engineers","designers","developers","job seekers","everyone"];'
-      'var tw=document.getElementById("hl-tw");'
-      'var twi=0,twd=false,twc="need";'
-      'function twStep(){'
-      'if(!tw)return;var target=words[twi];'
-      'if(!twd){twc=target.slice(0,twc.length+1);tw.textContent=twc;'
-      'if(twc===target){twd=true;setTimeout(twStep,2000);}else setTimeout(twStep,90);}'
-      'else{twc=twc.slice(0,-1);tw.textContent=twc;'
-      'if(!twc.length){twd=false;twi=(twi+1)%words.length;setTimeout(twStep,300);}else setTimeout(twStep,55);}}'
-      'setTimeout(function(){twd=true;twStep();},2600);'
-
-      # ── Toast helper (global) ──
-      'var toastTmr;'
-      'window.hlToast=function(msg,col){'
-      'var t=document.getElementById("hl-toast"),m=document.getElementById("hl-toast-msg"),d=document.getElementById("hl-toast-dot");'
-      'if(!t)return;if(m)m.textContent=msg;if(d&&col)d.style.background=col;'
-      't.classList.add("show");clearTimeout(toastTmr);toastTmr=setTimeout(function(){t.classList.remove("show");},3000);};'
+      'var tw=document.getElementById("hl-typewriter");'
+      'var twIdx=0;var twDeleting=false;var twCurrent="need";var twTimer;'
+      'function typeStep(){'
+      'if(!tw)return;'
+      'var target=words[twIdx];'
+      'if(!twDeleting){'
+      'twCurrent=target.slice(0,twCurrent.length+1);'
+      'tw.textContent=twCurrent;'
+      'if(twCurrent===target){twDeleting=true;twTimer=setTimeout(typeStep,2000);return;}'
+      'twTimer=setTimeout(typeStep,90);'
+      '}else{'
+      'twCurrent=twCurrent.slice(0,-1);'
+      'tw.textContent=twCurrent;'
+      'if(twCurrent.length===0){twDeleting=false;twIdx=(twIdx+1)%words.length;twTimer=setTimeout(typeStep,300);return;}'
+      'twTimer=setTimeout(typeStep,55);'
+      '}'
+      '}'
+      'setTimeout(function(){twDeleting=true;typeStep();},2500);'
 
       '})();'
       '</script>')
