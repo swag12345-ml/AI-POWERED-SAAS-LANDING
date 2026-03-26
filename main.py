@@ -473,6 +473,111 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   50%       { opacity: 0.5; }
 }
 
+/* ── Scroll-reveal ── */
+.hl-reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.hl-reveal.hl-visible { opacity: 1; transform: none; }
+.hl-reveal-d1 { transition-delay: 0.1s; }
+.hl-reveal-d2 { transition-delay: 0.2s; }
+.hl-reveal-d3 { transition-delay: 0.3s; }
+
+/* ── Radar animation ── */
+.hl-rpoly { stroke-dasharray: 900; stroke-dashoffset: 900; transition: stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1); }
+.hl-rpoly.hl-drawn { stroke-dashoffset: 0; }
+.hl-rdot { opacity: 0; transform-origin: center; transform: scale(0); transition: opacity 0.4s ease, transform 0.4s ease; }
+.hl-rdot.hl-drawn { opacity: 1; transform: scale(1); }
+
+/* ── Active nav link ── */
+.hl-nav-links a.hl-active { color: #f5f5f7; }
+.hl-nav-links a.hl-active::after { transform: scaleX(1); }
+
+/* ── Mobile hamburger ── */
+.hl-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px 4px; }
+.hl-hamburger span { display: block; width: 22px; height: 2px; background: rgba(245,245,247,0.7); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+.hl-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hl-hamburger.open span:nth-child(2) { opacity: 0; }
+.hl-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile fullscreen drawer ── */
+#hl-drawer {
+  position: fixed; inset: 0; z-index: 950; background: rgba(0,0,0,0.97);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
+  transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); pointer-events: none;
+}
+#hl-drawer.open { transform: translateY(0); pointer-events: all; }
+#hl-drawer a { font-size: 26px; font-weight: 700; color: rgba(245,245,247,0.55); text-decoration: none; transition: color 0.2s; }
+#hl-drawer a:hover { color: #f5f5f7; }
+#hl-drawer-close { position: absolute; top: 22px; right: 24px; background: none; border: none; color: rgba(245,245,247,0.4); font-size: 28px; cursor: pointer; line-height: 1; }
+
+/* ── Section dot nav ── */
+#hl-dots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 800; }
+.hl-dot-btn { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); border: none; cursor: pointer; padding: 0; transition: background 0.3s, transform 0.3s; }
+.hl-dot-btn:hover { background: rgba(255,255,255,0.5); }
+.hl-dot-btn.active { background: #0a84ff; transform: scale(1.6); }
+
+/* ── Sticky CTA bar ── */
+#hl-sticky {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 880;
+  background: rgba(0,0,0,0.93); border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  padding: 14px 32px; transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+#hl-sticky.show { transform: translateY(0); }
+.hl-sticky-inner { max-width: 1140px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.hl-sticky-text { font-size: 14px; font-weight: 600; color: rgba(245,245,247,0.6); }
+.hl-sticky-text span { color: #f5f5f7; }
+.hl-sticky-x { background: none; border: none; color: rgba(245,245,247,0.3); font-size: 22px; cursor: pointer; line-height: 1; padding: 2px 6px; transition: color 0.2s; }
+.hl-sticky-x:hover { color: rgba(245,245,247,0.7); }
+
+/* ── Toast ── */
+#hl-toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(16px);
+  background: #18181c; border: 1px solid rgba(255,255,255,0.12); border-radius: 100px;
+  padding: 11px 20px; font-size: 13px; font-weight: 600; color: #f5f5f7;
+  display: flex; align-items: center; gap: 8px; z-index: 9990;
+  opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+#hl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#hl-toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Cursor spotlight ── */
+#hl-spot {
+  position: absolute; width: 560px; height: 560px; border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, rgba(10,132,255,0.09) 0%, transparent 65%);
+  transform: translate(-50%,-50%); left: 50%; top: 50%;
+  transition: left 0.08s ease, top 0.08s ease;
+}
+
+/* ── Typewriter cursor ── */
+.hl-tw-cursor { display: inline-block; width: 3px; height: 0.85em; background: #0a84ff; margin-left: 3px; vertical-align: middle; animation: twBlink 1s step-end infinite; }
+@keyframes twBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── Testimonial ticker ── */
+.hl-ticker-wrap {
+  padding: 48px 0; background: #000;
+  border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg,transparent,black 10%,black 90%,transparent);
+  -webkit-mask-image: linear-gradient(90deg,transparent,black 10%,black 90%,transparent);
+}
+.hl-ticker-track { display: flex; gap: 20px; width: max-content; animation: hlTicker 36s linear infinite; }
+.hl-ticker-track:hover { animation-play-state: paused; }
+@keyframes hlTicker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+.hl-tcard { background: #0d0d0f; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 20px 24px; width: 300px; flex-shrink: 0; }
+.hl-tcard-q { font-size: 13px; color: rgba(245,245,247,0.58); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+.hl-tcard-author { display: flex; align-items: center; gap: 10px; }
+.hl-tcard-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.hl-tcard-name { font-size: 12px; font-weight: 700; color: #f5f5f7; }
+.hl-tcard-role { font-size: 11px; color: rgba(245,245,247,0.34); margin-top: 1px; }
+
+/* ── Stat hover ── */
+.hl-stat:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.14); }
+
+/* ── Panel hover ── */
+.hl-panel { transition: border-color 0.3s, box-shadow 0.3s; }
+.hl-panel:hover { border-color: rgba(255,255,255,0.12); box-shadow: 0 50px 100px rgba(0,0,0,0.6); }
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .hl-story-grid { grid-template-columns: 1fr; gap: 44px; }
@@ -483,6 +588,9 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
   .hl-step:last-child   { border-radius: 0 0 20px 0; }
   .hl-ctas { flex-direction: column; align-items: center; }
   .hl-nav-links { display: none; }
+  .hl-hamburger { display: flex; }
+  #hl-dots { display: none; }
+  .hl-sticky-text { display: none; }
   .hl-cta { padding: 52px 28px; }
   .hl-card-grid { grid-template-columns: 1fr; }
   .hl-compare-head, .hl-compare-row { grid-template-columns: 1.4fr 1fr; }
@@ -531,9 +639,12 @@ def radar_svg():
         grid += '<polygon points="'+pts+'" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>'
     axes = "".join('<line x1="'+str(cx)+'" y1="'+str(cy)+'" x2="'+str(round(pt(i,1)[0],1))+'" y2="'+str(round(pt(i,1)[1],1))+'" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>' for i in range(n))
     poly = " ".join(str(round(pt(i,scores[i])[0],1))+","+str(round(pt(i,scores[i])[1],1)) for i in range(n))
-    dots = "".join('<circle cx="'+str(round(pt(i,scores[i])[0],1))+'" cy="'+str(round(pt(i,scores[i])[1],1))+'" r="3.5" fill="#0a84ff"/>' for i in range(n))
+    dots = "".join('<circle class="hl-rdot" cx="'+str(round(pt(i,scores[i])[0],1))+'" cy="'+str(round(pt(i,scores[i])[1],1))+'" r="3.5" fill="#0a84ff" style="transition-delay:'+str(round(1.1+i*0.1,1))+'s"/>' for i in range(n))
     labels = "".join('<text x="'+str(round(pt(i,1.30)[0],1))+'" y="'+str(round(pt(i,1.30)[1],1))+'" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,245,247,0.4)" font-size="8.5" font-family="Sora,sans-serif" font-weight="500">'+cats[i]+'</text>' for i in range(n))
-    return ('<svg width="220" height="220" viewBox="0 0 220 220" fill="none">'+grid+axes+'<polygon points="'+poly+'" fill="rgba(10,132,255,0.14)" stroke="#0a84ff" stroke-width="1.5"/>'+dots+labels+'</svg>')
+    return ('<svg id="hl-radar-svg" width="220" height="220" viewBox="0 0 220 220" fill="none">'
+            +grid+axes
+            +'<polygon id="hl-radar-poly" class="hl-rpoly" points="'+poly+'" fill="rgba(10,132,255,0.14)" stroke="#0a84ff" stroke-width="1.5"/>'
+            +dots+labels+'</svg>')
 
 # ─── fragment builders ────────────────────────────────────────────────────────
 def ats_bars():
@@ -717,31 +828,72 @@ def render_banner():
       '</div>')
 
 def render_nav():
-    H('<div id="sp"></div>'
+    H(
+      # ── Toast ──
+      '<div id="hl-toast"><div id="hl-toast-dot"></div><span id="hl-toast-msg">Copied!</span></div>'
+      # ── Sticky CTA ──
+      '<div id="hl-sticky">'
+      '<div class="hl-sticky-inner">'
+      '<div class="hl-sticky-text">Ready to land your next role? <span>Hirelyzer is 100% free.</span></div>'
+      '<div style="display:flex;align-items:center;gap:10px">'
+      '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p" style="padding:10px 22px;font-size:13px">'
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
+      'Analyse free</a>'
+      '<button class="hl-sticky-x" onclick="(function(){document.getElementById(\'hl-sticky\').classList.remove(\'show\');window.__hlSticky=true;})()">&times;</button>'
+      '</div></div></div>'
+      # ── Section dot nav ──
+      '<div id="hl-dots">'
+      '<button class="hl-dot-btn" data-sid="hl-hero" title="Hero"></button>'
+      '<button class="hl-dot-btn" data-sid="how" title="How it works"></button>'
+      '<button class="hl-dot-btn" data-sid="analyzer" title="Analyzer"></button>'
+      '<button class="hl-dot-btn" data-sid="builder" title="Builder"></button>'
+      '<button class="hl-dot-btn" data-sid="career" title="Career Hub"></button>'
+      '<button class="hl-dot-btn" data-sid="compare" title="Compare"></button>'
+      '<button class="hl-dot-btn" data-sid="contact" title="Contact"></button>'
+      '</div>'
+      # ── Mobile full-screen drawer ──
+      '<div id="hl-drawer">'
+      '<button id="hl-drawer-close" onclick="hlCloseDrawer()">&times;</button>'
+      '<a href="#how"     onclick="hlCloseDrawer()">How it works</a>'
+      '<a href="#analyzer" onclick="hlCloseDrawer()">Analyzer</a>'
+      '<a href="#builder" onclick="hlCloseDrawer()">Builder</a>'
+      '<a href="#career"  onclick="hlCloseDrawer()">Career Hub</a>'
+      '<a href="#compare" onclick="hlCloseDrawer()">Compare</a>'
+      '<a href="#contact" onclick="hlCloseDrawer()">Contact</a>'
+      '<a href="' + APP_URL + '" target="_blank" style="color:#0a84ff!important">Open App &rarr;</a>'
+      '</div>'
+      # ── Scroll progress bar ──
+      '<div id="sp"></div>'
+      # ── Nav ──
       '<div class="hl-nav" id="hl-nav"><div class="hl-nav-inner">'
       '<a href="#" class="hl-logo"><div class="hl-logo-icon">'
       '<svg width="18" height="18" viewBox="0 0 24 24" fill="none">'
       '<path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
       '</svg></div>HIRELYZER</a>'
-      '<div class="hl-nav-links">'
-      '<a href="#how">How it works</a>'
-      '<a href="#analyzer">Analyzer</a>'
-      '<a href="#builder">Builder</a>'
-      '<a href="#career">Career Hub</a>'
-      '<a href="#compare">Compare</a>'
-      '<a href="#contact">Contact</a>'
+      '<div class="hl-nav-links" id="hl-nav-links">'
+      '<a href="#how"      data-nav="how">How it works</a>'
+      '<a href="#analyzer" data-nav="analyzer">Analyzer</a>'
+      '<a href="#builder"  data-nav="builder">Builder</a>'
+      '<a href="#career"   data-nav="career">Career Hub</a>'
+      '<a href="#compare"  data-nav="compare">Compare</a>'
+      '<a href="#contact"  data-nav="contact">Contact</a>'
       '</div>'
       '<div class="hl-nav-right">'
       '<a href="' + APP_URL + '" target="_blank" class="hl-nav-cta">'
       '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
       'Open App</a>'
+      '<button class="hl-hamburger" id="hl-ham" onclick="hlOpenDrawer()" aria-label="Menu">'
+      '<span></span><span></span><span></span>'
+      '</button>'
       '</div>'
-      '</div></div>')
+      '</div></div>'
+    )
 
 def render_hero():
     ring = ats_ring(78)
     bars = ats_bars()
-    H('<div class="hl-hero">'
+    H('<div id="hl-hero" class="hl-hero">'
+      '<div id="hl-spot"></div>'
       '<div class="hl-hero-glow"></div>'
       '<div class="hl-hero-grid"></div>'
       '<div class="hl-hero-fade"></div>'
@@ -750,7 +902,7 @@ def render_hero():
       '<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#0a84ff"/></svg>'
       'AI-Powered Career Intelligence'
       '</div>'
-      '<h1 class="hl-h1">The last resume tool<br>you&rsquo;ll ever <em class="hl-h1-gradient">need</em></h1>'
+      '<h1 class="hl-h1">The last resume tool<br>you&rsquo;ll ever <em id="hl-tw" class="hl-h1-gradient">need</em><span class="hl-tw-cursor"></span></h1>'
       '<p class="hl-hero-sub">Upload your resume. Hirelyzer instantly scores it for ATS compatibility, detects bias, rewrites with AI, and connects you to jobs &mdash; all in one place.</p>'
       '<div class="hl-ctas">'
       '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p">'
@@ -835,11 +987,11 @@ def render_hero():
       '</div></div></div>'
 
       '<div class="hl-stats">'
-      '<div class="hl-stat"><div class="hl-stat-n">15+</div><div class="hl-stat-l">Templates</div></div>'
-      '<div class="hl-stat"><div class="hl-stat-n">5</div><div class="hl-stat-l">Core Modules</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n" data-count="15" data-suffix="+">15+</div><div class="hl-stat-l">Templates</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n" data-count="5">5</div><div class="hl-stat-l">Core Modules</div></div>'
       '<div class="hl-stat"><div class="hl-stat-n">AI</div><div class="hl-stat-l">LLM Powered</div></div>'
       '<div class="hl-stat"><div class="hl-stat-n">Free</div><div class="hl-stat-l">No Credit Card</div></div>'
-      '<div class="hl-stat"><div class="hl-stat-n">10k+</div><div class="hl-stat-l">Resumes Scored</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n" data-count="10" data-suffix="k+">10k+</div><div class="hl-stat-l">Resumes Scored</div></div>'
       '</div>'
       '</div></div>')
 
@@ -849,22 +1001,22 @@ def render_how():
       '<div class="hl-divider">How it works</div>'
       '<div class="hl-steps">'
 
-      '<div class="hl-step"><span class="hl-step-n">01</span>'
+      '<div class="hl-step hl-reveal hl-reveal-d1"><span class="hl-step-n">01</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(10,132,255,0.1)"/><path d="M22 28V20M22 20L19 23M22 20L25 23" stroke="#0a84ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 30h14" stroke="#0a84ff" stroke-width="1.6" stroke-linecap="round"/><rect x="14" y="13" width="16" height="19" rx="3" stroke="#0a84ff" stroke-width="1.4" stroke-dasharray="3 2" fill="none"/></svg>'
       '<div class="hl-step-title">Upload your resume</div>'
       '<div class="hl-step-desc">Drop any PDF. Our parser handles messy formats, multi-column layouts, and scanned documents via OCR fallback.</div></div>'
 
-      '<div class="hl-step"><span class="hl-step-n">02</span>'
+      '<div class="hl-step hl-reveal hl-reveal-d2"><span class="hl-step-n">02</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(48,209,88,0.1)"/><circle cx="20" cy="20" r="7" stroke="#30d158" stroke-width="1.5" fill="none"/><path d="M20 17v3l2 1.5" stroke="#30d158" stroke-width="1.5" stroke-linecap="round"/><path d="M25.2 25.2l3.5 3.5" stroke="#30d158" stroke-width="1.7" stroke-linecap="round"/></svg>'
       '<div class="hl-step-title">Instant AI analysis</div>'
       '<div class="hl-step-desc">ATS scoring, bias detection, grammar check, keyword matching &mdash; all computed in seconds with detailed feedback.</div></div>'
 
-      '<div class="hl-step"><span class="hl-step-n">03</span>'
+      '<div class="hl-step hl-reveal hl-reveal-d2"><span class="hl-step-n">03</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(191,90,242,0.1)"/><rect x="12" y="11" width="13" height="18" rx="2.5" stroke="#bf5af2" stroke-width="1.5" fill="none"/><rect x="19" y="16" width="14" height="18" rx="2.5" fill="rgba(191,90,242,0.08)" stroke="#bf5af2" stroke-width="1.5"/><path d="M22 21h8M22 24.5h8M22 28h5" stroke="#bf5af2" stroke-width="1.3" stroke-linecap="round"/><circle cx="32" cy="13" r="4" fill="#bf5af2"/><path d="M30.5 13l1 1 2-2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       '<div class="hl-step-title">Build or rewrite</div>'
       '<div class="hl-step-desc">Use the AI rewriter or open the full Resume Builder. Choose from 15 templates, generate a cover letter, export to PDF or DOCX.</div></div>'
 
-      '<div class="hl-step"><span class="hl-step-n">04</span>'
+      '<div class="hl-step hl-reveal hl-reveal-d3"><span class="hl-step-n">04</span>'
       '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(255,159,10,0.1)"/><path d="M22 28c-3.31 0-6-2.69-6-6 0-4 3-8 6-9 3 1 6 5 6 9 0 3.31-2.69 6-6 6z" stroke="#ff9f0a" stroke-width="1.5" fill="none"/><circle cx="22" cy="22" r="2" fill="#ff9f0a"/><path d="M29 13l-2 2M15 13l2 2" stroke="#ff9f0a" stroke-width="1.4" stroke-linecap="round"/></svg>'
       '<div class="hl-step-title">Apply with confidence</div>'
       '<div class="hl-step-desc">Discover live job listings, salary benchmarks, curated courses, and practice with the AI Interview Coach before applying.</div></div>'
@@ -876,14 +1028,14 @@ def render_story_ats():
     bars = ats_bars()
     p = pills(["ATS Score","6-Dimension Breakdown","Keyword Gap","Grammar Check","Downloadable Report"])
     H('<div id="analyzer" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
-      '<div>'
+      '<div class="hl-reveal">'
       '<div class="hl-story-num">Feature 01 &mdash; Resume Analyzer</div>'
       '<h2 class="hl-story-h">Your resume, <span class="hl-blue">scored like a machine</span> reads it</h2>'
       '<p class="hl-story-p">Most resumes never reach a human. Applicant Tracking Systems silently filter them on format, missing keywords, or structural issues. Hirelyzer&rsquo;s analyzer replicates how ATS parsers actually read your document &mdash; not just a surface keyword match.</p>'
       '<p class="hl-story-p">You get a score across six dimensions, a prioritised fix list, grammar and readability signals, and a full keyword-gap report mapped to the roles you care about.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div><div class="hl-panel">'
+      '<div class="hl-reveal hl-reveal-d2"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" fill="#30d158"/></svg>ATS Analysis Report</div>'
       '<div style="display:flex;align-items:center;gap:18px;margin-bottom:22px">'
       + ring +
@@ -899,14 +1051,14 @@ def render_story_ats():
 def render_story_bias():
     p = pills(["Gender-coded Detection","AI Neutral Rewrite","Lexicon of 400+ Words","One-click Apply"])
     H('<div class="hl-story-alt"><div class="hl-section"><div class="hl-story-grid">'
-      '<div style="order:2">'
+      '<div style="order:2" class="hl-reveal">'
       '<div class="hl-story-num">Feature 02 &mdash; Bias Detection</div>'
       '<h2 class="hl-story-h">Bias-free language that <span class="hl-purp">opens every door</span></h2>'
       '<p class="hl-story-p">Gender-coded words can unconsciously signal culture fit to recruiters. Hirelyzer scans every verb, adjective, and phrase against a curated bias lexicon of 400+ terms.</p>'
       '<p class="hl-story-p">The AI rewriter suggests impact-neutral alternatives, preserving your achievements while broadening appeal across hiring contexts.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div style="order:1"><div class="hl-panel">'
+      '<div style="order:1" class="hl-reveal hl-reveal-d2"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" fill="#bf5af2"/></svg>Bias Analysis Report</div>'
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">'
       '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.15)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:6px">Masculine</div><div style="font-size:26px;font-weight:800;color:#4db3ff">8</div><div style="font-size:11px;color:rgba(245,245,247,0.34)">words flagged</div></div>'
@@ -925,7 +1077,7 @@ def render_story_builder():
     tmpl = tmpl_gallery()
     p = pills(["15 Templates","DOCX + PDF Export","AI Cover Letter","Live Preview","ATS Single-Column"])
     H('<div id="builder" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
-      '<div>'
+      '<div class="hl-reveal">'
       '<div class="hl-story-num">Feature 03 &mdash; Resume Builder</div>'
       '<h2 class="hl-story-h">Build resumes that <span class="hl-green">look as good</span> as they parse</h2>'
       '<p class="hl-story-p">Fifteen ATS-optimised templates &mdash; from understated minimal to executive prestige &mdash; all built on strict single-column structures that parse correctly in every major hiring platform.</p>'
@@ -946,14 +1098,14 @@ def render_story_career():
     cards = job_cards()
     p = pills(["Live Job Listings","Salary Benchmarks","Course Recommendations","Skills Radar","Remote Filter"])
     H('<div id="career" class="hl-story-alt"><div class="hl-section"><div class="hl-story-grid">'
-      '<div style="order:2">'
+      '<div style="order:2" class="hl-reveal">'
       '<div class="hl-story-num">Feature 04 &mdash; Career Intelligence</div>'
       '<h2 class="hl-story-h">Jobs, salaries, courses &mdash; <span class="hl-amber">one place</span></h2>'
       '<p class="hl-story-p">The Job Search Hub pulls live listings from LinkedIn, Naukri, Foundit, and Indeed &mdash; or uses the JSearch/RapidAPI engine with remote and employment-type filters.</p>'
       '<p class="hl-story-p">Hirelyzer surfaces salary benchmarks by role and market, curated courses mapped to skill gaps in your resume, and prep videos &mdash; all linked to your career profile.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div style="order:1"><div class="hl-panel">'
+      '<div style="order:1" class="hl-reveal hl-reveal-d2"><div class="hl-panel">'
       '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M2 13h20" stroke="#ff9f0a" stroke-width="1.3" stroke-linecap="round"/></svg>Job Search Hub</div>'
       + cards +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">'
@@ -968,14 +1120,13 @@ def render_story_interview():
     radar = radar_svg()
     p = pills(["Resume-based Questions","Real-time AI Scoring","Radar Chart","Session History","Downloadable Report"])
     H('<div class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
-      '<div>'
-      '<div class="hl-story-num">Feature 05 &mdash; AI Interview Coach</div>'
+      '<div class="hl-reveal">'
       '<h2 class="hl-story-h">Practice until <span class="hl-blue">every answer</span> lands</h2>'
       '<p class="hl-story-p">Upload your resume and Hirelyzer generates interview questions derived directly from your actual experience &mdash; not generic prompts. Answer in free text; the AI coach scores you on communication, technical depth, confidence, structure, and use of concrete examples.</p>'
       '<p class="hl-story-p">Every session ends with a performance radar chart, a detailed Q&amp;A review, and course recommendations tied to your weakest dimensions.</p>'
       '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div><div class="hl-panel">'
+      '<div class="hl-reveal hl-reveal-d2"><div class="hl-panel">'
       '<div class="hl-ptitle" style="justify-content:space-between">'
       '<div style="display:flex;align-items:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#ff453a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>Mock Interview &middot; Session 3</div>'
       '<div class="hl-score-badge"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#30d158"/></svg>82 / 100</div>'
@@ -991,6 +1142,29 @@ def render_story_interview():
       '</div>'
       '</div></div>'
       '</div></div></div>')
+
+def render_testimonials():
+    tdata = [
+        ("&ldquo;Got my ATS score from 52 to 88 in one session. Landed 3 interviews the next week.&rdquo;", "Arjun M.", "SWE &mdash; Google", "#0a84ff"),
+        ("&ldquo;The bias rewriter caught words I had no idea were gendered. Total game changer.&rdquo;", "Priya S.", "PM &mdash; Razorpay", "#bf5af2"),
+        ("&ldquo;Interview Coach is scary accurate. It read my actual resume and asked about my internship.&rdquo;", "Rahul D.", "Data Analyst &mdash; Zepto", "#30d158"),
+        ("&ldquo;Went from zero callbacks to four offers. The keyword gap report was the unlock.&rdquo;", "Sneha K.", "ML Eng &mdash; Swiggy", "#ff9f0a"),
+        ("&ldquo;Best free tool I&rsquo;ve used. Templates are beautiful and genuinely ATS-safe.&rdquo;", "Amit R.", "Backend Dev &mdash; Freshworks", "#ff453a"),
+        ("&ldquo;Spotted I had no skills section. Fixed in 5 min. Callback rate tripled after that.&rdquo;", "Nisha T.", "Frontend Dev &mdash; Meesho", "#4db3ff"),
+    ]
+    def card(q, name, role, col):
+        return (
+            '<div class="hl-tcard">'
+            '<div class="hl-tcard-q">' + q + '</div>'
+            '<div class="hl-tcard-author">'
+            '<div class="hl-tcard-av" style="background:' + col + '20;color:' + col + '">' + name[0] + '</div>'
+            '<div><div class="hl-tcard-name">' + name + '</div><div class="hl-tcard-role">' + role + '</div></div>'
+            '</div></div>'
+        )
+    inner = "".join(card(*t) for t in tdata)
+    H('<div class="hl-ticker-wrap">'
+      '<div class="hl-ticker-track">' + inner + inner + '</div>'
+      '</div>')
 
 def render_compare():
     rows = [
@@ -1149,31 +1323,121 @@ def render_footer():
 def render_js():
     H('<script>'
       '(function(){'
-      # Scroll progress bar
+
+      # ── Scroll progress bar ──
       'var sp=document.getElementById("sp");'
-      'function u(){if(!sp)return;var p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;sp.style.width=Math.min(p,100)+"%";}'
-      'window.addEventListener("scroll",u,{passive:true});'
-      # Nav scroll shadow
+      'function upProg(){if(!sp)return;var pct=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;sp.style.width=Math.min(pct,100)+"%";}'
+      'window.addEventListener("scroll",upProg,{passive:true});'
+
+      # ── Nav scroll shadow ──
       'var nav=document.getElementById("hl-nav");'
-      'window.addEventListener("scroll",function(){if(nav){nav.classList.toggle("scrolled",window.scrollY>20);}},{passive:true});'
-      # Smooth scroll for anchor links
+      'window.addEventListener("scroll",function(){if(nav)nav.classList.toggle("scrolled",window.scrollY>20);},{passive:true});'
+
+      # ── Smooth scroll ──
       'document.querySelectorAll("a[href^=\'#\']").forEach(function(a){'
       'a.addEventListener("click",function(e){'
       'var t=document.querySelector(this.getAttribute("href"));'
       'if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth",block:"start"});}'
       '});});'
-      # FAQ accordion
+
+      # ── FAQ accordion ──
       'document.querySelectorAll(".hl-faq-q").forEach(function(q){'
       'q.addEventListener("click",function(){'
-      'var ans=this.nextElementSibling;'
-      'var icon=this.querySelector(".hl-faq-q-icon");'
-      'var open=ans.style.display==="block";'
+      'var ans=this.nextElementSibling,icon=this.querySelector(".hl-faq-q-icon"),open=ans.style.display==="block";'
       'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
       'document.querySelectorAll(".hl-faq-q-icon").forEach(function(i){i.textContent="+";});'
       'if(!open){ans.style.display="block";icon.textContent="\u2212";}'
       '});});'
-      # Init all FAQ closed
       'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
+
+      # ── Scroll-reveal via IntersectionObserver ──
+      'var revObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add("hl-visible");revObs.unobserve(e.target);}});'
+      '},{threshold:0.12});'
+      'document.querySelectorAll(".hl-reveal").forEach(function(el){revObs.observe(el);});'
+
+      # ── Radar draw animation ──
+      'var radarObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){'
+      'var poly=document.getElementById("hl-radar-poly");if(poly)poly.classList.add("hl-drawn");'
+      'document.querySelectorAll(".hl-rdot").forEach(function(d){d.classList.add("hl-drawn");});'
+      'radarObs.unobserve(e.target);'
+      '}});},{threshold:0.3});'
+      'var rsvg=document.getElementById("hl-radar-svg");if(rsvg)radarObs.observe(rsvg);'
+
+      # ── Animated stat counters ──
+      'function animCount(el,target,suffix){'
+      'var s=0,dur=1500,t0=null;'
+      'function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/dur,1);el.textContent=Math.round(p*target)+(suffix||"");if(p<1)requestAnimationFrame(step);}'
+      'requestAnimationFrame(step);}'
+      'var cntObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){var el=e.target,n=parseInt(el.getAttribute("data-count")),s=el.getAttribute("data-suffix")||"";if(n)animCount(el,n,s);cntObs.unobserve(el);}});},{threshold:0.5});'
+      'document.querySelectorAll("[data-count]").forEach(function(el){cntObs.observe(el);});'
+
+      # ── Sticky CTA (shows after 30% scroll, dismissable) ──
+      'var sticky=document.getElementById("hl-sticky"),stickyGone=false;'
+      'window.addEventListener("scroll",function(){'
+      'if(stickyGone||!sticky)return;'
+      'var pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight);'
+      'sticky.classList.toggle("show",pct>0.3);'
+      '},{passive:true});'
+
+      # ── Active nav highlight + dot nav via IntersectionObserver ──
+      'var sections=["hl-hero","how","analyzer","builder","career","compare","contact"];'
+      'var navObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(!e.isIntersecting)return;'
+      'var id=e.target.id;'
+      'document.querySelectorAll("[data-nav]").forEach(function(a){a.classList.toggle("hl-active",a.getAttribute("data-nav")===id);});'
+      'document.querySelectorAll(".hl-dot-btn").forEach(function(d){d.classList.toggle("active",d.getAttribute("data-sid")===id);});'
+      '});},{threshold:0.35});'
+      'sections.forEach(function(id){var el=document.getElementById(id);if(el)navObs.observe(el);});'
+
+      # ── Dot nav click ──
+      'document.querySelectorAll(".hl-dot-btn").forEach(function(btn){'
+      'btn.addEventListener("click",function(){'
+      'var el=document.getElementById(this.getAttribute("data-sid"));'
+      'if(el)el.scrollIntoView({behavior:"smooth",block:"start"});'
+      '});});'
+
+      # ── Mobile drawer ──
+      'window.hlOpenDrawer=function(){'
+      'document.getElementById("hl-drawer").classList.add("open");'
+      'document.getElementById("hl-ham").classList.add("open");'
+      'document.body.style.overflow="hidden";};'
+      'window.hlCloseDrawer=function(){'
+      'document.getElementById("hl-drawer").classList.remove("open");'
+      'document.getElementById("hl-ham").classList.remove("open");'
+      'document.body.style.overflow="";};'
+
+      # ── Cursor spotlight on hero ──
+      'var heroEl=document.getElementById("hl-hero"),spot=document.getElementById("hl-spot");'
+      'if(heroEl&&spot){'
+      'heroEl.addEventListener("mousemove",function(e){'
+      'var r=heroEl.getBoundingClientRect();spot.style.left=(e.clientX-r.left)+"px";spot.style.top=(e.clientY-r.top)+"px";});'
+      'heroEl.addEventListener("mouseleave",function(){spot.style.left="50%";spot.style.top="50%";});}'
+
+      # ── Typewriter headline ──
+      'var words=["need","engineers","designers","developers","job seekers","everyone"];'
+      'var tw=document.getElementById("hl-tw");'
+      'var twi=0,twd=false,twc="need";'
+      'function twStep(){'
+      'if(!tw)return;var target=words[twi];'
+      'if(!twd){twc=target.slice(0,twc.length+1);tw.textContent=twc;'
+      'if(twc===target){twd=true;setTimeout(twStep,2000);}else setTimeout(twStep,90);}'
+      'else{twc=twc.slice(0,-1);tw.textContent=twc;'
+      'if(!twc.length){twd=false;twi=(twi+1)%words.length;setTimeout(twStep,300);}else setTimeout(twStep,55);}}'
+      'setTimeout(function(){twd=true;twStep();},2600);'
+
+      # ── Toast helper (global) ──
+      'var toastTmr;'
+      'window.hlToast=function(msg,col){'
+      'var t=document.getElementById("hl-toast"),m=document.getElementById("hl-toast-msg"),d=document.getElementById("hl-toast-dot");'
+      'if(!t)return;if(m)m.textContent=msg;if(d&&col)d.style.background=col;'
+      't.classList.add("show");clearTimeout(toastTmr);toastTmr=setTimeout(function(){t.classList.remove("show");},3000);};'
+
       '})();'
       '</script>')
 
@@ -1187,6 +1451,7 @@ render_story_bias()
 render_story_builder()
 render_story_career()
 render_story_interview()
+render_testimonials()
 render_compare()
 render_highlights()
 render_faq()
