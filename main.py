@@ -7,7 +7,7 @@ st.set_page_config(
     layout="wide",
 )
 
-APP_URL = "https://hirelyzer-career-based-saas-platform-fjkckpqy6nz5nknpsesukc.streamlit.app/"
+APP_URL = "https://hirelyzer-supabase-implemented-ktycj9qzgfcjmior3qjtku.streamlit.app/"
 SUPPORT_EMAIL = "swagato_bmca2024@msit.edu.in"
 
 # ─── helpers ──────────────────────────────────────────────────────────────────
