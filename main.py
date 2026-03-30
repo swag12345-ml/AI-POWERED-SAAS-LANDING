@@ -862,6 +862,730 @@ div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 }
 """)
 
+# ─── GAMING HUD ENHANCEMENT CSS ───────────────────────────────────────────────
+CSS("""
+/* ══════════════════════════════════════════
+   CUSTOM SCOPE CURSOR SYSTEM
+══════════════════════════════════════════ */
+* { cursor: none !important; }
+
+#hud-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+}
+
+#hud-cursor-dot {
+  position: absolute;
+  width: 5px; height: 5px;
+  background: #0a84ff;
+  border-radius: 50%;
+  top: -2.5px; left: -2.5px;
+  box-shadow: 0 0 6px #0a84ff, 0 0 12px rgba(10,132,255,0.5);
+  transition: transform 0.08s cubic-bezier(0.25,0.46,0.45,0.94),
+              background 0.15s ease, box-shadow 0.15s ease;
+}
+
+#hud-cursor-ring {
+  position: absolute;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(10,132,255,0.7);
+  border-radius: 50%;
+  top: -16px; left: -16px;
+  transition: transform 0.12s cubic-bezier(0.25,0.46,0.45,0.94),
+              width 0.2s cubic-bezier(0.25,0.46,0.45,0.94),
+              height 0.2s cubic-bezier(0.25,0.46,0.45,0.94),
+              top 0.2s, left 0.2s,
+              border-color 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 0 8px rgba(10,132,255,0.2), inset 0 0 8px rgba(10,132,255,0.05);
+}
+
+#hud-cursor-cross-h,
+#hud-cursor-cross-v {
+  position: absolute;
+  background: rgba(10,132,255,0.5);
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+#hud-cursor-cross-h {
+  width: 10px; height: 1px;
+  top: -0.5px;
+}
+#hud-cursor-cross-h.left  { right: 20px; }
+#hud-cursor-cross-h.right { left: 20px; }
+#hud-cursor-cross-v {
+  width: 1px; height: 10px;
+  left: -0.5px;
+}
+#hud-cursor-cross-v.top    { bottom: 20px; }
+#hud-cursor-cross-v.bottom { top: 20px; }
+
+/* Hover state — ring expands */
+body.hud-hover #hud-cursor-ring {
+  width: 48px; height: 48px;
+  top: -24px; left: -24px;
+  border-color: rgba(10,132,255,0.9);
+  box-shadow: 0 0 16px rgba(10,132,255,0.3), inset 0 0 12px rgba(10,132,255,0.1);
+}
+body.hud-hover #hud-cursor-dot {
+  background: #30d158;
+  box-shadow: 0 0 8px #30d158, 0 0 16px rgba(48,209,88,0.4);
+}
+
+/* Click state — ring shrinks */
+body.hud-click #hud-cursor-ring {
+  width: 18px; height: 18px;
+  top: -9px; left: -9px;
+  border-color: #30d158;
+}
+body.hud-click #hud-cursor-dot {
+  transform: scale(2);
+  background: #30d158;
+}
+
+/* ══════════════════════════════════════════
+   CURSOR TRAIL (ghost rings)
+══════════════════════════════════════════ */
+.hud-trail {
+  position: fixed;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(10,132,255,0.25);
+  pointer-events: none;
+  z-index: 99990;
+  top: 0; left: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease;
+}
+
+/* ══════════════════════════════════════════
+   UPGRADED BUTTON PHYSICS
+══════════════════════════════════════════ */
+.hl-btn-p {
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.22s cubic-bezier(0.25,0.46,0.45,0.94) !important;
+  position: relative !important;
+}
+.hl-btn-p:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 16px 52px rgba(10,132,255,0.6),
+              0 0 0 1px rgba(255,255,255,0.12) inset,
+              0 0 30px rgba(10,132,255,0.2) !important;
+}
+.hl-btn-p:active {
+  transform: scale(0.96) translateY(1px) !important;
+  box-shadow: 0 4px 16px rgba(10,132,255,0.3) !important;
+  transition-duration: 0.06s !important;
+}
+
+/* Sheen sweep on primary buttons */
+.hl-btn-p::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.hl-btn-p:hover::after { left: 160%; }
+
+.hl-btn-g {
+  transition: border-color 0.2s, background 0.2s,
+              box-shadow 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.hl-btn-g:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.14) !important;
+}
+.hl-btn-g:active { transform: scale(0.96) !important; }
+
+/* ══════════════════════════════════════════
+   UPGRADED CARD HOVER PHYSICS
+══════════════════════════════════════════ */
+.hl-panel {
+  transition: border-color 0.3s ease,
+              box-shadow 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
+              transform 0.3s cubic-bezier(0.34,1.2,0.64,1) !important;
+}
+.hl-panel:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(10,132,255,0.2) !important;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(10,132,255,0.08) inset,
+              0 0 40px rgba(10,132,255,0.06) !important;
+}
+
+.hl-stat {
+  transition: border-color 0.25s, transform 0.28s cubic-bezier(0.34,1.4,0.64,1),
+              box-shadow 0.3s ease !important;
+}
+.hl-stat:hover {
+  transform: translateY(-5px) !important;
+  border-color: rgba(10,132,255,0.25) !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(10,132,255,0.1) !important;
+}
+
+.hl-highlight {
+  transition: background 0.25s, border-color 0.25s,
+              transform 0.28s cubic-bezier(0.34,1.3,0.64,1) !important;
+}
+.hl-highlight:hover { transform: translateY(-5px) !important; }
+
+.hl-step {
+  transition: background 0.25s, border-color 0.25s,
+              transform 0.28s cubic-bezier(0.34,1.3,0.64,1) !important;
+}
+.hl-step:hover { transform: translateY(-4px) !important; }
+
+.hl-job {
+  transition: border-color 0.18s, background 0.18s,
+              transform 0.22s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+.hl-job:hover { transform: translateX(6px) !important; }
+
+.hl-ticker-item {
+  transition: border-color 0.2s, transform 0.24s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+.hl-ticker-item:hover { transform: translateY(-5px) !important; }
+
+/* ══════════════════════════════════════════
+   UPGRADED SCROLL REVEAL — STAGGERED + PRECISE
+══════════════════════════════════════════ */
+.hl-reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: none;
+}
+.hl-reveal.hl-animate {
+  animation: hudReveal 0.72s cubic-bezier(0.16,1,0.3,1) both !important;
+}
+.hl-reveal-delay-1.hl-animate { animation-delay: 0.06s !important; }
+.hl-reveal-delay-2.hl-animate { animation-delay: 0.14s !important; }
+.hl-reveal-delay-3.hl-animate { animation-delay: 0.24s !important; }
+
+@keyframes hudReveal {
+  0%   { opacity: 0; transform: translateY(36px) scale(0.98); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ══════════════════════════════════════════
+   HUD SCAN-LINE OVERLAY (ambient)
+══════════════════════════════════════════ */
+#hud-scanlines {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.018) 2px,
+    rgba(0,0,0,0.018) 4px
+  );
+  opacity: 0.6;
+}
+
+/* ══════════════════════════════════════════
+   HUD CORNER BRACKETS (section accent)
+══════════════════════════════════════════ */
+.hud-bracket {
+  position: relative;
+}
+.hud-bracket::before,
+.hud-bracket::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  border-color: rgba(10,132,255,0.35);
+  border-style: solid;
+  pointer-events: none;
+  transition: border-color 0.3s;
+}
+.hud-bracket::before {
+  top: -1px; left: -1px;
+  border-width: 1px 0 0 1px;
+}
+.hud-bracket::after {
+  bottom: -1px; right: -1px;
+  border-width: 0 1px 1px 0;
+}
+.hud-bracket:hover::before,
+.hud-bracket:hover::after { border-color: rgba(10,132,255,0.7); }
+
+/* Apply to panels */
+.hl-panel { position: relative; }
+
+/* ══════════════════════════════════════════
+   UPGRADED NAV — HUD STYLE
+══════════════════════════════════════════ */
+.hl-nav {
+  transition: box-shadow 0.4s ease, border-color 0.4s ease,
+              background 0.4s ease !important;
+}
+.hl-nav.scrolled {
+  background: rgba(0,0,0,0.92) !important;
+  border-color: rgba(10,132,255,0.12) !important;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.7),
+              0 1px 0 rgba(10,132,255,0.08) !important;
+}
+
+.hl-nav-links a {
+  position: relative !important;
+  transition: color 0.2s !important;
+}
+.hl-nav-links a::after {
+  transition: transform 0.28s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+
+.hl-nav-cta {
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.25s ease !important;
+  overflow: hidden !important;
+}
+.hl-nav-cta:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+}
+.hl-nav-cta::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -80%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-15deg);
+  transition: left 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+  pointer-events: none;
+}
+.hl-nav-cta:hover::after { left: 150%; }
+
+/* ══════════════════════════════════════════
+   UPGRADED SCROLL PROGRESS BAR
+══════════════════════════════════════════ */
+#sp {
+  background: linear-gradient(90deg,
+    #0a84ff 0%, #30d158 40%, #bf5af2 70%, #0a84ff 100%) !important;
+  background-size: 200% 100% !important;
+  animation: gradientShift 2s linear infinite !important;
+  box-shadow: 0 0 8px rgba(10,132,255,0.6), 0 0 16px rgba(48,209,88,0.3) !important;
+  height: 2px !important;
+}
+
+/* ══════════════════════════════════════════
+   UPGRADED FAQ ACCORDION
+══════════════════════════════════════════ */
+.hl-faq-item {
+  transition: border-color 0.25s, box-shadow 0.28s cubic-bezier(0.25,0.46,0.45,0.94),
+              transform 0.22s cubic-bezier(0.34,1.2,0.64,1) !important;
+}
+.hl-faq-item:hover {
+  transform: translateX(4px) !important;
+  border-color: rgba(10,132,255,0.2) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 16px rgba(10,132,255,0.06) !important;
+}
+.hl-faq-q-icon {
+  transition: background 0.2s, transform 0.3s cubic-bezier(0.34,1.4,0.64,1), color 0.2s !important;
+}
+.hl-faq-item.open .hl-faq-q-icon {
+  transform: rotate(45deg) !important;
+  background: rgba(10,132,255,0.15) !important;
+  color: var(--blue) !important;
+}
+
+/* ══════════════════════════════════════════
+   UPGRADED DOT NAV
+══════════════════════════════════════════ */
+.hl-dot-nav {
+  transition: background 0.3s, transform 0.3s cubic-bezier(0.34,1.6,0.64,1),
+              box-shadow 0.3s !important;
+  position: relative !important;
+}
+.hl-dot-nav.active {
+  transform: scale(1.6) !important;
+  box-shadow: 0 0 12px var(--blue), 0 0 24px rgba(10,132,255,0.3) !important;
+}
+.hl-dot-nav:hover {
+  transform: scale(1.3) !important;
+}
+
+/* ══════════════════════════════════════════
+   EYEBROW BADGE — HUD PULSE
+══════════════════════════════════════════ */
+.hl-eyebrow {
+  border: 1px solid rgba(10,132,255,0.4) !important;
+  box-shadow: 0 0 20px rgba(10,132,255,0.12),
+              inset 0 0 12px rgba(10,132,255,0.05) !important;
+  animation: fadeUp 0.6s ease both, hudEyebrowPulse 3s ease-in-out infinite !important;
+}
+@keyframes hudEyebrowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(10,132,255,0.12), inset 0 0 12px rgba(10,132,255,0.05); }
+  50%       { box-shadow: 0 0 28px rgba(10,132,255,0.22), inset 0 0 16px rgba(10,132,255,0.08); }
+}
+
+/* ══════════════════════════════════════════
+   HERO CARD — PREMIUM HUD FRAME
+══════════════════════════════════════════ */
+.hl-card {
+  box-shadow: 0 60px 120px rgba(0,0,0,0.9),
+              0 0 0 1px rgba(10,132,255,0.08),
+              0 0 80px rgba(10,132,255,0.06),
+              0 0 160px rgba(10,132,255,0.03) !important;
+  transition: box-shadow 0.5s ease, transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94) !important;
+  position: relative !important;
+}
+.hl-card:hover {
+  box-shadow: 0 80px 160px rgba(0,0,0,0.95),
+              0 0 0 1px rgba(10,132,255,0.15),
+              0 0 100px rgba(10,132,255,0.1) !important;
+  transform: translateY(-4px) !important;
+}
+
+/* HUD corner brackets on card */
+.hl-card::before,
+.hl-card-bar::before {
+  display: none;
+}
+
+/* ══════════════════════════════════════════
+   BANNER — UPGRADED SHIMMER
+══════════════════════════════════════════ */
+.hl-banner {
+  animation: shimmerBg 4s linear infinite !important;
+  border-bottom-color: rgba(10,132,255,0.25) !important;
+}
+
+/* ══════════════════════════════════════════
+   ATS BAR FILLS — ANIMATED ON LOAD
+══════════════════════════════════════════ */
+.hl-bar-fill {
+  animation: barGrow 1.2s cubic-bezier(0.25,0.46,0.45,0.94) both;
+}
+@keyframes barGrow {
+  from { width: 0% !important; opacity: 0; }
+}
+
+/* ══════════════════════════════════════════
+   GLOW SYSTEM — ENHANCED SHADOWS
+══════════════════════════════════════════ */
+.hl-logo-icon {
+  transition: box-shadow 0.25s cubic-bezier(0.25,0.46,0.45,0.94),
+              transform 0.22s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.hl-logo:hover .hl-logo-icon {
+  box-shadow: 0 6px 28px rgba(10,132,255,0.7),
+              0 0 0 1px rgba(10,132,255,0.4),
+              0 0 40px rgba(10,132,255,0.25) !important;
+  transform: scale(1.08) rotate(-3deg) !important;
+}
+
+/* ══════════════════════════════════════════
+   COMPARE TABLE — HUD HIGHLIGHT
+══════════════════════════════════════════ */
+.hl-cc-hl {
+  background: rgba(10,132,255,0.06) !important;
+  transition: background 0.2s !important;
+}
+.hl-compare-row:hover .hl-cc-hl {
+  background: rgba(10,132,255,0.1) !important;
+}
+
+/* ══════════════════════════════════════════
+   CONTACT EMAIL BUTTON
+══════════════════════════════════════════ */
+.hl-contact-email {
+  transition: background 0.22s, border-color 0.22s,
+              box-shadow 0.25s, transform 0.2s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+.hl-contact-email:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 0 32px rgba(10,132,255,0.2), 0 8px 24px rgba(0,0,0,0.3) !important;
+}
+
+/* ══════════════════════════════════════════
+   WORD CHIP HOVER
+══════════════════════════════════════════ */
+.wc {
+  transition: transform 0.18s cubic-bezier(0.34,1.4,0.64,1),
+              box-shadow 0.2s ease !important;
+}
+.wc:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+}
+.wc-m:hover { box-shadow: 0 4px 12px rgba(10,132,255,0.25) !important; }
+.wc-f:hover { box-shadow: 0 4px 12px rgba(191,90,242,0.25) !important; }
+.wc-n:hover { box-shadow: 0 4px 12px rgba(48,209,88,0.25) !important; }
+
+/* ══════════════════════════════════════════
+   PILL HOVER
+══════════════════════════════════════════ */
+.hl-pill {
+  transition: border-color 0.2s, color 0.2s, background 0.2s,
+              transform 0.18s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+.hl-pill:hover { transform: translateY(-2px) scale(1.04) !important; }
+
+/* ══════════════════════════════════════════
+   TEMPLATE GRID HOVER
+══════════════════════════════════════════ */
+.hl-tmpl {
+  transition: border-color 0.2s, box-shadow 0.22s,
+              transform 0.22s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+.hl-tmpl:hover { transform: translateY(-4px) scale(1.02) !important; }
+
+/* ══════════════════════════════════════════
+   FOOTER LINKS
+══════════════════════════════════════════ */
+.hl-footer-links a {
+  transition: color 0.2s,
+              transform 0.18s cubic-bezier(0.34,1.4,0.64,1) !important;
+  display: inline-block !important;
+}
+.hl-footer-links a:hover { transform: translateY(-2px) !important; }
+
+/* ══════════════════════════════════════════
+   PARALLAX HERO LAYERS (depth)
+══════════════════════════════════════════ */
+.hl-aurora-1 { will-change: transform; }
+.hl-aurora-2 { will-change: transform; }
+.hl-aurora-3 { will-change: transform; }
+.hl-orb      { will-change: transform; }
+
+/* ══════════════════════════════════════════
+   SECTION DIVIDERS — HUD STYLE
+══════════════════════════════════════════ */
+.hl-divider {
+  letter-spacing: 2.5px !important;
+  font-size: 9.5px !important;
+}
+.hl-divider::before,
+.hl-divider::after {
+  background: linear-gradient(90deg, transparent, rgba(10,132,255,0.15), transparent) !important;
+}
+
+/* ══════════════════════════════════════════
+   RADAR DOTS — ENHANCED GLOW
+══════════════════════════════════════════ */
+.hl-radar-dot.drawn {
+  filter: drop-shadow(0 0 6px rgba(10,132,255,0.9)) !important;
+}
+
+/* ══════════════════════════════════════════
+   SCORE BADGE PULSE
+══════════════════════════════════════════ */
+.hl-score-badge {
+  animation: scorePulse 2.5s ease-in-out infinite !important;
+}
+@keyframes scorePulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(48,209,88,0.12); }
+  50%       { box-shadow: 0 0 20px rgba(48,209,88,0.25); }
+}
+
+/* ══════════════════════════════════════════
+   MOBILE DRAWER — SLIDE PHYSICS
+══════════════════════════════════════════ */
+#hl-drawer {
+  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1) !important;
+}
+#hl-drawer a {
+  transition: color 0.2s,
+              transform 0.2s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+#hl-drawer a:hover { transform: translateX(6px) !important; }
+
+/* ══════════════════════════════════════════
+   STICKY CTA — SMOOTH SLIDE
+══════════════════════════════════════════ */
+#hl-sticky-cta {
+  transition: transform 0.45s cubic-bezier(0.16,1,0.3,1) !important;
+}
+
+/* ══════════════════════════════════════════
+   TOAST — PHYSICS BOUNCE
+══════════════════════════════════════════ */
+#hl-toast.show {
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0) !important;
+  transition: opacity 0.3s ease,
+              transform 0.4s cubic-bezier(0.16,1,0.3,1) !important;
+}
+
+/* ══════════════════════════════════════════
+   CTA SECTION GLOW
+══════════════════════════════════════════ */
+.hl-cta {
+  transition: box-shadow 0.4s ease !important;
+}
+.hl-cta:hover {
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5),
+              0 0 80px rgba(10,132,255,0.08) !important;
+}
+
+/* ══════════════════════════════════════════
+   BANNER BADGE — HUD FLICKER
+══════════════════════════════════════════ */
+.hl-banner-badge {
+  animation: hudBadgeFlicker 4s ease-in-out infinite !important;
+}
+@keyframes hudBadgeFlicker {
+  0%, 90%, 100% { opacity: 1; }
+  92%            { opacity: 0.7; }
+  94%            { opacity: 1; }
+  96%            { opacity: 0.8; }
+}
+""")
+
+# ─── GAMING HUD HTML INJECTION ────────────────────────────────────────────────
+def inject_hud():
+    H(
+      # Custom cursor elements
+      '<div id="hud-cursor">'
+      '<div id="hud-cursor-dot"></div>'
+      '<div id="hud-cursor-ring"></div>'
+      '<div id="hud-cursor-cross-h left" style="position:absolute;width:10px;height:1px;background:rgba(10,132,255,0.5);top:-0.5px;right:20px;"></div>'
+      '<div id="hud-cursor-cross-h right" style="position:absolute;width:10px;height:1px;background:rgba(10,132,255,0.5);top:-0.5px;left:20px;"></div>'
+      '<div id="hud-cursor-cross-v top" style="position:absolute;width:1px;height:10px;background:rgba(10,132,255,0.5);left:-0.5px;bottom:20px;"></div>'
+      '<div id="hud-cursor-cross-v bottom" style="position:absolute;width:1px;height:10px;background:rgba(10,132,255,0.5);left:-0.5px;top:20px;"></div>'
+      '</div>'
+      # Scanlines overlay
+      '<div id="hud-scanlines"></div>'
+    )
+
+# ─── GAMING HUD JAVASCRIPT ────────────────────────────────────────────────────
+def inject_hud_js():
+    H('<script>'
+      '(function(){'
+
+      # ── Custom cursor with lag interpolation ──
+      'var cur=document.getElementById("hud-cursor");'
+      'var dot=document.getElementById("hud-cursor-dot");'
+      'var ring=document.getElementById("hud-cursor-ring");'
+      'var mx=window.innerWidth/2,my=window.innerHeight/2;'
+      'var rx=mx,ry=my;'
+      'document.addEventListener("mousemove",function(e){mx=e.clientX;my=e.clientY;},{passive:true});'
+
+      # Smooth ring interpolation
+      'function animCursor(){'
+      'rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;'
+      'if(cur){cur.style.transform="translate("+mx+"px,"+my+"px)";}'
+      'if(ring){ring.style.transform="translate("+(rx-mx)+"px,"+(ry-my)+"px)";}'
+      'requestAnimationFrame(animCursor);'
+      '}'
+      'animCursor();'
+
+      # Hover state
+      'var interactSel="a,button,.hl-btn-p,.hl-btn-g,.hl-panel,.hl-step,.hl-stat,.hl-highlight,.hl-job,.hl-tmpl,.hl-pill,.wc,.hl-faq-q,.hl-dot-nav,.hl-ticker-item,.hl-nav-cta,.hl-contact-email,.hl-logo,.hl-hamburger,input,textarea,select,[onclick],[role=button]";'
+      'document.addEventListener("mouseover",function(e){'
+      'if(e.target.closest(interactSel)){document.body.classList.add("hud-hover");}'
+      '},{passive:true});'
+      'document.addEventListener("mouseout",function(e){'
+      'if(e.target.closest(interactSel)){document.body.classList.remove("hud-hover");}'
+      '},{passive:true});'
+
+      # Click state
+      'document.addEventListener("mousedown",function(){document.body.classList.add("hud-click");},{passive:true});'
+      'document.addEventListener("mouseup",function(){document.body.classList.remove("hud-click");},{passive:true});'
+
+      # ── Trail particles ──
+      'var trails=[];var trailCount=6;'
+      'for(var i=0;i<trailCount;i++){'
+      'var t=document.createElement("div");'
+      't.className="hud-trail";'
+      't.style.opacity=((trailCount-i)/trailCount*0.3).toFixed(2);'
+      't.style.width=(6-i*0.7)+"px";t.style.height=(6-i*0.7)+"px";'
+      'document.body.appendChild(t);trails.push({el:t,x:mx,y:my});'
+      '}'
+      'function animTrails(){'
+      'for(var j=0;j<trails.length;j++){'
+      'var lag=0.12/(j*0.04+0.08);lag=Math.min(lag,0.3);'
+      'trails[j].x+=(mx-trails[j].x)*(0.08+j*0.02);'
+      'trails[j].y+=(my-trails[j].y)*(0.08+j*0.02);'
+      'trails[j].el.style.transform="translate("+(trails[j].x-3)+"px,"+(trails[j].y-3)+"px)";'
+      '}'
+      'requestAnimationFrame(animTrails);'
+      '}'
+      'animTrails();'
+
+      # ── Parallax hero on mousemove ──
+      'var heroEl2=document.querySelector(".hl-hero");'
+      'if(heroEl2){'
+      'heroEl2.addEventListener("mousemove",function(e){'
+      'var rect=heroEl2.getBoundingClientRect();'
+      'var px=(e.clientX-rect.left)/rect.width-0.5;'
+      'var py=(e.clientY-rect.top)/rect.height-0.5;'
+      'var a1=document.querySelector(".hl-aurora-1");'
+      'var a2=document.querySelector(".hl-aurora-2");'
+      'var a3=document.querySelector(".hl-aurora-3");'
+      'var orb=document.querySelector(".hl-orb-1");'
+      'if(a1){a1.style.transform="translate("+(px*28)+"px,"+(py*18)+"px) scale(1)";}'
+      'if(a2){a2.style.transform="translate("+(px*-20)+"px,"+(py*22)+"px) scale(1)";}'
+      'if(a3){a3.style.transform="translate("+(px*16)+"px,"+(py*-14)+"px) scale(1)";}'
+      'if(orb){orb.style.transform="translate(-50%,-50%) translate("+(px*12)+"px,"+(py*8)+"px)";}'
+      '},{passive:true});'
+      'heroEl2.addEventListener("mouseleave",function(){'
+      'var a1=document.querySelector(".hl-aurora-1");'
+      'var a2=document.querySelector(".hl-aurora-2");'
+      'var a3=document.querySelector(".hl-aurora-3");'
+      'if(a1){a1.style.transform="";}'
+      'if(a2){a2.style.transform="";}'
+      'if(a3){a3.style.transform="";}'
+      '});'
+      '}'
+
+      # ── Staggered card reveal with precise timing ──
+      'setTimeout(function(){'
+      'var staggerObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e,idx){'
+      'if(e.isIntersecting){'
+      'var delay=parseInt(e.target.getAttribute("data-stagger")||"0");'
+      'setTimeout(function(){e.target.classList.add("hl-animate");},delay);'
+      'staggerObs.unobserve(e.target);'
+      '}'
+      '});},{threshold:0.06,rootMargin:"0px 0px -30px 0px"});'
+
+      # Assign stagger delays to cards
+      'var steps=document.querySelectorAll(".hl-step");'
+      'steps.forEach(function(el,i){el.setAttribute("data-stagger",i*80);el.classList.add("hl-reveal");staggerObs.observe(el);});'
+      'var highlights=document.querySelectorAll(".hl-highlight");'
+      'highlights.forEach(function(el,i){el.setAttribute("data-stagger",i*60);el.classList.add("hl-reveal");staggerObs.observe(el);});'
+      'var stats=document.querySelectorAll(".hl-stat");'
+      'stats.forEach(function(el,i){el.setAttribute("data-stagger",i*50);el.classList.add("hl-reveal");staggerObs.observe(el);});'
+      'var jobs=document.querySelectorAll(".hl-job");'
+      'jobs.forEach(function(el,i){el.setAttribute("data-stagger",i*70);el.classList.add("hl-reveal");staggerObs.observe(el);});'
+      '},600);'
+
+      # ── Upgrade FAQ with open class ──
+      'document.querySelectorAll(".hl-faq-q").forEach(function(q){'
+      'q.addEventListener("click",function(){'
+      'var item=this.closest(".hl-faq-item");'
+      'var wasOpen=item&&item.classList.contains("open");'
+      'document.querySelectorAll(".hl-faq-item").forEach(function(it){it.classList.remove("open");});'
+      'if(!wasOpen&&item){item.classList.add("open");}'
+      '});});'
+
+      # ── Magnetic button effect ──
+      'document.querySelectorAll(".hl-btn-p,.hl-btn-g,.hl-nav-cta").forEach(function(btn){'
+      'btn.addEventListener("mousemove",function(e){'
+      'var r=this.getBoundingClientRect();'
+      'var px=((e.clientX-r.left)/r.width-0.5)*12;'
+      'var py=((e.clientY-r.top)/r.height-0.5)*6;'
+      'this.style.transform="translateY(-2px) translate("+px+"px,"+py+"px)";'
+      '},{passive:true});'
+      'btn.addEventListener("mouseleave",function(){'
+      'this.style.transform="";'
+      '});});'
+
+      # ── Cursor hide on idle ──
+      'var idleTimer;'
+      'document.addEventListener("mousemove",function(){'
+      'if(cur){cur.style.opacity="1";}'
+      'clearTimeout(idleTimer);'
+      'idleTimer=setTimeout(function(){if(cur){cur.style.opacity="0";}},3000);'
+      '},{passive:true});'
+
+      '})()'
+      '</script>')
+
 # ─── SVG helpers ──────────────────────────────────────────────────────────────
 def ats_ring(score=78):
     r, c, sw = 38, 48, 5
@@ -1828,703 +2552,8 @@ def render_js():
       '})();'
       '</script>')
 
-# ─── GAMING ENHANCEMENTS ──────────────────────────────────────────────────────
-def inject_gaming_css():
-    CSS("""
-/* ════════════════════════════════════════════════════════
-   HIRELYZER — GAMING HUD ENHANCEMENT LAYER
-   Additive overrides on top of base styles
-   ════════════════════════════════════════════════════════ */
-
-/* ── Custom Cursor System ── */
-*, *::before, *::after { cursor: none !important; }
-#hg-cursor-dot {
-  position: fixed; width: 6px; height: 6px; border-radius: 50%;
-  background: #0a84ff; pointer-events: none; z-index: 99999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.08s cubic-bezier(0.23,1,0.32,1), background 0.2s, width 0.2s, height 0.2s;
-  box-shadow: 0 0 8px #0a84ff, 0 0 20px rgba(10,132,255,0.4);
-  mix-blend-mode: normal;
-}
-#hg-cursor-ring {
-  position: fixed; width: 32px; height: 32px; border-radius: 50%;
-  border: 1px solid rgba(10,132,255,0.6); pointer-events: none; z-index: 99998;
-  transform: translate(-50%, -50%);
-  transition: transform 0.14s cubic-bezier(0.23,1,0.32,1), width 0.25s cubic-bezier(0.23,1,0.32,1), height 0.25s cubic-bezier(0.23,1,0.32,1), opacity 0.2s, border-color 0.2s;
-  box-shadow: 0 0 12px rgba(10,132,255,0.15), inset 0 0 8px rgba(10,132,255,0.04);
-}
-#hg-cursor-cross-h {
-  position: fixed; height: 1px; width: 14px; background: rgba(10,132,255,0.5);
-  pointer-events: none; z-index: 99997;
-  transform: translate(-50%, -50%);
-  transition: transform 0.14s cubic-bezier(0.23,1,0.32,1), opacity 0.2s;
-}
-#hg-cursor-cross-v {
-  position: fixed; width: 1px; height: 14px; background: rgba(10,132,255,0.5);
-  pointer-events: none; z-index: 99997;
-  transform: translate(-50%, -50%);
-  transition: transform 0.14s cubic-bezier(0.23,1,0.32,1), opacity 0.2s;
-}
-body.cursor-hover #hg-cursor-ring {
-  width: 52px; height: 52px; border-color: rgba(10,132,255,0.9);
-  box-shadow: 0 0 20px rgba(10,132,255,0.25), inset 0 0 16px rgba(10,132,255,0.06);
-}
-body.cursor-hover #hg-cursor-dot {
-  width: 4px; height: 4px; background: #fff;
-  box-shadow: 0 0 6px #fff;
-}
-body.cursor-click #hg-cursor-ring {
-  width: 20px; height: 20px; border-color: rgba(48,209,88,0.9);
-  box-shadow: 0 0 16px rgba(48,209,88,0.4);
-}
-body.cursor-click #hg-cursor-dot {
-  width: 8px; height: 8px; background: #30d158;
-  box-shadow: 0 0 12px #30d158;
-}
-
-/* ── Scan-line overlay (subtle CRT effect) ── */
-#hg-scanlines {
-  position: fixed; inset: 0; z-index: 2; pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.018) 2px,
-    rgba(0,0,0,0.018) 4px
-  );
-  opacity: 1;
-}
-
-/* ── HUD Corner Brackets on panels ── */
-.hl-panel { position: relative; }
-.hl-panel::after {
-  content: '';
-  position: absolute; inset: -1px; border-radius: inherit;
-  background: transparent;
-  pointer-events: none;
-  z-index: 1;
-}
-/* Corner brackets via outline + clip */
-.hl-panel .hg-bracket-tl,
-.hl-panel .hg-bracket-tr,
-.hl-panel .hg-bracket-bl,
-.hl-panel .hg-bracket-br {
-  position: absolute; width: 16px; height: 16px; pointer-events: none; z-index: 10;
-}
-.hg-bracket-tl { top: -1px; left: -1px; border-top: 2px solid rgba(10,132,255,0.7); border-left: 2px solid rgba(10,132,255,0.7); }
-.hg-bracket-tr { top: -1px; right: -1px; border-top: 2px solid rgba(10,132,255,0.7); border-right: 2px solid rgba(10,132,255,0.7); }
-.hg-bracket-bl { bottom: -1px; left: -1px; border-bottom: 2px solid rgba(10,132,255,0.7); border-left: 2px solid rgba(10,132,255,0.7); }
-.hg-bracket-br { bottom: -1px; right: -1px; border-bottom: 2px solid rgba(10,132,255,0.7); border-right: 2px solid rgba(10,132,255,0.7); }
-
-/* ── Enhanced scroll reveal — staggered precision ── */
-.hl-reveal {
-  opacity: 0;
-  transform: translateY(24px) scale(0.99);
-  will-change: opacity, transform;
-}
-.hl-reveal.hl-animate {
-  animation: hgReveal 0.7s cubic-bezier(0.16,1,0.3,1) both;
-}
-.hl-reveal-delay-1.hl-animate { animation-delay: 0.09s; }
-.hl-reveal-delay-2.hl-animate { animation-delay: 0.2s; }
-.hl-reveal-delay-3.hl-animate { animation-delay: 0.31s; }
-@keyframes hgReveal {
-  0%   { opacity: 0; transform: translateY(24px) scale(0.99); }
-  60%  { opacity: 1; }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* ── Glitch text effect on hover for section headings ── */
-.hl-story-h {
-  transition: letter-spacing 0.3s ease;
-  position: relative;
-}
-.hl-story-h:hover { letter-spacing: -1.8px; }
-
-/* ── Enhanced button tactile feedback ── */
-.hl-btn-p {
-  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease !important;
-  position: relative;
-}
-.hl-btn-p::after {
-  content: '';
-  position: absolute; inset: 0; border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.hl-btn-p:hover::after { opacity: 1; }
-.hl-btn-p:hover {
-  transform: translateY(-3px) scale(1.02) !important;
-  box-shadow: 0 16px 48px rgba(10,132,255,0.55), 0 0 0 1px rgba(255,255,255,0.12) inset, 0 0 32px rgba(10,132,255,0.2) !important;
-}
-.hl-btn-p:active {
-  transform: scale(0.96) translateY(1px) !important;
-  box-shadow: 0 4px 16px rgba(10,132,255,0.3) !important;
-  transition: transform 0.08s ease, box-shadow 0.08s ease !important;
-}
-.hl-btn-g:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255,255,255,0.28) !important;
-  background: rgba(255,255,255,0.08) !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(255,255,255,0.04) !important;
-}
-.hl-btn-g:active { transform: scale(0.96) !important; transition: transform 0.08s ease !important; }
-.hl-nav-cta:hover {
-  transform: translateY(-2px) scale(1.03) !important;
-  box-shadow: 0 8px 32px rgba(10,132,255,0.55) !important;
-}
-.hl-nav-cta:active { transform: scale(0.95) !important; }
-
-/* ── Card hover lift + glow ── */
-.hl-highlight {
-  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease !important;
-}
-.hl-highlight:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 32px var(--card-glow, rgba(10,132,255,0.08)) !important;
-}
-
-.hl-stat {
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s, box-shadow 0.3s !important;
-}
-.hl-stat:hover {
-  transform: translateY(-5px) scale(1.02) !important;
-  box-shadow: 0 24px 56px rgba(0,0,0,0.55), 0 0 24px rgba(10,132,255,0.12) !important;
-}
-
-.hl-ticker-item {
-  transition: border-color 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s !important;
-}
-.hl-ticker-item:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 20px 48px rgba(0,0,0,0.5) !important;
-}
-
-.hl-step {
-  transition: background 0.25s, border-color 0.25s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1) !important;
-}
-.hl-step:hover { transform: translateY(-5px) !important; }
-
-.hl-job {
-  transition: border-color 0.2s, background 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s !important;
-}
-.hl-job:hover {
-  transform: translateX(5px) !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
-}
-
-.hl-panel {
-  transition: border-color 0.3s, box-shadow 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1) !important;
-}
-.hl-panel:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 60px 120px rgba(0,0,0,0.75), 0 0 60px rgba(10,132,255,0.08) !important;
-}
-
-/* ── HUD status line in nav ── */
-.hl-nav::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(10,132,255,0.4) 30%, rgba(48,209,88,0.3) 60%, transparent 100%);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
-}
-.hl-nav.scrolled::after { transform: scaleX(1); }
-
-/* ── Dot nav enhanced ── */
-.hl-dot-nav {
-  transition: background 0.3s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s !important;
-  position: relative;
-}
-.hl-dot-nav::before {
-  content: '';
-  position: absolute; inset: -4px; border-radius: 50%;
-  border: 1px solid transparent;
-  transition: border-color 0.3s, transform 0.3s;
-}
-.hl-dot-nav.active::before { border-color: rgba(10,132,255,0.4); transform: scale(1.5); }
-.hl-dot-nav.active {
-  transform: scale(1.7) !important;
-  box-shadow: 0 0 12px var(--blue), 0 0 24px rgba(10,132,255,0.3) !important;
-}
-
-/* ── FAQ enhanced ── */
-.hl-faq-a {
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), padding 0.3s ease !important;
-}
-.hl-faq-q-icon {
-  transition: background 0.2s, color 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1) !important;
-}
-
-/* ── Scroll progress bar enhanced glow ── */
-#sp {
-  height: 2px;
-  box-shadow: 0 0 8px rgba(10,132,255,0.6), 0 0 16px rgba(48,209,88,0.3) !important;
-  filter: blur(0.3px);
-}
-
-/* ── Aurora enhanced with deeper motion ── */
-.hl-aurora-1 {
-  background: radial-gradient(circle, rgba(10,132,255,0.16) 0%, rgba(10,132,255,0.04) 50%, transparent 70%) !important;
-  filter: blur(2px);
-}
-.hl-aurora-2 {
-  background: radial-gradient(circle, rgba(48,209,88,0.1) 0%, transparent 65%) !important;
-  filter: blur(3px);
-}
-.hl-aurora-3 {
-  background: radial-gradient(circle, rgba(191,90,242,0.1) 0%, transparent 65%) !important;
-  filter: blur(2px);
-}
-
-/* ── Data bars animated ── */
-.hl-bar-fill {
-  position: relative;
-  overflow: hidden;
-}
-.hl-bar-fill::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent 40%, rgba(255,255,255,0.12), transparent 60%);
-  transform: translateX(-100%);
-  animation: hgShimmer 2.5s ease-in-out infinite;
-}
-@keyframes hgShimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(200%); }
-}
-
-/* ── Hero card floating animation ── */
-.hl-card {
-  animation: fadeUp 0.6s 0.44s ease both, hgFloat 8s ease-in-out 1.2s infinite !important;
-}
-@keyframes hgFloat {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-
-/* ── Eyebrow badge pulse glow ── */
-.hl-eyebrow {
-  animation: fadeUp 0.6s ease both, hgBadgePulse 3s ease-in-out 1s infinite !important;
-}
-@keyframes hgBadgePulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(10,132,255,0.1); }
-  50%       { box-shadow: 0 0 28px rgba(10,132,255,0.22), 0 0 48px rgba(10,132,255,0.08); }
-}
-
-/* ── Pill hover upgrade ── */
-.hl-pill {
-  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s !important;
-}
-.hl-pill:hover {
-  transform: translateY(-2px) scale(1.04) !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
-}
-
-/* ── Ticker items staggered reveal ── */
-.hl-ticker-track {
-  animation: tickerScroll 36s linear infinite !important;
-}
-
-/* ── Compare table row hover ── */
-.hl-compare-row {
-  transition: background 0.2s, transform 0.2s !important;
-}
-.hl-compare-row:hover { background: rgba(10,132,255,0.03) !important; }
-
-/* ── Logo hover glow spin ── */
-.hl-logo-icon {
-  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s !important;
-}
-.hl-logo:hover .hl-logo-icon {
-  transform: rotate(12deg) scale(1.1) !important;
-  box-shadow: 0 8px 32px rgba(10,132,255,0.65), 0 0 0 2px rgba(10,132,255,0.3) !important;
-}
-
-/* ── Contact email hover ── */
-.hl-contact-email {
-  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1) !important;
-}
-.hl-contact-email:hover {
-  transform: translateY(-3px) !important;
-  box-shadow: 0 12px 36px rgba(10,132,255,0.18) !important;
-}
-
-/* ── Parallax depth class ── */
-.hg-parallax-slow { will-change: transform; }
-.hg-parallax-fast { will-change: transform; }
-
-/* ── Word chip hover ── */
-.wc {
-  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s !important;
-  cursor: default !important;
-}
-.wc:hover { transform: translateY(-3px) scale(1.06) !important; box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important; }
-
-/* ── Section divider line animation ── */
-.hl-divider::before,
-.hl-divider::after {
-  background: linear-gradient(90deg, transparent, rgba(10,132,255,0.2), rgba(48,209,88,0.15), transparent) !important;
-  transition: opacity 0.6s !important;
-}
-
-/* ── HUD corner decorations for the hero card ── */
-.hl-card {
-  position: relative;
-}
-.hl-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(10,132,255,0.06) 0%, transparent 50%, rgba(48,209,88,0.03) 100%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── Radar dot pulse ── */
-.hl-radar-dot.drawn {
-  animation: hgRadarPulse 2.5s ease-in-out infinite !important;
-}
-@keyframes hgRadarPulse {
-  0%, 100% { filter: drop-shadow(0 0 3px rgba(10,132,255,0.8)); }
-  50%       { filter: drop-shadow(0 0 8px rgba(10,132,255,1)) drop-shadow(0 0 16px rgba(10,132,255,0.5)); }
-}
-
-/* ── Glitch line decoration ── */
-.hg-glitch-line {
-  position: absolute; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(10,132,255,0.5), transparent);
-  animation: hgGlitchLine 6s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes hgGlitchLine {
-  0%, 90%, 100% { opacity: 0; transform: translateX(-100%); }
-  92%           { opacity: 1; transform: translateX(0); }
-  94%           { opacity: 0.5; transform: translateX(100%); }
-}
-
-/* ── Nav link hover underline upgrade ── */
-.hl-nav-links a::after {
-  background: linear-gradient(90deg, var(--blue), var(--green), var(--purple)) !important;
-  height: 1.5px !important;
-  box-shadow: 0 0 8px rgba(10,132,255,0.4) !important;
-}
-
-/* ── Score badge pulse ── */
-.hl-score-badge {
-  animation: hgScorePulse 3s ease-in-out infinite !important;
-}
-@keyframes hgScorePulse {
-  0%, 100% { box-shadow: 0 0 12px rgba(48,209,88,0.12); }
-  50%       { box-shadow: 0 0 20px rgba(48,209,88,0.3), 0 0 40px rgba(48,209,88,0.1); }
-}
-
-/* ── Stat number gradient ── */
-.hl-stat-n {
-  background: linear-gradient(135deg, #f5f5f7 0%, rgba(245,245,247,0.7) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: none !important;
-}
-
-/* ── Mobile cursor disable ── */
-@media (hover: none) {
-  #hg-cursor-dot, #hg-cursor-ring, #hg-cursor-cross-h, #hg-cursor-cross-v { display: none !important; }
-  *, *::before, *::after { cursor: auto !important; }
-}
-""")
-
-
-def inject_gaming_html():
-    H("""
-<div id="hg-cursor-dot"></div>
-<div id="hg-cursor-ring"></div>
-<div id="hg-cursor-cross-h"></div>
-<div id="hg-cursor-cross-v"></div>
-<div id="hg-scanlines"></div>
-""")
-
-
-def inject_gaming_js():
-    H("""<script>
-(function() {
-  'use strict';
-
-  /* ── Custom Cursor System ── */
-  var dot   = document.getElementById('hg-cursor-dot');
-  var ring  = document.getElementById('hg-cursor-ring');
-  var crossH = document.getElementById('hg-cursor-cross-h');
-  var crossV = document.getElementById('hg-cursor-cross-v');
-
-  if (!dot || !ring) return;
-
-  var mx = window.innerWidth / 2, my = window.innerHeight / 2;
-  var rx = mx, ry = my;
-  var rafId;
-
-  document.addEventListener('mousemove', function(e) {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
-    crossH.style.left = mx + 'px';
-    crossH.style.top  = my + 'px';
-    crossV.style.left = mx + 'px';
-    crossV.style.top  = my + 'px';
-  }, { passive: true });
-
-  function lerpRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    rafId = requestAnimationFrame(lerpRing);
-  }
-  lerpRing();
-
-  /* Interaction states */
-  var interactables = 'a,button,.hl-btn-p,.hl-btn-g,.hl-nav-cta,.hl-pill,.hl-step,.hl-highlight,.hl-stat,.hl-ticker-item,.hl-job,.hl-faq-q,.hl-tmpl,.hl-contact-email,.hl-dot-nav,.hl-logo,.wc';
-  document.addEventListener('mouseover', function(e) {
-    if (e.target.closest && e.target.closest(interactables)) {
-      document.body.classList.add('cursor-hover');
-    }
-  }, { passive: true });
-  document.addEventListener('mouseout', function(e) {
-    if (e.target.closest && e.target.closest(interactables)) {
-      document.body.classList.remove('cursor-hover');
-    }
-  }, { passive: true });
-  document.addEventListener('mousedown', function() {
-    document.body.classList.add('cursor-click');
-  });
-  document.addEventListener('mouseup', function() {
-    document.body.classList.remove('cursor-click');
-  });
-
-  /* ── Inject HUD brackets into panels ── */
-  function addBrackets() {
-    document.querySelectorAll('.hl-panel').forEach(function(panel) {
-      if (panel.querySelector('.hg-bracket-tl')) return;
-      ['tl','tr','bl','br'].forEach(function(pos) {
-        var b = document.createElement('div');
-        b.className = 'hg-bracket-' + pos;
-        panel.appendChild(b);
-      });
-    });
-  }
-  setTimeout(addBrackets, 600);
-
-  /* ── Parallax on hero background elements ── */
-  var heroEl = document.querySelector('.hl-hero');
-  var aurora1 = document.querySelector('.hl-aurora-1');
-  var aurora2 = document.querySelector('.hl-aurora-2');
-  var aurora3 = document.querySelector('.hl-aurora-3');
-
-  if (heroEl) {
-    heroEl.addEventListener('mousemove', function(e) {
-      var rect = heroEl.getBoundingClientRect();
-      var cx = (e.clientX - rect.left - rect.width / 2) / rect.width;
-      var cy = (e.clientY - rect.top - rect.height / 2) / rect.height;
-      if (aurora1) aurora1.style.transform = 'translate(' + (cx*28) + 'px,' + (cy*20) + 'px) scale(1.04)';
-      if (aurora2) aurora2.style.transform = 'translate(' + (-cx*22) + 'px,' + (-cy*16) + 'px) scale(1.06)';
-      if (aurora3) aurora3.style.transform = 'translate(' + (cx*18) + 'px,' + (cy*12) + 'px) scale(1.02)';
-    }, { passive: true });
-    heroEl.addEventListener('mouseleave', function() {
-      if (aurora1) aurora1.style.transform = '';
-      if (aurora2) aurora2.style.transform = '';
-      if (aurora3) aurora3.style.transform = '';
-    });
-  }
-
-  /* ── Magnetic button effect ── */
-  function addMagnet(el) {
-    el.addEventListener('mousemove', function(e) {
-      var rect = el.getBoundingClientRect();
-      var cx = e.clientX - rect.left - rect.width / 2;
-      var cy = e.clientY - rect.top - rect.height / 2;
-      el.style.transform = 'translate(' + (cx * 0.12) + 'px,' + (cy * 0.12) + 'px) translateY(-3px) scale(1.02)';
-    });
-    el.addEventListener('mouseleave', function() {
-      el.style.transform = '';
-    });
-  }
-  setTimeout(function() {
-    document.querySelectorAll('.hl-btn-p, .hl-btn-g, .hl-nav-cta').forEach(addMagnet);
-  }, 800);
-
-  /* ── Highlight cards — track mouse for glow position ── */
-  setTimeout(function() {
-    document.querySelectorAll('.hl-highlight').forEach(function(card) {
-      card.addEventListener('mousemove', function(e) {
-        var rect = card.getBoundingClientRect();
-        var x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-        var y = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
-        card.style.setProperty('--mx', x + '%');
-        card.style.setProperty('--my', y + '%');
-      });
-    });
-  }, 700);
-
-  /* ── Stat number entrance ── */
-  /* (uses existing animateCount from main JS) */
-
-  /* ── Glitch line on section headings (hover) ── */
-  setTimeout(function() {
-    document.querySelectorAll('.hl-story-h').forEach(function(h) {
-      var line = document.createElement('div');
-      line.className = 'hg-glitch-line';
-      line.style.cssText = 'top:0;';
-      h.style.position = 'relative';
-      h.style.overflow = 'hidden';
-      h.appendChild(line);
-    });
-  }, 900);
-
-  /* ── Scroll-triggered section number ticker ── */
-  var storyNums = document.querySelectorAll('.hl-story-num');
-  var numObs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        e.target.style.animation = 'hgReveal 0.5s cubic-bezier(0.16,1,0.3,1) both';
-        numObs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.5 });
-  storyNums.forEach(function(el) { numObs.observe(el); });
-
-  /* ── Ticker pause on hover (already in CSS via animation-play-state) ── */
-
-  /* ── FAQ smooth slide ── */
-  setTimeout(function() {
-    document.querySelectorAll('.hl-faq-q').forEach(function(q) {
-      q.addEventListener('click', function() {
-        var ans = this.nextElementSibling;
-        var icon = this.querySelector('.hl-faq-q-icon');
-        if (!ans) return;
-        var isOpen = ans.dataset.open === '1';
-        // Close all
-        document.querySelectorAll('.hl-faq-a').forEach(function(a) {
-          a.style.maxHeight = '0';
-          a.style.paddingTop = '0';
-          a.style.paddingBottom = '0';
-          a.style.display = 'block';
-          a.dataset.open = '0';
-        });
-        document.querySelectorAll('.hl-faq-q-icon').forEach(function(i) { i.textContent = '+'; i.style.transform = 'rotate(0deg)'; });
-        if (!isOpen) {
-          ans.style.maxHeight = ans.scrollHeight + 'px';
-          ans.style.paddingTop = '0';
-          ans.style.paddingBottom = '20px';
-          ans.dataset.open = '1';
-          icon.textContent = '−';
-          icon.style.transform = 'rotate(180deg)';
-        }
-      });
-    });
-    // Init: collapse all
-    document.querySelectorAll('.hl-faq-a').forEach(function(a) {
-      a.style.display = 'block';
-      a.style.maxHeight = '0';
-      a.style.paddingBottom = '0';
-      a.style.overflow = 'hidden';
-      a.dataset.open = '0';
-    });
-  }, 1100);
-
-  /* ── Job card stagger on scroll ── */
-  setTimeout(function() {
-    var jobs = document.querySelectorAll('.hl-job');
-    jobs.forEach(function(job, i) {
-      job.style.opacity = '0';
-      job.style.transform = 'translateX(-12px)';
-      job.style.transition = 'none';
-    });
-    var jobObs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          var idx = Array.from(jobs).indexOf(e.target);
-          setTimeout(function() {
-            e.target.style.transition = 'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)';
-            e.target.style.opacity = '1';
-            e.target.style.transform = '';
-          }, idx * 90);
-          jobObs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    jobs.forEach(function(job) { jobObs.observe(job); });
-  }, 1000);
-
-  /* ── Step cards stagger ── */
-  setTimeout(function() {
-    var steps = document.querySelectorAll('.hl-step');
-    steps.forEach(function(step) {
-      step.style.opacity = '0';
-      step.style.transform = 'translateY(20px)';
-    });
-    var stepObs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          var idx = Array.from(steps).indexOf(e.target);
-          setTimeout(function() {
-            e.target.style.transition = 'opacity 0.6s cubic-bezier(0.16,1,0.3,1) ' + (idx * 0.1) + 's, transform 0.6s cubic-bezier(0.16,1,0.3,1) ' + (idx * 0.1) + 's, background 0.25s, border-color 0.25s';
-            e.target.style.opacity = '1';
-            e.target.style.transform = '';
-          }, 50);
-          stepObs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    steps.forEach(function(step) { stepObs.observe(step); });
-  }, 1000);
-
-  /* ── Highlight grid stagger ── */
-  setTimeout(function() {
-    var cards = document.querySelectorAll('.hl-highlight');
-    cards.forEach(function(card) {
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(20px) scale(0.98)';
-    });
-    var cardObs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          var idx = Array.from(cards).indexOf(e.target);
-          setTimeout(function() {
-            e.target.style.transition = 'opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1), background 0.3s, border-color 0.3s, box-shadow 0.3s';
-            e.target.style.opacity = '1';
-            e.target.style.transform = '';
-          }, idx * 80);
-          cardObs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    cards.forEach(function(card) { cardObs.observe(card); });
-  }, 1100);
-
-  /* ── Template mini-card pulse on hover ── */
-  setTimeout(function() {
-    document.querySelectorAll('.hl-tmpl').forEach(function(tmpl) {
-      tmpl.addEventListener('mouseenter', function() {
-        this.style.boxShadow = '0 0 0 1.5px rgba(10,132,255,0.5), 0 16px 40px rgba(0,0,0,0.5), 0 0 24px rgba(10,132,255,0.12)';
-      });
-      tmpl.addEventListener('mouseleave', function() {
-        if (!this.classList.contains('hl-tmpl-act')) {
-          this.style.boxShadow = '';
-        }
-      });
-    });
-  }, 900);
-
-})();
-</script>""")
-
-
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
-inject_gaming_css()
-inject_gaming_html()
+inject_hud()
 render_banner()
 render_nav()
 render_hero()
@@ -2542,4 +2571,4 @@ render_cta()
 render_contact_section()
 render_footer()
 render_js()
-inject_gaming_js()
+inject_hud_js()
