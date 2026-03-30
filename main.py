@@ -1,49 +1,52 @@
+import math
 import streamlit as st
 
 st.set_page_config(
-    page_title="HIRELYZER — GAMING EDITION",
-    page_icon="⚡",
+    page_title="HIRELYZER — Intelligent Career Platform",
+    page_icon="⬡",
     layout="wide",
 )
 
 APP_URL = "https://hirelyzer-supabase-implemented-kf4y7bocccdsmiswtabveh.streamlit.app/"
 SUPPORT_EMAIL = "swagato_bmca2024@msit.edu.in"
 
+# ─── helpers ──────────────────────────────────────────────────────────────────
 def H(s):
     st.markdown(s, unsafe_allow_html=True)
 
 def CSS(s):
     st.markdown("<style>" + s + "</style>", unsafe_allow_html=True)
 
+# ─── CSS ──────────────────────────────────────────────────────────────────────
 CSS("""
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --cyan:    #00f5ff;
-  --magenta: #ff00ff;
-  --yellow:  #ffff00;
-  --orange:  #ff6600;
-  --green:   #00ff41;
-  --red:     #ff0033;
-  --white:   #ffffff;
-  --dim:     rgba(255,255,255,0.55);
-  --dimmer:  rgba(255,255,255,0.22);
-  --bg:      #000008;
-  --bg2:     #04040f;
-  --panel:   rgba(0,245,255,0.04);
-  --border:  rgba(0,245,255,0.18);
-  --border2: rgba(255,0,255,0.18);
+  --blue:    #0a84ff;
+  --green:   #30d158;
+  --purple:  #bf5af2;
+  --amber:   #ff9f0a;
+  --red:     #ff453a;
+  --sky:     #4db3ff;
+  --fg:      #f5f5f7;
+  --fg2:     rgba(245,245,247,0.5);
+  --fg3:     rgba(245,245,247,0.28);
+  --border:  rgba(255,255,255,0.08);
+  --surface: #0a0a0c;
+  --surface2:#111115;
+  --glow-blue: rgba(10,132,255,0.18);
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body,
 [data-testid="stAppViewContainer"],
 [data-testid="stMain"] {
-  background-color: var(--bg) !important;
-  color: var(--white) !important;
-  font-family: 'Rajdhani', sans-serif !important;
+  background-color: #000 !important;
+  color: var(--fg) !important;
+  font-family: 'Sora', sans-serif !important;
   overflow-x: hidden !important;
+  -webkit-font-smoothing: antialiased !important;
 }
 
 [data-testid="stHeader"],
@@ -51,1784 +54,2477 @@ html, body,
 [data-testid="stDecoration"],
 [data-testid="stSidebar"],
 [data-testid="stStatusWidget"],
-footer, #MainMenu { display: none !important; }
+footer,
+#MainMenu { display: none !important; }
 
 section[data-testid="stAppViewContainer"] > div { padding: 0 !important; }
 .block-container { padding: 0 !important; max-width: 100% !important; }
 div[data-testid="stMarkdownContainer"] > p { margin: 0 !important; }
 
-/* ═══════════════════════════════════════════════════
-   SCANLINES OVERLAY
-═══════════════════════════════════════════════════ */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.08) 2px,
-    rgba(0,0,0,0.08) 4px
-  );
-  pointer-events: none;
-  z-index: 9999;
-  animation: scanMove 8s linear infinite;
-}
-@keyframes scanMove {
-  0%   { background-position: 0 0; }
-  100% { background-position: 0 100px; }
-}
-
-/* ═══════════════════════════════════════════════════
-   SCROLL PROGRESS
-═══════════════════════════════════════════════════ */
+/* ── Scroll progress bar ── */
 #sp {
-  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
-  background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--cyan));
-  background-size: 200%;
-  z-index: 9998;
-  animation: gradShift 2s linear infinite;
-  box-shadow: 0 0 12px var(--cyan), 0 0 24px rgba(0,245,255,0.5);
+  position: fixed; top: 0; left: 0; right: 0; height: 2px; width: 0%;
+  background: linear-gradient(90deg, #0a84ff, #30d158, #bf5af2, #0a84ff);
+  background-size: 200% 100%;
+  z-index: 9999; transition: width 0.05s linear; pointer-events: none;
+  animation: gradientShift 3s linear infinite;
+}
+
+/* ── Noise texture overlay ── */
+.hl-noise {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat; background-size: 128px 128px;
+}
+
+/* ── Toast notification ── */
+#hl-toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: rgba(10,10,12,0.95); border: 1px solid rgba(255,255,255,0.14); border-radius: 100px;
+  padding: 12px 22px; font-size: 13px; font-weight: 600; color: var(--fg);
+  display: flex; align-items: center; gap: 8px; z-index: 9998;
+  opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+}
+#hl-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#hl-toast-dot { width: 7px; height: 7px; border-radius: 50%; background: #30d158; flex-shrink: 0; box-shadow: 0 0 8px #30d158; }
+
+/* ── Sticky bottom CTA ── */
+#hl-sticky-cta {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 890;
+  background: rgba(0,0,0,0.92); border-top: 1px solid var(--border);
+  backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+  padding: 14px 32px; display: flex; align-items: center; justify-content: space-between;
+  transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  max-width: 100%;
+}
+#hl-sticky-cta.visible { transform: translateY(0); }
+.hl-sticky-inner { max-width: 1140px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.hl-sticky-text { font-size: 14px; font-weight: 600; color: var(--fg2); }
+.hl-sticky-text span { color: var(--fg); }
+.hl-sticky-btns { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+#hl-sticky-dismiss { background: none; border: none; color: var(--fg3); font-size: 20px; cursor: pointer; padding: 4px 8px; line-height: 1; transition: color 0.2s; }
+#hl-sticky-dismiss:hover { color: var(--fg2); }
+
+/* ── Section dot nav ── */
+#hl-dots {
+  position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px; z-index: 800;
+}
+.hl-dot-nav {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); cursor: pointer;
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s; border: none; padding: 0;
+}
+.hl-dot-nav.active { background: var(--blue); transform: scale(1.5); box-shadow: 0 0 8px var(--blue); }
+.hl-dot-nav:hover { background: rgba(255,255,255,0.5); }
+@media (max-width: 900px) { #hl-dots { display: none; } }
+
+/* ── Mobile hamburger ── */
+.hl-hamburger {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer;
+  background: none; border: none; padding: 6px;
+}
+.hl-hamburger span {
+  display: block; width: 22px; height: 2px; background: var(--fg2);
+  border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.hl-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hl-hamburger.open span:nth-child(2) { opacity: 0; }
+.hl-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Mobile drawer ── */
+#hl-drawer {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 850;
+  background: rgba(0,0,0,0.98); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 32px;
+  transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
   pointer-events: none;
-  transition: width 0.05s linear;
+}
+#hl-drawer.open { transform: translateY(0); pointer-events: all; }
+#hl-drawer a {
+  font-size: 28px; font-weight: 700; color: var(--fg2);
+  text-decoration: none; letter-spacing: -1px; transition: color 0.2s;
+  font-family: 'Sora', sans-serif;
+}
+#hl-drawer a:hover { color: var(--fg); }
+#hl-drawer-close {
+  position: absolute; top: 24px; right: 24px;
+  background: none; border: none; color: var(--fg3);
+  font-size: 28px; cursor: pointer; line-height: 1;
 }
 
-/* ═══════════════════════════════════════════════════
-   GLOBAL ANIMATIONS
-═══════════════════════════════════════════════════ */
-@keyframes gradShift {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 200% 0%; }
+/* ── Announcement banner ── */
+.hl-banner {
+  background: linear-gradient(90deg, rgba(10,132,255,0.1), rgba(48,209,88,0.06), rgba(191,90,242,0.08), rgba(10,132,255,0.1));
+  background-size: 300% 100%;
+  border-bottom: 1px solid rgba(10,132,255,0.18);
+  padding: 10px 32px; text-align: center; position: relative; z-index: 901;
+  font-size: 12.5px; color: var(--fg2); font-weight: 500;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  animation: shimmerBg 5s linear infinite;
 }
-@keyframes glitch {
-  0%,100% { clip-path: none; transform: none; }
-  7%  { clip-path: polygon(0 15%, 100% 15%, 100% 22%, 0 22%); transform: translate(-3px, 0); }
-  10% { clip-path: none; transform: none; }
-  27% { clip-path: polygon(0 65%, 100% 65%, 100% 72%, 0 72%); transform: translate(3px, 0); color: var(--magenta); }
-  30% { clip-path: none; transform: none; color: inherit; }
-  55% { clip-path: polygon(0 40%, 100% 40%, 100% 48%, 0 48%); transform: translate(-2px, 0); }
-  58% { clip-path: none; transform: none; }
+.hl-banner-badge {
+  padding: 2px 10px; border-radius: 100px;
+  background: linear-gradient(135deg, rgba(10,132,255,0.25), rgba(48,209,88,0.15));
+  border: 1px solid rgba(10,132,255,0.4); color: var(--blue);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  flex-shrink: 0; box-shadow: 0 0 12px rgba(10,132,255,0.2);
 }
-@keyframes scanline-flash {
-  0%,100% { opacity: 0; }
-  50%      { opacity: 1; }
-}
-@keyframes float-hex {
-  0%,100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
-  50%     { transform: translateY(-30px) rotate(180deg); opacity: 0.7; }
-}
-@keyframes pulse-ring {
-  0%   { transform: scale(1); opacity: 1; }
-  100% { transform: scale(2.5); opacity: 0; }
-}
-@keyframes cyber-border {
-  0%   { border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan), inset 0 0 10px rgba(0,245,255,0.05); }
-  33%  { border-color: var(--magenta); box-shadow: 0 0 10px var(--magenta), inset 0 0 10px rgba(255,0,255,0.05); }
-  66%  { border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan), inset 0 0 10px rgba(0,245,255,0.05); }
-  100% { border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan), inset 0 0 10px rgba(0,245,255,0.05); }
-}
-@keyframes hud-in {
-  from { opacity: 0; transform: translateX(-20px); }
-  to   { opacity: 1; transform: none; }
-}
-@keyframes blink-cursor {
-  0%,100% { opacity: 1; }
-  50%     { opacity: 0; }
-}
-@keyframes matrix-fall {
-  0%   { transform: translateY(-100%); opacity: 0; }
-  10%  { opacity: 1; }
-  100% { transform: translateY(100vh); opacity: 0; }
-}
-@keyframes power-up {
-  0%   { transform: scaleX(0); }
-  100% { transform: scaleX(1); }
-}
-@keyframes neon-flicker {
-  0%,19%,21%,23%,25%,54%,56%,100% {
-    text-shadow: 0 0 7px var(--cyan), 0 0 10px var(--cyan), 0 0 21px var(--cyan), 0 0 42px var(--cyan);
-  }
-  20%,24%,55% {
-    text-shadow: none;
-  }
-}
-@keyframes orbit {
-  from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
-}
-@keyframes slideUp {
-  from { opacity:0; transform: translateY(40px) skewX(-2deg); }
-  to   { opacity:1; transform: none; }
-}
-@keyframes grid-pulse {
-  0%,100% { opacity: 0.04; }
-  50%     { opacity: 0.09; }
-}
-@keyframes ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+.hl-banner a { color: var(--blue); font-weight: 600; text-decoration: none; transition: color 0.2s; }
+.hl-banner a:hover { color: var(--sky); }
 
-/* ═══════════════════════════════════════════════════
-   MATRIX RAIN BACKGROUND
-═══════════════════════════════════════════════════ */
-#matrix-canvas {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none; z-index: 0;
-  opacity: 0.07;
+/* ── Nav ── */
+.hl-nav {
+  position: sticky; top: 0; left: 0; right: 0; z-index: 900;
+  height: 62px; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.82);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
 }
-
-/* ═══════════════════════════════════════════════════
-   PERSPECTIVE GRID
-═══════════════════════════════════════════════════ */
-.cyber-grid {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background-image:
-    linear-gradient(rgba(0,245,255,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,245,255,0.06) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: grid-pulse 4s ease-in-out infinite;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+.hl-nav.scrolled { box-shadow: 0 8px 48px rgba(0,0,0,0.7); border-color: rgba(255,255,255,0.09); }
+.hl-nav-inner {
+  width: 100%; max-width: 1140px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 32px;
 }
-
-/* ═══════════════════════════════════════════════════
-   NAV
-═══════════════════════════════════════════════════ */
-.g-nav {
-  position: sticky; top: 0; z-index: 900;
-  height: 64px;
-  background: rgba(0,0,8,0.9);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(24px);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 40px rgba(0,245,255,0.08);
+.hl-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Sora', sans-serif;
+  font-size: 13.5px; font-weight: 800; color: var(--fg); text-decoration: none; letter-spacing: 0.8px;
 }
-.g-nav-inner {
-  width: 100%; max-width: 1200px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px;
+.hl-logo-icon {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: linear-gradient(135deg, #1a6fff, #0044bb);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(10,132,255,0.45), 0 0 0 1px rgba(10,132,255,0.2);
+  transition: box-shadow 0.2s;
 }
-.g-logo {
-  display: flex; align-items: center; gap: 12px;
-  font-family: 'Orbitron', monospace;
-  font-size: 15px; font-weight: 900;
-  color: var(--cyan);
-  text-decoration: none;
-  letter-spacing: 3px;
-  text-shadow: 0 0 20px var(--cyan);
+.hl-logo:hover .hl-logo-icon { box-shadow: 0 6px 28px rgba(10,132,255,0.6), 0 0 0 1px rgba(10,132,255,0.3); }
+.hl-nav-links { display: flex; align-items: center; gap: 30px; }
+.hl-nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--fg3); text-decoration: none;
+  transition: color 0.2s; position: relative; padding-bottom: 4px;
 }
-.g-logo-hex {
-  width: 38px; height: 38px;
-  background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(0,245,255,0.05));
-  border: 1px solid var(--cyan);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-  box-shadow: 0 0 15px rgba(0,245,255,0.4);
-  animation: cyber-border 3s infinite;
+.hl-nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  transform: scaleX(0); transition: transform 0.25s ease; transform-origin: left;
 }
-.g-nav-links {
-  display: flex; align-items: center; gap: 32px;
-}
-.g-nav-links a {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 13px; font-weight: 600;
-  color: var(--dim); text-decoration: none;
-  letter-spacing: 2px; text-transform: uppercase;
-  transition: color 0.2s, text-shadow 0.2s;
-  position: relative;
-}
-.g-nav-links a::after {
-  content: '';
-  position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
-  background: var(--cyan);
-  transform: scaleX(0); transition: transform 0.2s;
-  box-shadow: 0 0 6px var(--cyan);
-}
-.g-nav-links a:hover { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-.g-nav-links a:hover::after { transform: scaleX(1); }
-
-.g-nav-cta {
-  font-family: 'Orbitron', monospace;
-  font-size: 11px; font-weight: 700;
-  padding: 10px 24px; letter-spacing: 2px; text-transform: uppercase;
-  border: 1px solid var(--cyan);
-  color: var(--cyan); text-decoration: none;
-  background: rgba(0,245,255,0.05);
-  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+.hl-nav-links a:hover { color: var(--fg); }
+.hl-nav-links a:hover::after { transform: scaleX(1); }
+.hl-nav-links a.hl-nav-active { color: var(--fg); }
+.hl-nav-links a.hl-nav-active::after { transform: scaleX(1); }
+.hl-nav-right { display: flex; align-items: center; gap: 12px; }
+.hl-nav-cta {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 20px; border-radius: 100px;
+  background: linear-gradient(135deg, #1a6fff, #0055d4);
+  color: #fff; font-size: 13px; font-weight: 600; text-decoration: none;
+  box-shadow: 0 4px 20px rgba(10,132,255,0.35); 
+  transition: transform 0.15s, box-shadow 0.2s;
   position: relative; overflow: hidden;
 }
-.g-nav-cta::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(0,245,255,0.2), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.3s;
+.hl-nav-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  border-radius: inherit;
 }
-.g-nav-cta:hover {
-  background: rgba(0,245,255,0.12);
-  box-shadow: 0 0 20px rgba(0,245,255,0.3);
-  color: var(--white);
-}
-.g-nav-cta:hover::before { transform: translateX(0); }
+.hl-nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(10,132,255,0.5); }
 
-/* ═══════════════════════════════════════════════════
-   ANNOUNCEMENT BANNER
-═══════════════════════════════════════════════════ */
-.g-banner {
-  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.06), rgba(255,0,255,0.04), transparent);
-  border-bottom: 1px solid rgba(0,245,255,0.12);
-  padding: 9px 32px; text-align: center;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px; color: var(--dim);
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  position: relative; z-index: 901;
-}
-.g-banner-badge {
-  font-family: 'Orbitron', monospace;
-  font-size: 9px; font-weight: 700; letter-spacing: 2px;
-  padding: 3px 10px;
-  border: 1px solid var(--green);
-  color: var(--green);
-  text-shadow: 0 0 8px var(--green);
-  animation: neon-flicker 4s infinite;
-}
-.g-banner a {
-  color: var(--cyan); font-weight: 700; text-decoration: none;
-  text-shadow: 0 0 6px var(--cyan);
-}
-
-/* ═══════════════════════════════════════════════════
-   HERO
-═══════════════════════════════════════════════════ */
-.g-hero {
-  min-height: 100vh;
-  display: flex; flex-direction: column;
+/* ── Hero ── */
+.hl-hero {
+  min-height: 100vh; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  text-align: center;
-  padding: 80px 32px;
-  position: relative; overflow: hidden;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,245,255,0.06) 0%, transparent 60%),
-              radial-gradient(ellipse 60% 50% at 80% 80%, rgba(255,0,255,0.04) 0%, transparent 60%),
-              var(--bg);
+  text-align: center; padding: 80px 32px 80px;
+  position: relative; overflow: hidden; background: #000;
 }
 
-/* Corner HUD brackets */
-.g-hero::before {
-  content: '';
-  position: absolute;
-  top: 40px; left: 40px;
-  width: 60px; height: 60px;
-  border-top: 2px solid var(--cyan);
-  border-left: 2px solid var(--cyan);
-  box-shadow: 0 0 10px var(--cyan);
-  pointer-events: none;
+/* Aurora mesh background */
+.hl-aurora {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
 }
-.g-hero::after {
-  content: '';
-  position: absolute;
-  bottom: 80px; right: 40px;
-  width: 60px; height: 60px;
-  border-bottom: 2px solid var(--magenta);
-  border-right: 2px solid var(--magenta);
-  box-shadow: 0 0 10px var(--magenta);
-  pointer-events: none;
+.hl-aurora-1 {
+  position: absolute; width: 800px; height: 800px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(10,132,255,0.12) 0%, transparent 65%);
+  top: -200px; left: 10%; animation: auroraFloat1 12s ease-in-out infinite;
+}
+.hl-aurora-2 {
+  position: absolute; width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(48,209,88,0.07) 0%, transparent 60%);
+  top: 0; right: 5%; animation: auroraFloat2 15s ease-in-out infinite;
+}
+.hl-aurora-3 {
+  position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(191,90,242,0.07) 0%, transparent 60%);
+  bottom: -100px; left: 30%; animation: auroraFloat3 18s ease-in-out infinite;
+}
+@keyframes auroraFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(60px, 40px) scale(1.05); }
+  66% { transform: translate(-40px, 80px) scale(0.96); }
+}
+@keyframes auroraFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40% { transform: translate(-80px, 60px) scale(1.08); }
+  70% { transform: translate(40px, -40px) scale(0.94); }
+}
+@keyframes auroraFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  30% { transform: translate(50px, -60px) scale(1.06); }
+  60% { transform: translate(-60px, 20px) scale(1.02); }
 }
 
-/* Orbiting elements */
-.g-hero-orbit {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 1px; height: 1px;
+/* Cursor spotlight */
+#hl-spotlight {
+  position: absolute; pointer-events: none; z-index: 0;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(10,132,255,0.07) 0%, transparent 60%);
+  transform: translate(-50%, -50%); transition: left 0.1s ease, top 0.1s ease;
+  left: 50%; top: 50%;
+}
+
+/* Floating particles canvas */
+#hl-particles {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+}
+
+.hl-hero-grid {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 50% at 50% 0%, black 40%, transparent 100%);
+}
+.hl-hero-fade {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 280px;
+  background: linear-gradient(to bottom, transparent, #000);
   pointer-events: none; z-index: 0;
 }
-.g-orbit-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(0,245,255,0.08);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+.hl-hero-content {
+  position: relative; z-index: 1; width: 100%; display: flex; flex-direction: column; align-items: center;
 }
 
-.g-hero-content { position: relative; z-index: 1; }
-
-.g-status-bar {
+.hl-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px; color: var(--green);
-  padding: 6px 18px;
-  border: 1px solid rgba(0,255,65,0.3);
-  background: rgba(0,255,65,0.04);
-  margin-bottom: 32px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  animation: slideUp 0.5s ease both;
-}
-.g-status-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green);
-  animation: blink-cursor 1s step-end infinite;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--blue); padding: 6px 16px; border-radius: 100px;
+  border: 1px solid rgba(10,132,255,0.3); background: rgba(10,132,255,0.08); margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+  box-shadow: 0 0 20px rgba(10,132,255,0.1);
 }
 
-.g-h1 {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(40px, 8vw, 100px);
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -2px;
-  color: var(--white);
-  max-width: 1000px;
-  margin: 0 auto;
-  animation: slideUp 0.5s 0.1s ease both;
+.hl-eyebrow-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--blue);
+  box-shadow: 0 0 8px var(--blue); animation: pulse 2s ease infinite;
 }
-.g-h1-glitch {
-  display: block;
-  color: var(--cyan);
-  text-shadow: 0 0 30px var(--cyan), 0 0 60px rgba(0,245,255,0.3);
-  animation: glitch 8s infinite, slideUp 0.5s 0.15s ease both;
-  position: relative;
+
+.hl-h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(44px, 7.5vw, 96px); font-weight: 800; line-height: 1.0;
+  letter-spacing: -4px; color: var(--fg); max-width: 1020px;
+  animation: fadeUp 0.6s 0.1s ease both;
 }
-.g-h1-glitch::before {
-  content: attr(data-text);
-  position: absolute; inset: 0;
-  color: var(--magenta);
-  clip-path: polygon(0 30%, 100% 30%, 100% 40%, 0 40%);
-  transform: translateX(-3px);
-  animation: glitch 8s 0.5s infinite;
-  opacity: 0.6;
-}
-.g-h1-sub {
-  display: block; font-size: 0.55em;
-  color: var(--dim);
-  letter-spacing: 8px;
-  font-weight: 400;
-  margin-top: 8px;
+.hl-h1-blue { color: var(--blue); }
+.hl-h1-gradient {
+  background: linear-gradient(135deg, #1a6fff 0%, #30d158 55%, #1a6fff 100%);
+  background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; animation: gradientShift 4s ease infinite;
 }
 
 /* Typewriter */
-.g-typewriter-wrap {
-  display: inline-block;
-  color: var(--magenta);
-  text-shadow: 0 0 20px var(--magenta);
+#hl-typewriter {
+  display: inline-block; min-width: 120px;
+  background: linear-gradient(135deg, #1a6fff 0%, #30d158 55%, #1a6fff 100%);
+  background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; animation: gradientShift 4s ease infinite;
 }
-.g-cursor {
-  display: inline-block;
-  width: 4px; height: 0.75em;
-  background: var(--cyan);
-  margin-left: 4px; vertical-align: middle;
-  animation: blink-cursor 0.8s step-end infinite;
-  box-shadow: 0 0 8px var(--cyan);
+.hl-cursor {
+  display: inline-block; width: 3px; height: 0.82em; background: var(--blue);
+  margin-left: 3px; vertical-align: middle; border-radius: 2px;
+  animation: blink 1s step-end infinite; box-shadow: 0 0 8px var(--blue);
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.hl-hero-sub {
+  font-size: clamp(15px, 1.9vw, 19px); color: var(--fg2); line-height: 1.75;
+  max-width: 580px; margin: 28px auto 0; animation: fadeUp 0.6s 0.2s ease both;
+  text-align: center;
 }
 
-.g-hero-desc {
-  font-size: clamp(15px, 2vw, 19px);
-  color: var(--dim); line-height: 1.8;
-  max-width: 560px; margin: 32px auto 0;
-  font-weight: 400; letter-spacing: 0.5px;
-  animation: slideUp 0.5s 0.2s ease both;
+.hl-ctas {
+  display: flex; gap: 14px; justify-content: center; margin-top: 48px; flex-wrap: wrap;
+  animation: fadeUp 0.6s 0.3s ease both;
 }
 
-/* HUD stats row */
-.g-hud-row {
-  display: flex; align-items: center; justify-content: center; gap: 40px;
-  margin-top: 52px;
-  animation: slideUp 0.5s 0.25s ease both;
+/* Primary button */
+.hl-btn-p {
+  display: inline-flex; align-items: center; gap: 8px; padding: 15px 34px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, #1a6fff, #0055d4);
+  color: #fff; font-size: 15px; font-weight: 600; text-decoration: none; letter-spacing: -0.2px;
+  box-shadow: 0 8px 32px rgba(10,132,255,0.4), 0 0 0 1px rgba(255,255,255,0.08) inset;
+  transition: transform 0.15s, box-shadow 0.2s; position: relative; overflow: hidden;
 }
-.g-hud-stat {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  position: relative; padding: 0 20px;
+.hl-btn-p::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
 }
-.g-hud-stat::after {
-  content: '';
-  position: absolute; right: 0; top: 10%; bottom: 10%;
-  width: 1px;
-  background: linear-gradient(180deg, transparent, var(--border), transparent);
+.hl-btn-p:hover { transform: translateY(-2px); box-shadow: 0 14px 48px rgba(10,132,255,0.55), 0 0 0 1px rgba(255,255,255,0.1) inset; }
+.hl-btn-p:active { transform: scale(0.97); }
+
+/* Ghost button */
+.hl-btn-g {
+  display: inline-flex; align-items: center; gap: 8px; padding: 15px 32px;
+  border-radius: 100px; background: rgba(255,255,255,0.04); color: var(--fg);
+  font-size: 15px; font-weight: 600; text-decoration: none; letter-spacing: -0.2px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  backdrop-filter: blur(8px);
 }
-.g-hud-stat:last-child::after { display: none; }
-.g-hud-num {
-  font-family: 'Orbitron', monospace;
-  font-size: 28px; font-weight: 900;
-  color: var(--cyan);
-  text-shadow: 0 0 20px var(--cyan);
+.hl-btn-g:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.07); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.hl-btn-g:active { transform: scale(0.97); }
+
+/* ── Hero feature strip ── */
+.hl-hero-features {
+  display: flex; align-items: center; gap: 0; flex-wrap: wrap; justify-content: center;
+  margin-top: 52px; padding: 13px 26px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 100px; animation: fadeUp 0.6s 0.4s ease both;
+  backdrop-filter: blur(12px);
 }
-.g-hud-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px; color: var(--dimmer);
-  letter-spacing: 2px; text-transform: uppercase;
+.hl-hf-item {
+  display: flex; align-items: center; gap: 7px; padding: 0 18px;
+  font-size: 12.5px; font-weight: 600; color: var(--fg3);
+  white-space: nowrap;
+}
+.hl-hf-sep { width: 1px; height: 14px; background: var(--border); flex-shrink: 0; }
+
+/* ── Hero card / panel ── */
+.hl-card {
+  margin-top: 72px; width: 100%; max-width: 880px;
+  background: rgba(10,10,14,0.9);
+  border-radius: 26px; border: 1px solid rgba(255,255,255,0.09); overflow: hidden;
+  box-shadow: 0 60px 120px rgba(0,0,0,0.9), 0 0 0 1px rgba(10,132,255,0.05), 0 0 80px rgba(10,132,255,0.05);
+  animation: fadeUp 0.6s 0.44s ease both;
+  backdrop-filter: blur(16px);
+}
+.hl-card-bar {
+  height: 44px; background: rgba(20,20,24,0.95); border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; padding: 0 16px; gap: 8px;
+}
+.hl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.hl-card-tab { margin-left: 6px; font-size: 11px; color: var(--fg3); font-family: 'JetBrains Mono', monospace; }
+.hl-card-body { padding: 28px; }
+.hl-card-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.hl-ptitle {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--fg3); display: flex; align-items: center; gap: 7px; margin-bottom: 18px;
 }
 
-/* CTA buttons */
-.g-ctas {
-  display: flex; gap: 16px; justify-content: center; margin-top: 48px; flex-wrap: wrap;
-  animation: slideUp 0.5s 0.3s ease both;
+.hl-bar { margin-bottom: 10px; }
+.hl-bar-row {
+  display: flex; justify-content: space-between; font-size: 11px;
+  color: var(--fg2); margin-bottom: 5px; font-weight: 500;
 }
-.g-btn-primary {
-  font-family: 'Orbitron', monospace;
-  font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-  padding: 16px 40px;
-  background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(0,245,255,0.05));
-  border: 1px solid var(--cyan);
-  color: var(--cyan); text-decoration: none;
-  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+.hl-bar-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+.hl-bar-fill { height: 100%; border-radius: 2px; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+
+.hl-words { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.wc { padding: 4px 11px; border-radius: 7px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+.wc-m { background: rgba(10,132,255,0.1); color: #4db3ff; border: 1px solid rgba(10,132,255,0.2); }
+.wc-f { background: rgba(191,90,242,0.1); color: #d07ef7; border: 1px solid rgba(191,90,242,0.2); }
+.wc-n { background: rgba(48,209,88,0.1); color: #4cd964; border: 1px solid rgba(48,209,88,0.2); }
+
+/* ── Stats row ── */
+.hl-stats {
+  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin: 36px 0 0;
+  animation: fadeUp 0.6s 0.55s ease both;
+}
+.hl-stat {
+  display: flex; flex-direction: column; align-items: center; padding: 22px 36px;
+  border-radius: 20px;
+  background: rgba(10,10,14,0.8);
+  border: 1px solid rgba(255,255,255,0.07); min-width: 130px;
   position: relative; overflow: hidden;
-  transition: all 0.2s;
-  box-shadow: 0 0 20px rgba(0,245,255,0.2), inset 0 0 20px rgba(0,245,255,0.03);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  backdrop-filter: blur(12px);
 }
-.g-btn-primary::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(0,245,255,0.3), rgba(0,245,255,0.1));
-  transform: translateX(-100%); transition: transform 0.3s;
+.hl-stat:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.16); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.hl-stat::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(10,132,255,0.5), rgba(48,209,88,0.3), transparent);
 }
-.g-btn-primary:hover {
-  color: var(--white);
-  box-shadow: 0 0 40px rgba(0,245,255,0.4), inset 0 0 30px rgba(0,245,255,0.1);
-  transform: translateY(-2px);
-}
-.g-btn-primary:hover::before { transform: translateX(0); }
+.hl-stat-n { font-size: 30px; font-weight: 800; color: var(--fg); letter-spacing: -1.5px; }
+.hl-stat-l { font-size: 10px; color: var(--fg3); font-weight: 600; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.9px; }
 
-.g-btn-secondary {
-  font-family: 'Orbitron', monospace;
-  font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-  padding: 16px 40px;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.15);
-  color: var(--dim); text-decoration: none;
-  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-  transition: all 0.2s;
+/* ── Section ── */
+.hl-section { max-width: 1140px; margin: 0 auto; padding: 0 32px; }
+
+/* ── Divider ── */
+.hl-divider {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--fg3); display: flex; align-items: center; gap: 18px; margin-bottom: 64px;
 }
-.g-btn-secondary:hover {
-  border-color: var(--magenta);
-  color: var(--magenta);
-  box-shadow: 0 0 20px rgba(255,0,255,0.2);
+.hl-divider::before,
+.hl-divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
 }
 
-/* Scroll indicator */
-.g-scroll-hint {
-  margin-top: 60px;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px; color: var(--dimmer); letter-spacing: 3px;
-  animation: slideUp 0.5s 0.4s ease both;
-}
-.g-scroll-line {
-  width: 1px; height: 40px;
-  background: linear-gradient(180deg, var(--cyan), transparent);
-  animation: power-up 2s ease-in-out infinite;
-  box-shadow: 0 0 6px var(--cyan);
-}
-
-/* ═══════════════════════════════════════════════════
-   SECTION WRAPPER
-═══════════════════════════════════════════════════ */
-.g-section {
-  padding: 100px 32px; position: relative; max-width: 1200px; margin: 0 auto;
-}
-.g-section-full {
-  padding: 100px 0; position: relative;
-}
-.g-section-header {
-  text-align: center; margin-bottom: 64px;
-}
-.g-section-eyebrow {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--cyan); margin-bottom: 16px;
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-}
-.g-section-eyebrow::before,
-.g-section-eyebrow::after {
-  content: '';
-  display: block; width: 40px; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan));
-}
-.g-section-eyebrow::after { transform: scaleX(-1); }
-.g-section-h2 {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(24px, 4vw, 44px);
-  font-weight: 800; color: var(--white);
-  letter-spacing: -1px; line-height: 1.1;
-}
-.g-section-h2 .accent { color: var(--cyan); text-shadow: 0 0 20px var(--cyan); }
-.g-section-h2 .accent-m { color: var(--magenta); text-shadow: 0 0 20px var(--magenta); }
-.g-section-sub {
-  font-size: 16px; color: var(--dim); margin-top: 14px; line-height: 1.7; letter-spacing: 0.3px;
-}
-
-/* ═══════════════════════════════════════════════════
-   HOW IT WORKS — MISSION STEPS
-═══════════════════════════════════════════════════ */
-.g-steps {
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
-  margin-top: 56px;
-  border: 1px solid var(--border); border-radius: 4px;
-  overflow: hidden;
-}
-.g-step {
+/* ── How it works ── */
+.hl-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
+.hl-step {
   padding: 36px 28px;
-  border-right: 1px solid var(--border);
-  position: relative; overflow: hidden;
-  background: rgba(0,0,8,0.9);
-  transition: background 0.3s;
+  background: rgba(8,8,10,0.9);
+  border: 1px solid rgba(255,255,255,0.06); position: relative; overflow: hidden;
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
 }
-.g-step:last-child { border-right: none; }
-.g-step::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--cyan), var(--magenta));
-  transform: scaleX(0); transition: transform 0.4s;
+.hl-step::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
 }
-.g-step:hover { background: rgba(0,245,255,0.03); }
-.g-step:hover::before { transform: scaleX(1); }
-.g-step-num {
-  font-family: 'Orbitron', monospace;
-  font-size: 10px; font-weight: 700; letter-spacing: 3px;
-  color: var(--dimmer); margin-bottom: 16px;
-  display: flex; align-items: center; gap: 8px;
-}
-.g-step-num::after {
-  content: '';
-  flex: 1; height: 1px;
-  background: linear-gradient(90deg, var(--border), transparent);
-}
-.g-step-icon {
-  font-size: 28px; margin-bottom: 16px;
-  filter: drop-shadow(0 0 8px var(--cyan));
-}
-.g-step-title {
-  font-family: 'Orbitron', monospace;
-  font-size: 13px; font-weight: 700;
-  color: var(--white); margin-bottom: 10px;
-  letter-spacing: 0.5px;
-}
-.g-step-desc {
-  font-size: 13px; color: var(--dim); line-height: 1.7;
+.hl-step:hover { background: rgba(14,14,18,0.95); border-color: rgba(255,255,255,0.11); transform: translateY(-3px); }
+.hl-step:first-child { border-radius: 20px 0 0 20px; }
+.hl-step:last-child  { border-radius: 0 20px 20px 0; }
+.hl-step-n { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; color: var(--fg3); margin-bottom: 18px; display: block; }
+.hl-step-icon { width: 48px; height: 48px; margin-bottom: 20px; }
+.hl-step-title { font-size: 14px; font-weight: 700; color: var(--fg); margin-bottom: 9px; letter-spacing: -0.3px; }
+.hl-step-desc  { font-size: 13px; color: var(--fg2); line-height: 1.72; }
+
+/* Connector lines */
+.hl-step:not(:last-child)::after {
+  content: ''; position: absolute; right: -1px; top: 50%; transform: translateY(-50%);
+  width: 2px; height: 30px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.06), transparent);
 }
 
-/* ═══════════════════════════════════════════════════
-   FEATURE PANELS — STORY SECTIONS
-═══════════════════════════════════════════════════ */
-.g-story {
-  padding: 80px 32px; position: relative;
-  border-top: 1px solid rgba(255,255,255,0.04);
-}
-.g-story-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
-}
-.g-story-inner.rev { direction: rtl; }
-.g-story-inner.rev > * { direction: ltr; }
+/* ── Story sections ── */
+.hl-story     { padding: 120px 0; background: #000; }
+.hl-story-alt { padding: 120px 0; background: #030305; }
+.hl-story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: center; }
 
-.g-story-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--cyan); margin-bottom: 20px;
-  display: flex; align-items: center; gap: 8px;
-}
-.g-story-label-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--cyan); box-shadow: 0 0 8px var(--cyan);
-}
-.g-story-h {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(20px, 3vw, 32px);
-  font-weight: 800; color: var(--white);
-  line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 18px;
-}
-.g-story-p {
-  font-size: 15px; color: var(--dim); line-height: 1.85;
-  margin-bottom: 20px; letter-spacing: 0.2px;
+/* ── Scroll-reveal ── */
+.hl-reveal.hl-animate { animation: revealUp 0.75s cubic-bezier(0.16,1,0.3,1) both; }
+.hl-reveal-delay-1.hl-animate { animation-delay: 0.08s; }
+.hl-reveal-delay-2.hl-animate { animation-delay: 0.18s; }
+.hl-reveal-delay-3.hl-animate { animation-delay: 0.28s; }
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: none; }
 }
 
-/* Cyber panel card */
-.g-panel {
-  background: rgba(0,0,12,0.95);
-  border: 1px solid var(--border);
-  border-radius: 4px; padding: 28px;
-  position: relative; overflow: hidden;
-  box-shadow: 0 0 40px rgba(0,245,255,0.05);
-  transition: border-color 0.3s, box-shadow 0.3s;
+.hl-story-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 600; color: var(--fg3); letter-spacing: 1px; margin-bottom: 18px;
 }
-.g-panel::before {
-  content: '';
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 2px;
-  background: linear-gradient(90deg, var(--cyan), var(--magenta), transparent);
+.hl-story-h { font-size: clamp(28px, 3.8vw, 48px); font-weight: 800; letter-spacing: -2.2px; line-height: 1.06; color: var(--fg); margin-bottom: 22px; }
+.hl-story-h .hl-blue  { color: var(--blue); }
+.hl-story-h .hl-green { color: var(--green); }
+.hl-story-h .hl-amber { color: var(--amber); }
+.hl-story-h .hl-purp  { color: var(--purple); }
+.hl-cta p, .hl-story p, .hl-story-alt p,
+.hl-hero p, .hl-compare p {
+  margin: 0 !important; text-align: inherit !important;
 }
-.g-panel::after {
-  content: '';
-  position: absolute; top: 4px; right: 4px;
-  width: 8px; height: 8px;
-  border-top: 1px solid var(--cyan);
-  border-right: 1px solid var(--cyan);
-}
-.g-panel:hover {
-  border-color: rgba(0,245,255,0.35);
-  box-shadow: 0 0 60px rgba(0,245,255,0.08), 0 20px 40px rgba(0,0,0,0.5);
-  transform: translateY(-3px);
-}
+.hl-story-p { font-size: 15px; color: var(--fg2); line-height: 1.84; margin-bottom: 18px; }
 
 /* ── Pills ── */
-.g-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.g-pill {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 5px 12px;
-  border: 1px solid rgba(0,245,255,0.2);
-  color: rgba(0,245,255,0.7);
-  background: rgba(0,245,255,0.04);
-  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+.hl-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.hl-pill {
+  padding: 6px 14px; border-radius: 100px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.09); color: var(--fg2);
+  background: rgba(255,255,255,0.03);
   transition: border-color 0.2s, color 0.2s, background 0.2s;
+  backdrop-filter: blur(4px);
 }
-.g-pill:hover {
-  border-color: var(--cyan);
-  color: var(--cyan);
-  background: rgba(0,245,255,0.08);
-  box-shadow: 0 0 10px rgba(0,245,255,0.15);
+.hl-pill:hover { border-color: rgba(255,255,255,0.2); color: var(--fg); background: rgba(255,255,255,0.05); }
+
+/* ── Panel ── */
+.hl-panel {
+  background: rgba(8,8,12,0.95);
+  border-radius: 24px; border: 1px solid rgba(255,255,255,0.08);
+  padding: 28px; overflow: hidden; position: relative;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  backdrop-filter: blur(16px);
+}
+.hl-panel:hover { border-color: rgba(255,255,255,0.13); box-shadow: 0 60px 120px rgba(0,0,0,0.7); transform: translateY(-2px); }
+.hl-panel::before {
+  content: ''; position: absolute; top: 0; left: 24px; right: 24px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
 }
 
-/* ── ATS Score visualization ── */
-.g-ats-meter {
-  margin-bottom: 20px;
+/* ── Radar animation ── */
+.hl-radar-polygon {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.4,0,0.2,1);
 }
-.g-meter-label {
-  display: flex; justify-content: space-between; align-items: center;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px; color: var(--dim); margin-bottom: 6px;
-}
-.g-meter-value {
-  font-size: 13px; font-weight: 700; color: var(--cyan);
-  text-shadow: 0 0 8px var(--cyan);
-}
-.g-meter-bar {
-  height: 4px; background: rgba(255,255,255,0.06);
-  border-radius: 0; overflow: hidden; position: relative;
-}
-.g-meter-fill {
-  height: 100%; border-radius: 0;
-  animation: power-up 1.2s cubic-bezier(0.16,1,0.3,1) both;
-  position: relative;
-}
-.g-meter-fill::after {
-  content: '';
-  position: absolute; right: 0; top: -2px; bottom: -2px; width: 3px;
-  background: inherit;
-  box-shadow: 0 0 8px currentColor;
-  filter: brightness(2);
-}
-
-/* ── Mini resume templates ── */
-.g-tmpl-grid {
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 16px;
-}
-.g-tmpl {
-  border-radius: 4px; border: 1px solid rgba(0,245,255,0.1);
-  background: rgba(0,0,12,0.9); overflow: hidden;
-  display: flex; flex-direction: column; min-height: 100px;
-  position: relative; cursor: pointer;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-.g-tmpl:hover { border-color: var(--cyan); transform: translateY(-3px); box-shadow: 0 0 15px rgba(0,245,255,0.15); }
-.g-tmpl-act { border-color: var(--cyan) !important; box-shadow: 0 0 15px rgba(0,245,255,0.2) !important; }
-.g-tmpl-hdr { height: 4px; }
-.g-tmpl-ln { height: 2px; border-radius: 1px; background: rgba(255,255,255,0.1); margin: 2px 4px; }
-.g-tmpl-badge {
-  position: absolute; bottom: 4px; left: 4px; right: 4px;
-  background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.25);
-  border-radius: 2px; padding: 2px 4px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 7px; color: var(--cyan); text-align: center; letter-spacing: 0.5px;
-}
-
-/* ── Job cards ── */
-.g-job {
-  padding: 12px 16px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(0,0,12,0.9);
-  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
-  transition: border-color 0.2s, transform 0.2s;
-  position: relative;
-}
-.g-job::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-  background: var(--cyan);
-  transform: scaleY(0); transition: transform 0.2s;
-}
-.g-job:hover { border-color: rgba(0,245,255,0.2); transform: translateX(4px); }
-.g-job:hover::before { transform: scaleY(1); }
-.g-job-logo {
-  width: 34px; height: 34px; border-radius: 2px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 12px; flex-shrink: 0;
-  font-family: 'Orbitron', monospace;
-}
-.g-job-title { font-size: 13px; font-weight: 600; color: var(--white); font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; }
-.g-job-co { font-size: 11px; color: var(--dimmer); margin-top: 1px; font-family: 'Share Tech Mono', monospace; }
-.g-job-badge {
-  padding: 3px 10px; font-size: 9px; font-weight: 700; white-space: nowrap;
-  flex-shrink: 0; font-family: 'Orbitron', monospace; letter-spacing: 1px;
-  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
-}
-
-/* ═══════════════════════════════════════════════════
-   TESTIMONIALS TICKER
-═══════════════════════════════════════════════════ */
-.g-ticker-wrap {
-  overflow: hidden; padding: 48px 0;
-  border-top: 1px solid rgba(0,245,255,0.06);
-  border-bottom: 1px solid rgba(0,245,255,0.06);
-  background: linear-gradient(180deg, transparent, rgba(0,245,255,0.015), transparent);
-  mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
-}
-.g-ticker-track {
-  display: flex; gap: 20px; width: max-content;
-  animation: ticker 40s linear infinite;
-}
-.g-ticker-track:hover { animation-play-state: paused; }
-.g-ticker-item {
-  border: 1px solid rgba(0,245,255,0.1);
-  background: rgba(0,0,12,0.9);
-  padding: 20px 24px; min-width: 300px; max-width: 340px;
-  flex-shrink: 0;
-  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  transition: border-color 0.2s;
-  position: relative;
-}
-.g-ticker-item::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, var(--cyan), transparent);
-}
-.g-ticker-item:hover { border-color: rgba(0,245,255,0.3); }
-.g-ticker-stars { color: var(--cyan); font-size: 10px; margin-bottom: 8px; letter-spacing: 2px; text-shadow: 0 0 8px var(--cyan); }
-.g-ticker-quote { font-size: 13px; color: var(--dim); line-height: 1.7; margin-bottom: 14px; font-style: italic; }
-.g-ticker-author { display: flex; align-items: center; gap: 10px; }
-.g-ticker-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; flex-shrink: 0;
-  font-family: 'Orbitron', monospace;
-  border: 1px solid var(--border);
-}
-.g-ticker-name {
-  font-size: 12px; font-weight: 700; color: var(--white);
-  font-family: 'Orbitron', monospace; font-size: 10px; letter-spacing: 1px;
-}
-.g-ticker-role { font-size: 11px; color: var(--dimmer); font-family: 'Share Tech Mono', monospace; }
-
-/* ═══════════════════════════════════════════════════
-   COMPARISON TABLE
-═══════════════════════════════════════════════════ */
-.g-compare-wrap {
-  margin-top: 52px;
-  border: 1px solid var(--border); overflow: hidden;
-}
-.g-compare-head, .g-compare-row {
-  display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr;
-}
-.g-compare-head {
-  background: rgba(0,0,12,0.98);
-  border-bottom: 1px solid var(--border);
-}
-.g-compare-row {
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  transition: background 0.15s;
-}
-.g-compare-row:last-child { border-bottom: none; }
-.g-compare-row:hover { background: rgba(255,255,255,0.01); }
-.g-ch {
-  padding: 14px 20px;
-  font-family: 'Orbitron', monospace;
-  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
-  color: var(--dimmer);
-}
-.g-ch-hl {
-  background: rgba(0,245,255,0.05);
-  border-left: 1px solid rgba(0,245,255,0.15);
-  border-right: 1px solid rgba(0,245,255,0.15);
-  color: var(--cyan); display: flex; align-items: center; gap: 6px; justify-content: center;
-}
-.g-cc { padding: 14px 20px; font-size: 13px; color: var(--dim); display: flex; align-items: center; }
-.g-cc-feat { font-weight: 600; color: var(--white); font-size: 13px; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.3px; }
-.g-cc-feat small { display: block; font-size: 11px; color: var(--dimmer); font-weight: 400; margin-top: 1px; font-family: 'Share Tech Mono', monospace; }
-.g-cc-hl {
-  background: rgba(0,245,255,0.03);
-  border-left: 1px solid rgba(0,245,255,0.08);
-  border-right: 1px solid rgba(0,245,255,0.08);
-  justify-content: center; font-weight: 700; color: var(--white);
-}
-.g-cc-center { justify-content: center; }
-.g-chk-y { color: var(--cyan); font-size: 14px; text-shadow: 0 0 8px var(--cyan); }
-.g-chk-n { color: rgba(255,255,255,0.12); font-size: 16px; }
-.g-chk-p { color: var(--orange); font-size: 10px; font-weight: 700; font-family: 'Share Tech Mono', monospace; }
-
-/* ═══════════════════════════════════════════════════
-   FEATURE GRID
-═══════════════════════════════════════════════════ */
-.g-feat-grid {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 1px;
-  margin-top: 56px;
-  background: rgba(0,245,255,0.06);
-  border: 1px solid var(--border);
-}
-.g-feat {
-  padding: 36px 30px;
-  background: var(--bg2);
-  position: relative; overflow: hidden;
-  transition: background 0.3s;
-}
-.g-feat:hover { background: rgba(0,245,255,0.02); }
-.g-feat::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,245,255,0.12), transparent);
-}
-.g-feat::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; width: 0;
-  height: 1px; background: var(--cyan);
-  transition: width 0.4s;
-}
-.g-feat:hover::after { width: 100%; }
-.g-feat-icon {
-  width: 44px; height: 44px;
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 20px; font-size: 18px;
-  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-  background: rgba(0,245,255,0.04);
-}
-.g-feat-title {
-  font-family: 'Orbitron', monospace;
-  font-size: 12px; font-weight: 700; color: var(--white);
-  margin-bottom: 10px; letter-spacing: 0.5px;
-}
-.g-feat-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-
-/* ═══════════════════════════════════════════════════
-   FAQ
-═══════════════════════════════════════════════════ */
-.g-faq-list { max-width: 760px; margin: 56px auto 0; }
-.g-faq-item {
-  border: 1px solid rgba(0,245,255,0.08);
-  background: rgba(0,0,12,0.9);
-  margin-bottom: 4px; overflow: hidden;
-  transition: border-color 0.2s;
-}
-.g-faq-item:hover { border-color: rgba(0,245,255,0.2); }
-.g-faq-q {
-  padding: 18px 24px;
-  font-size: 14px; font-weight: 600; color: var(--white);
-  display: flex; justify-content: space-between; align-items: center;
-  cursor: pointer; gap: 12px;
-  font-family: 'Rajdhani', sans-serif; letter-spacing: 0.3px;
-}
-.g-faq-q-icon {
-  width: 24px; height: 24px; flex-shrink: 0;
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: var(--cyan);
-  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
-  background: rgba(0,245,255,0.05);
-}
-.g-faq-a { padding: 0 24px 18px; font-size: 14px; color: var(--dim); line-height: 1.8; }
-
-/* ═══════════════════════════════════════════════════
-   CTA SECTION
-═══════════════════════════════════════════════════ */
-.g-cta-section {
-  margin: 0 32px 100px;
-  padding: 80px 60px; text-align: center;
-  border: 1px solid var(--border); position: relative; overflow: hidden;
-  background: rgba(0,0,12,0.95);
-  clip-path: polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
-}
-.g-cta-section::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(0,245,255,0.08) 0%, transparent 60%),
-              radial-gradient(ellipse 40% 40% at 80% 80%, rgba(255,0,255,0.04) 0%, transparent 60%);
-  pointer-events: none;
-}
-.g-cta-corner-tl, .g-cta-corner-br {
-  position: absolute; width: 30px; height: 30px;
-}
-.g-cta-corner-tl {
-  top: 12px; left: 30px;
-  border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan);
-}
-.g-cta-corner-br {
-  bottom: 12px; right: 30px;
-  border-bottom: 2px solid var(--magenta); border-right: 2px solid var(--magenta);
-}
-.g-cta-h {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(24px, 4vw, 48px); font-weight: 900;
-  letter-spacing: -1px; color: var(--white); line-height: 1.05;
-  max-width: 700px; margin: 0 auto 20px; position: relative; z-index: 1;
-}
-.g-cta-sub {
-  font-size: 16px; color: var(--dim);
-  margin: 0 auto 40px; max-width: 500px; line-height: 1.7;
-  position: relative; z-index: 1;
-}
-.g-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
-
-/* ═══════════════════════════════════════════════════
-   CONTACT
-═══════════════════════════════════════════════════ */
-.g-contact-card {
-  border: 1px solid var(--border);
-  background: rgba(0,0,12,0.95);
-  padding: 44px; max-width: 560px; margin: 0 auto 80px;
-  text-align: center; position: relative;
-  clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
-}
-.g-contact-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--cyan));
-}
-.g-contact-card h3 {
-  font-family: 'Orbitron', monospace;
-  font-size: 18px; font-weight: 800; color: var(--white);
-  letter-spacing: 0px; margin-bottom: 10px;
-}
-.g-contact-card p { font-size: 14px; color: var(--dim); line-height: 1.7; margin-bottom: 28px; }
-.g-contact-email {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 14px 28px;
-  border: 1px solid rgba(0,245,255,0.25);
-  color: var(--cyan); font-size: 13px; font-weight: 600; text-decoration: none;
-  font-family: 'Share Tech Mono', monospace;
-  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  background: rgba(0,245,255,0.05);
-  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
-}
-.g-contact-email:hover {
-  background: rgba(0,245,255,0.1);
-  border-color: var(--cyan);
-  box-shadow: 0 0 20px rgba(0,245,255,0.2);
-}
-
-/* ═══════════════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════════════ */
-.g-footer {
-  border-top: 1px solid rgba(0,245,255,0.08);
-  padding: 40px 32px;
-  display: flex; align-items: center; justify-content: space-between;
-  max-width: 1200px; margin: 0 auto; gap: 20px;
-  flex-wrap: wrap;
-}
-.g-footer-copy {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px; color: var(--dimmer); letter-spacing: 1px;
-}
-.g-footer-links { display: flex; gap: 24px; }
-.g-footer-links a {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px; color: var(--dimmer); text-decoration: none;
-  letter-spacing: 1px; transition: color 0.2s;
-}
-.g-footer-links a:hover { color: var(--cyan); text-shadow: 0 0 6px var(--cyan); }
-
-/* ═══════════════════════════════════════════════════
-   STICKY CTA BAR
-═══════════════════════════════════════════════════ */
-#g-sticky {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 890;
-  background: rgba(0,0,8,0.96);
-  border-top: 1px solid var(--border);
-  backdrop-filter: blur(24px);
-  padding: 12px 32px;
-  display: flex; align-items: center; justify-content: space-between;
-  transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
-  box-shadow: 0 -4px 30px rgba(0,245,255,0.08);
-}
-#g-sticky.visible { transform: translateY(0); }
-.g-sticky-inner { max-width: 1200px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.g-sticky-text {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px; color: var(--dim); letter-spacing: 1px;
-}
-.g-sticky-text strong { color: var(--cyan); }
-.g-sticky-btns { display: flex; gap: 10px; align-items: center; }
-#g-sticky-dismiss {
-  background: none; border: none; color: var(--dimmer);
-  font-size: 20px; cursor: pointer; padding: 4px 8px; line-height: 1;
-  transition: color 0.2s;
-}
-#g-sticky-dismiss:hover { color: var(--white); }
-
-/* ═══════════════════════════════════════════════════
-   SECTION DOT NAV
-═══════════════════════════════════════════════════ */
-#g-dots {
-  position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
-  display: flex; flex-direction: column; gap: 10px; z-index: 800;
-}
-.g-dot-nav {
-  width: 6px; height: 6px;
-  background: rgba(0,245,255,0.15);
-  cursor: pointer; transition: all 0.3s;
-  border: none; padding: 0;
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-}
-.g-dot-nav.active {
-  background: var(--cyan);
-  transform: scale(1.6);
-  box-shadow: 0 0 10px var(--cyan);
-}
-.g-dot-nav:hover { background: rgba(0,245,255,0.5); }
-
-/* ═══════════════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════════════ */
-#g-toast {
-  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: rgba(0,0,12,0.97);
-  border: 1px solid var(--cyan);
-  padding: 10px 20px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px; color: var(--white);
-  display: flex; align-items: center; gap: 8px; z-index: 9998;
-  opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none;
-  box-shadow: 0 0 20px rgba(0,245,255,0.2);
-  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  letter-spacing: 1px;
-}
-#g-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-#g-toast-dot { width: 6px; height: 6px; background: var(--green); box-shadow: 0 0 8px var(--green); flex-shrink: 0; }
-
-/* ═══════════════════════════════════════════════════
-   RADAR
-═══════════════════════════════════════════════════ */
-.g-radar-polygon {
-  stroke-dasharray: 1000; stroke-dashoffset: 1000;
-  transition: stroke-dashoffset 1.8s cubic-bezier(0.4,0,0.2,1);
-}
-.g-radar-polygon.drawn { stroke-dashoffset: 0; }
-.g-radar-dot {
+.hl-radar-polygon.drawn { stroke-dashoffset: 0; }
+.hl-radar-dot {
   opacity: 0; transform: scale(0);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
-.g-radar-dot.drawn { opacity: 1; transform: scale(1); }
+.hl-radar-dot.drawn { opacity: 1; transform: scale(1); }
 
-/* ═══════════════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════════════ */
-@media (max-width: 900px) {
-  .g-story-inner { grid-template-columns: 1fr; gap: 40px; }
-  .g-story-inner.rev { direction: ltr; }
-  .g-steps { grid-template-columns: 1fr 1fr; }
-  .g-step { border-right: none; border-bottom: 1px solid var(--border); }
-  .g-feat-grid { grid-template-columns: 1fr; }
-  .g-nav-links { display: none; }
-  .g-cta-section { margin: 0 16px 60px; padding: 60px 28px; }
-  .g-hud-row { gap: 20px; }
-  .g-tmpl-grid { grid-template-columns: repeat(2,1fr); }
-  #g-dots { display: none; }
+/* ── Templates ── */
+.hl-tmpl-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
+.hl-tmpl {
+  border-radius: 11px; border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(18,18,22,0.9); overflow: hidden; display: flex;
+  flex-direction: column; min-height: 115px; position: relative; cursor: pointer;
+  transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
 }
-@media (max-width: 600px) {
-  .g-steps { grid-template-columns: 1fr; }
-  .g-compare-wrap { overflow-x: auto; }
+.hl-tmpl:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.5); }
+.hl-tmpl-act { border-color: var(--blue) !important; box-shadow: 0 0 0 2px rgba(10,132,255,0.25), 0 0 20px rgba(10,132,255,0.15) !important; }
+.hl-tmpl-hdr { height: 5px; border-radius: 2px; }
+.hl-tmpl-ln  { height: 3px; border-radius: 1.5px; background: rgba(255,255,255,0.13); }
+.hl-tmpl-badge {
+  position: absolute; bottom: 6px; left: 6px; right: 6px;
+  background: rgba(10,132,255,0.14); border: 1px solid rgba(10,132,255,0.28);
+  border-radius: 5px; padding: 3px 6px; font-size: 9px; font-weight: 700;
+  color: var(--blue); text-align: center; letter-spacing: 0.5px; text-transform: uppercase;
+}
+
+/* ── Jobs ── */
+.hl-job {
+  padding: 13px 15px; border-radius: 13px;
+  background: rgba(16,16,20,0.9);
+  border: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  transition: border-color 0.18s, background 0.18s, transform 0.18s;
+}
+.hl-job:hover { background: rgba(22,22,28,0.95); border-color: rgba(255,255,255,0.13); transform: translateX(3px); }
+.hl-job-logo { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+.hl-job-title { font-size: 13px; font-weight: 600; color: var(--fg); }
+.hl-job-co    { font-size: 11px; color: var(--fg3); margin-top: 2px; }
+.hl-job-badge { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+
+/* ── Interview ── */
+.hl-radar-wrap { display: flex; flex-direction: column; align-items: center; }
+.hl-qa { margin-bottom: 14px; }
+.hl-q { font-size: 13px; font-weight: 600; color: var(--fg); margin-bottom: 7px; display: flex; gap: 8px; align-items: flex-start; }
+.hl-a { font-size: 12px; color: var(--fg2); line-height: 1.68; padding-left: 22px; }
+.hl-score-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 100px;
+  font-size: 12px; font-weight: 700; background: rgba(48,209,88,0.1); color: var(--green);
+  border: 1px solid rgba(48,209,88,0.25); box-shadow: 0 0 12px rgba(48,209,88,0.12);
+}
+
+/* ── Comparison ── */
+.hl-compare { padding: 100px 0; background: #000; }
+.hl-compare-wrap {
+  margin-top: 52px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+}
+.hl-compare-head {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  background: rgba(8,8,12,0.98); border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.hl-compare-row {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s;
+}
+.hl-compare-row:last-child { border-bottom: none; }
+.hl-compare-row:hover { background: rgba(255,255,255,0.015); }
+.hl-ch { padding: 16px 24px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--fg3); }
+.hl-ch-hl {
+  background: rgba(10,132,255,0.07); border-left: 1px solid rgba(10,132,255,0.14);
+  border-right: 1px solid rgba(10,132,255,0.14); color: var(--blue);
+  display: flex; align-items: center; gap: 7px; justify-content: center;
+}
+.hl-cc { padding: 16px 24px; font-size: 13px; color: var(--fg2); display: flex; align-items: center; }
+.hl-cc-feat { font-weight: 600; color: var(--fg); font-size: 13.5px; }
+.hl-cc-feat small { display: block; font-size: 11px; color: var(--fg3); font-weight: 400; margin-top: 2px; }
+.hl-cc-hl {
+  background: rgba(10,132,255,0.04);
+  border-left: 1px solid rgba(10,132,255,0.1); border-right: 1px solid rgba(10,132,255,0.1);
+  justify-content: center; font-weight: 600; color: var(--fg);
+}
+.hl-cc-center { justify-content: center; }
+.hl-chk-y { color: var(--green); font-size: 16px; filter: drop-shadow(0 0 4px rgba(48,209,88,0.4)); }
+.hl-chk-n { color: rgba(245,245,247,0.18); font-size: 18px; }
+.hl-chk-p { color: var(--amber); font-size: 11px; font-weight: 700; }
+
+/* ── Feature Highlights ── */
+.hl-highlights { padding: 0 0 100px; background: #000; }
+.hl-highlight-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 48px; }
+.hl-highlight {
+  padding: 34px 30px; background: rgba(8,8,12,0.95); border: 1px solid rgba(255,255,255,0.06);
+  position: relative; overflow: hidden;
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+}
+.hl-highlight:first-child { border-radius: 20px 0 0 0; }
+.hl-highlight:nth-child(3) { border-radius: 0 20px 0 0; }
+.hl-highlight:nth-child(4) { border-radius: 0 0 0 20px; }
+.hl-highlight:last-child { border-radius: 0 0 20px 0; }
+.hl-highlight:hover { background: rgba(14,14,18,0.98); border-color: rgba(255,255,255,0.11); transform: translateY(-3px); }
+.hl-highlight::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+}
+/* Glow on hover - per card */
+.hl-highlight::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 30%, var(--card-glow, rgba(10,132,255,0.04)), transparent 65%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.hl-highlight:hover::after { opacity: 1; }
+.hl-hi-icon {
+  width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.hl-hi-title { font-size: 15px; font-weight: 700; color: var(--fg); margin-bottom: 9px; letter-spacing: -0.3px; }
+.hl-hi-desc { font-size: 13px; color: var(--fg2); line-height: 1.74; }
+
+/* ── FAQ ── */
+.hl-faq { padding: 100px 0; background: #030305; }
+.hl-faq-list { max-width: 720px; margin: 48px auto 0; display: flex; flex-direction: column; gap: 3px; }
+.hl-faq-item {
+  background: rgba(8,8,12,0.9); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.hl-faq-item:hover { border-color: rgba(255,255,255,0.13); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.hl-faq-q {
+  padding: 20px 24px; font-size: 14px; font-weight: 600; color: var(--fg);
+  display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 12px;
+}
+.hl-faq-q-icon {
+  width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  font-size: 16px; color: var(--fg2);
+  transition: background 0.2s, transform 0.2s;
+}
+.hl-faq-item:hover .hl-faq-q-icon { background: rgba(10,132,255,0.1); color: var(--blue); }
+.hl-faq-a { padding: 0 24px 20px; font-size: 14px; color: var(--fg2); line-height: 1.8; }
+
+/* ── CTA section ── */
+.hl-cta {
+  margin: 0 0 120px; padding: 96px 60px; border-radius: 32px;
+  background: rgba(6,6,10,0.95);
+  border: 1px solid rgba(255,255,255,0.08); text-align: center; position: relative; overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+}
+.hl-cta-glow {
+  position: absolute; top: -300px; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 800px;
+  background: radial-gradient(ellipse at center, rgba(10,132,255,0.12) 0%, rgba(48,209,88,0.05) 45%, transparent 68%);
+  pointer-events: none; animation: auroraFloat1 10s ease-in-out infinite;
+}
+.hl-cta-h { font-size: clamp(28px, 4.5vw, 56px); font-weight: 800; letter-spacing: -2.5px; color: var(--fg); line-height: 1.04; max-width: 700px; margin: 0 auto 22px; position: relative; z-index: 1; }
+.hl-cta-sub { font-size: 16px; color: var(--fg2); margin: 0 auto 40px; position: relative; z-index: 1; max-width: 520px; line-height: 1.72; text-align: center; }
+.hl-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+
+/* ── Checklist ── */
+.hl-checks { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; margin-top: 40px; }
+.hl-check  { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--fg3); }
+
+/* ── Contact section ── */
+.hl-contact-card {
+  background: rgba(8,8,12,0.9); border-radius: 24px; border: 1px solid rgba(255,255,255,0.07);
+  padding: 44px; max-width: 560px; margin: 0 auto 100px;
+  text-align: center; backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.hl-contact-card h3 { font-size: 22px; font-weight: 800; color: var(--fg); letter-spacing: -0.8px; margin-bottom: 10px; }
+.hl-contact-card p { font-size: 14px; color: var(--fg3); line-height: 1.7; margin-bottom: 28px; }
+.hl-contact-email {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 28px; border-radius: 14px;
+  background: rgba(10,132,255,0.07); border: 1px solid rgba(10,132,255,0.22);
+  color: #4db3ff; font-size: 14px; font-weight: 600; text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  word-break: break-all;
+}
+.hl-contact-email:hover { background: rgba(10,132,255,0.13); border-color: rgba(10,132,255,0.4); box-shadow: 0 0 24px rgba(10,132,255,0.15); }
+.hl-contact-meta { margin-top: 20px; font-size: 12px; color: rgba(245,245,247,0.24); }
+
+/* ── Footer ── */
+.hl-footer {
+  border-top: 1px solid rgba(255,255,255,0.06); padding: 44px 32px;
+  display: grid; grid-template-columns: 1fr auto; align-items: center;
+  max-width: 1140px; margin: 0 auto; gap: 20px;
+}
+.hl-footer-left { display: flex; flex-direction: column; gap: 10px; }
+.hl-footer-copy { font-size: 13px; font-weight: 600; color: var(--fg3); }
+.hl-footer-tagline { font-size: 12px; color: rgba(245,245,247,0.18); }
+.hl-footer-links { display: flex; gap: 24px; }
+.hl-footer-links a { font-size: 13px; color: rgba(245,245,247,0.28); text-decoration: none; transition: color 0.2s; }
+.hl-footer-links a:hover { color: var(--fg2); }
+
+/* ── Testimonial ticker ── */
+.hl-ticker-wrap {
+  overflow: hidden; padding: 48px 0; background: #000;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+.hl-ticker-track {
+  display: flex; gap: 24px; width: max-content;
+  animation: tickerScroll 36s linear infinite;
+}
+.hl-ticker-track:hover { animation-play-state: paused; }
+.hl-ticker-item {
+  background: rgba(10,10,14,0.9); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px; padding: 20px 26px; min-width: 320px; max-width: 360px;
+  flex-shrink: 0; backdrop-filter: blur(8px);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.hl-ticker-item:hover { border-color: rgba(255,255,255,0.16); transform: translateY(-3px); }
+.hl-ticker-quote { font-size: 13px; color: var(--fg2); line-height: 1.74; margin-bottom: 14px; font-style: italic; }
+.hl-ticker-author { display: flex; align-items: center; gap: 10px; }
+.hl-ticker-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.hl-ticker-name { font-size: 12px; font-weight: 700; color: var(--fg); }
+.hl-ticker-role { font-size: 11px; color: var(--fg3); margin-top: 1px; }
+
+/* Stars in ticker */
+.hl-ticker-stars { color: #ff9f0a; font-size: 10px; margin-bottom: 8px; letter-spacing: 1px; }
+
+/* ── Keyframes ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes shimmerBg {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--blue); }
+  50%       { opacity: 0.5; box-shadow: 0 0 4px var(--blue); }
+}
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes heroOrb {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* ── Orb decoration in hero ── */
+.hl-orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  animation: heroOrb 8s ease-in-out infinite;
+}
+.hl-orb-1 {
+  width: 400px; height: 400px; top: 20%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(from 0deg, rgba(10,132,255,0) 0deg, rgba(10,132,255,0.08) 120deg, rgba(48,209,88,0.06) 240deg, rgba(10,132,255,0) 360deg);
+  border: 1px solid rgba(255,255,255,0.04); z-index: 0;
+  animation-duration: 12s;
+}
+.hl-orb-ring {
+  position: absolute; border-radius: 50%; pointer-events: none; z-index: 0;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .hl-story-grid { grid-template-columns: 1fr; gap: 44px; }
+  .hl-steps { grid-template-columns: 1fr 1fr; }
+  .hl-step:first-child  { border-radius: 20px 0 0 0; }
+  .hl-step:nth-child(2) { border-radius: 0 20px 0 0; }
+  .hl-step:nth-child(3) { border-radius: 0 0 0 20px; }
+  .hl-step:last-child   { border-radius: 0 0 20px 0; }
+  .hl-ctas { flex-direction: column; align-items: center; }
+  .hl-nav-links { display: none; }
+  .hl-hamburger { display: flex; }
+  .hl-cta { padding: 56px 28px; }
+  .hl-card-grid { grid-template-columns: 1fr; }
+  .hl-compare-head, .hl-compare-row { grid-template-columns: 1.4fr 1fr; }
+  .hl-compare-head > *:nth-child(3),
+  .hl-compare-head > *:nth-child(4),
+  .hl-compare-row > *:nth-child(3),
+  .hl-compare-row > *:nth-child(4) { display: none; }
+  .hl-highlight-grid { grid-template-columns: 1fr 1fr; }
+  .hl-highlight:first-child { border-radius: 20px 0 0 0; }
+  .hl-highlight:nth-child(2) { border-radius: 0 20px 0 0; }
+  .hl-highlight:nth-child(5) { border-radius: 0 0 0 20px; }
+  .hl-highlight:last-child { border-radius: 0 0 20px 0; }
+  .hl-footer { grid-template-columns: 1fr; }
+  .hl-sticky-text { display: none; }
 }
 """)
 
-# ─────────────────────────────────────────────────────────────────
-# HELPER FUNCTIONS
-# ─────────────────────────────────────────────────────────────────
+# ─── SVG helpers ──────────────────────────────────────────────────────────────
+def ats_ring(score=78):
+    r, c, sw = 38, 48, 5
+    circ = 2 * math.pi * r
+    fill = (score / 100) * circ
+    off  = circ * 0.25
+    return (
+        '<svg width="96" height="96" viewBox="0 0 96 96" fill="none">'
+        '<circle cx="' + str(c) + '" cy="' + str(c) + '" r="' + str(r) + '" stroke="rgba(255,255,255,0.05)" stroke-width="' + str(sw) + '"/>'
+        '<circle cx="' + str(c) + '" cy="' + str(c) + '" r="' + str(r) + '" stroke="url(#ag)" stroke-width="' + str(sw) + '"'
+        ' stroke-dasharray="' + str(round(fill,1)) + ' ' + str(round(circ,1)) + '"'
+        ' stroke-dashoffset="-' + str(round(off,1)) + '" stroke-linecap="round" filter="drop-shadow(0 0 4px rgba(48,209,88,0.4))"/>'
+        '<text x="' + str(c) + '" y="' + str(c+1) + '" text-anchor="middle" dominant-baseline="middle"'
+        ' fill="#f5f5f7" font-size="18" font-weight="800" font-family="Sora,sans-serif">' + str(score) + '</text>'
+        '<defs><linearGradient id="ag" x1="0" y1="0" x2="96" y2="96" gradientUnits="userSpaceOnUse">'
+        '<stop offset="0%" stop-color="#30d158"/><stop offset="100%" stop-color="#0a84ff"/>'
+        '</linearGradient></defs></svg>'
+    )
 
-def chk_y(): return '<span class="g-chk-y">⬡</span>'
-def chk_n(): return '<span class="g-chk-n">—</span>'
-def chk_p(t): return f'<span class="g-chk-p">{t}</span>'
+def radar_svg():
+    cats   = ["Communication","Technical","Confidence","Structure","Examples"]
+    scores = [0.82, 0.74, 0.88, 0.70, 0.78]
+    cx = cy = 110; R = 62; n = len(cats)
+    def pt(i, frac):
+        angle = math.pi/2 + 2*math.pi*i/n
+        return cx + R*frac*math.cos(angle), cy - R*frac*math.sin(angle)
+    grid = ""
+    for lv in [0.25, 0.5, 0.75, 1.0]:
+        pts = " ".join(str(round(pt(i,lv)[0],1))+","+str(round(pt(i,lv)[1],1)) for i in range(n))
+        op = 0.04 + lv * 0.06
+        grid += '<polygon points="'+pts+'" fill="none" stroke="rgba(255,255,255,'+str(round(op,2))+')" stroke-width="1"/>'
+    axes = "".join('<line x1="'+str(cx)+'" y1="'+str(cy)+'" x2="'+str(round(pt(i,1)[0],1))+'" y2="'+str(round(pt(i,1)[1],1))+'" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>' for i in range(n))
+    poly = " ".join(str(round(pt(i,scores[i])[0],1))+","+str(round(pt(i,scores[i])[1],1)) for i in range(n))
+    dots = "".join('<circle class="hl-radar-dot" cx="'+str(round(pt(i,scores[i])[0],1))+'" cy="'+str(round(pt(i,scores[i])[1],1))+'" r="4" fill="#0a84ff" stroke="rgba(10,132,255,0.3)" stroke-width="6" style="transition-delay:'+str(1.2+i*0.1)+'s" filter="drop-shadow(0 0 3px rgba(10,132,255,0.8))"/>' for i in range(n))
+    labels = "".join('<text x="'+str(round(pt(i,1.32)[0],1))+'" y="'+str(round(pt(i,1.32)[1],1))+'" text-anchor="middle" dominant-baseline="middle" fill="rgba(245,245,247,0.38)" font-size="8.5" font-family="Sora,sans-serif" font-weight="500">'+cats[i]+'</text>' for i in range(n))
+    return ('<svg id="hl-radar-svg" width="220" height="220" viewBox="0 0 220 220" fill="none">'
+            +grid+axes
+            +'<polygon id="hl-radar-poly" class="hl-radar-polygon" points="'+poly+'" fill="rgba(10,132,255,0.12)" stroke="url(#radarGrad)" stroke-width="1.8"/>'
+            +dots+labels
+            +'<defs><linearGradient id="radarGrad" x1="0" y1="0" x2="220" y2="220" gradientUnits="userSpaceOnUse">'
+            '<stop offset="0%" stop-color="#0a84ff"/><stop offset="100%" stop-color="#30d158"/>'
+            '</linearGradient></defs>'
+            +'</svg>')
 
-def g_pill(labels):
-    return "".join(f'<span class="g-pill">{l}</span>' for l in labels)
+# ─── fragment builders ────────────────────────────────────────────────────────
+def ats_bars():
+    data = [("Format & Layout",92,"#30d158"),("Keyword Coverage",71,"#ff9f0a"),("Sections Present",85,"#0a84ff"),("Action Verbs",68,"#ff9f0a"),("Contact Info",100,"#30d158"),("Date Consistency",80,"#0a84ff")]
+    return "".join(
+        '<div class="hl-bar">'
+        '<div class="hl-bar-row"><span>'+lbl+'</span><span style="color:'+col+';font-weight:700;font-size:11px">'+str(pct)+'%</span></div>'
+        '<div class="hl-bar-track"><div class="hl-bar-fill" style="width:'+str(pct)+'%;background:linear-gradient(90deg,'+col+','+col+'cc);box-shadow:0 0 8px '+col+'44"></div></div>'
+        '</div>'
+        for lbl,pct,col in data)
 
-def g_job_cards():
+def score_bars():
+    data = [("Communication","85%","#0a84ff"),("Technical","79%","#bf5af2"),("Confidence","88%","#30d158"),("Structure","74%","#ff9f0a")]
+    return "".join(
+        '<div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(245,245,247,0.54);margin-bottom:5px"><span>'+dim+'</span><span style="color:'+col+';font-weight:700">'+sc+'</span></div>'
+        '<div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:8px;overflow:hidden">'
+        '<div style="width:'+sc+';height:100%;background:linear-gradient(90deg,'+col+','+col+'cc);border-radius:2px;box-shadow:0 0 6px '+col+'44"></div></div>'
+        for dim,sc,col in data)
+
+def _mini_resume(name, accent, layout="single", active=False, sidebar_bg=None, header_style="bar"):
+    act = ' hl-tmpl-act' if active else ''
+    badge = ('<div class="hl-tmpl-badge">'+name+'</div>') if active else ''
+    def ln(w, col="rgba(255,255,255,0.15)", h="2px", mt="3px"):
+        return f'<div style="height:{h};width:{w};background:{col};border-radius:1px;margin-top:{mt}"></div>'
+    def name_block(col):
+        return (f'<div style="height:4px;width:55%;background:{col};border-radius:1px;margin-bottom:2px"></div>'
+                f'<div style="height:2px;width:38%;background:{col};opacity:.5;border-radius:1px"></div>')
+    def section_lines(n=3, w_list=None, col="rgba(255,255,255,0.13)"):
+        ws = w_list or ["85%","70%","78%","60%","75%"]
+        return "".join(ln(ws[i % len(ws)], col) for i in range(n))
+    def section_label(col):
+        return f'<div style="height:2px;width:40%;background:{col};opacity:.7;border-radius:1px;margin-top:4px;margin-bottom:2px"></div>'
+    body = ""
+    if layout == "sidebar":
+        sb = sidebar_bg or "#1e293b"
+        body = (
+            f'<div style="display:flex;gap:0;flex:1;min-height:0">'
+            f'<div style="width:32%;background:{sb};padding:4px 3px;display:flex;flex-direction:column;gap:2px;">'
+            + (f'<div style="height:16px;width:16px;border-radius:50%;background:{accent};opacity:.7;margin:0 auto 3px"></div>' if not sidebar_bg else '')
+            + name_block(accent)
+            + ln("90%", "rgba(255,255,255,0.2)", "1px")
+            + section_label(accent) + ln("80%", "rgba(255,255,255,0.18)") + ln("65%", "rgba(255,255,255,0.18)")
+            + section_label(accent) + ln("70%", "rgba(255,255,255,0.18)") + ln("55%", "rgba(255,255,255,0.18)")
+            + f'</div>'
+            f'<div style="flex:1;padding:4px 4px;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent) + ln("90%") + ln("80%") + ln("70%")
+            + section_label(accent) + ln("85%") + ln("75%") + ln("60%")
+            + f'</div></div>'
+        )
+    elif layout == "two-col":
+        body = (
+            f'<div style="display:flex;gap:4px;flex:1;min-height:0;padding:2px;">'
+            f'<div style="flex:1;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent) + ln("90%") + ln("75%") + ln("80%")
+            + section_label(accent) + ln("85%") + ln("70%") + ln("65%")
+            + f'</div>'
+            f'<div style="flex:1;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent) + ln("80%") + ln("90%") + ln("70%")
+            + section_label(accent) + ln("75%") + ln("60%") + ln("80%")
+            + f'</div></div>'
+        )
+    elif layout == "timeline":
+        body = (
+            f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent)
+            + (f'<div style="display:flex;align-items:flex-start;gap:3px;margin-top:2px">'
+               f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
+               f'<div style="flex:1">' + ln("85%") + ln("70%") + f'</div></div>'
+               f'<div style="margin-left:3px;width:1px;height:5px;background:{accent};opacity:.3;margin-left:5px"></div>'
+               f'<div style="display:flex;align-items:flex-start;gap:3px">'
+               f'<div style="width:4px;height:4px;border-radius:50%;background:{accent};flex-shrink:0;margin-top:1px"></div>'
+               f'<div style="flex:1">' + ln("78%") + ln("62%") + f'</div></div>')
+            + section_label(accent) + ln("90%") + ln("75%")
+            + f'</div>'
+        )
+    else:
+        body = (
+            f'<div style="flex:1;padding:2px 3px;display:flex;flex-direction:column;gap:0;">'
+            + section_label(accent) + ln("90%") + ln("80%") + ln("72%")
+            + section_label(accent) + ln("85%") + ln("68%") + ln("76%")
+            + section_label(accent) + ln("70%") + ln("55%")
+            + f'</div>'
+        )
+    if header_style == "band":
+        hdr = (f'<div style="background:{accent};padding:4px 5px;border-radius:3px 3px 0 0;">'
+               f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.9);border-radius:1px;margin-bottom:1px"></div>'
+               f'<div style="height:2px;width:32%;background:rgba(255,255,255,0.55);border-radius:1px"></div></div>')
+    elif header_style == "left-accent":
+        hdr = (f'<div style="border-left:2px solid {accent};padding:3px 5px;">'
+               f'<div style="height:3px;width:50%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:1px"></div>'
+               f'<div style="height:2px;width:30%;background:{accent};border-radius:1px"></div>'
+               f'<div style="margin-top:2px;display:flex;gap:3px">'
+               f'<div style="height:2px;width:22%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+               f'<div style="height:2px;width:18%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+               f'</div></div>')
+    elif header_style == "center":
+        hdr = (f'<div style="text-align:center;padding:4px 3px;border-bottom:1px solid {accent}20;">'
+               f'<div style="height:3px;width:45%;background:rgba(255,255,255,0.75);border-radius:1px;margin:0 auto 2px"></div>'
+               f'<div style="height:2px;width:28%;background:{accent};border-radius:1px;margin:0 auto 2px"></div>'
+               f'<div style="display:flex;justify-content:center;gap:3px">'
+               f'<div style="height:1.5px;width:14%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+               f'<div style="height:1.5px;width:14%;background:rgba(255,255,255,0.2);border-radius:1px"></div>'
+               f'</div></div>')
+    else:
+        if layout == "sidebar":
+            hdr = ""
+        else:
+            hdr = (f'<div style="height:4px;background:{accent};border-radius:3px 3px 0 0;margin-bottom:3px"></div>'
+                   f'<div style="padding:0 4px 2px;">'
+                   f'<div style="height:3px;width:52%;background:rgba(255,255,255,0.7);border-radius:1px;margin-bottom:2px"></div>'
+                   f'<div style="height:2px;width:34%;background:{accent};opacity:.6;border-radius:1px"></div>'
+                   f'<div style="display:flex;gap:3px;margin-top:2px">'
+                   f'<div style="height:1.5px;width:16%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
+                   f'<div style="height:1.5px;width:16%;background:rgba(255,255,255,0.18);border-radius:1px"></div>'
+                   f'</div></div>')
+    return (f'<div class="hl-tmpl{act}" style="display:flex;flex-direction:column;padding:0;overflow:hidden;">'
+            + hdr + body + badge + f'</div>')
+
+def tmpl_gallery():
+    templates = [
+        ("Modern",    "#0a84ff", "center",   "center",       None,      True),
+        ("Classic",   "#f5f5f7", "single",   "left-accent",  None,      False),
+        ("Executive", "#ff9f0a", "single",   "band",         None,      False),
+        ("Timeline",  "#30d158", "timeline", "bar",          None,      False),
+        ("Corporate", "#1d4ed8", "sidebar",  "bar",          "#1a2744", False),
+        ("Slate",     "#64748b", "sidebar",  "bar",          "#1a1f2a", False),
+        ("Rose",      "#fb7185", "single",   "band",         None,      False),
+        ("Midnight",  "#a78bfa", "two-col",  "bar",          None,      False),
+    ]
+    out = ""
+    for name, accent, layout, hdr_style, sb_bg, active in templates[:8]:
+        out += _mini_resume(name, accent, layout, active, sb_bg, hdr_style)
+    return out
+
+def job_cards():
     jobs = [
-        ("SDE II","Google","MTN VIEW · FULL-TIME","#00b4f5","G",True),
-        ("ML Engineer","Anthropic","REMOTE · FULL-TIME","#ff9f0a","A",False),
-        ("Backend Dev","Razorpay","BANGALORE · FULL-TIME","#7c3aed","R",False),
-        ("Data Analyst","Zepto","MUMBAI · HYBRID","#00ff41","Z",False),
+        ("SDE II","Google","Mountain View · Full-time","#4285f4","G",True),
+        ("ML Engineer","Anthropic","Remote · Full-time","#d97706","A",False),
+        ("Backend Dev","Razorpay","Bangalore · Full-time","#2563eb","R",False),
+        ("Data Analyst","Zepto","Mumbai · Hybrid","#7c3aed","Z",False)
     ]
     out = ""
     for title,co,meta,col,letter,featured in jobs:
-        if featured:
-            bb="rgba(0,245,255,0.1)"; bc="var(--cyan)"; btx="FEATURED"
-            shadow=";box-shadow:0 0 10px rgba(0,245,255,0.2)"
-        else:
-            bb="rgba(255,255,255,0.03)"; bc="rgba(255,255,255,0.3)"; btx="NEW"; shadow=""
-        out += (f'<div class="g-job">'
-                f'<div class="g-job-logo" style="background:{col}22;color:{col}">{letter}</div>'
-                f'<div style="flex:1;min-width:0">'
-                f'<div class="g-job-title">{title} — {co}</div>'
-                f'<div class="g-job-co">{meta}</div></div>'
-                f'<div class="g-job-badge" style="background:{bb};color:{bc};border:1px solid {bc}44{shadow}">{btx}</div>'
-                f'</div>')
+        bb  = "rgba(10,132,255,0.12)" if featured else "rgba(255,255,255,0.04)"
+        bc  = "#4db3ff"               if featured else "rgba(245,245,247,0.3)"
+        btx = "Featured"              if featured else "New"
+        badge_shadow = ";box-shadow:0 0 10px rgba(10,132,255,0.2)" if featured else ""
+        out += '<div class="hl-job"><div class="hl-job-logo" style="background:'+col+'22;color:'+col+'">'+letter+'</div><div style="flex:1;min-width:0"><div class="hl-job-title">'+title+' — '+co+'</div><div class="hl-job-co">'+meta+'</div></div><div class="hl-job-badge" style="background:'+bb+';color:'+bc+';border:1px solid '+bc+'44'+badge_shadow+'">'+btx+'</div></div>'
     return out
 
-def ats_meter(label, pct, color="var(--cyan)"):
-    return (f'<div class="g-ats-meter">'
-            f'<div class="g-meter-label"><span>{label}</span>'
-            f'<span class="g-meter-value" style="color:{color};text-shadow:0 0 8px {color}">{pct}%</span></div>'
-            f'<div class="g-meter-bar">'
-            f'<div class="g-meter-fill" style="width:{pct}%;background:{color}"></div>'
-            f'</div></div>')
+def checklist():
+    items = ["ATS score in seconds","Bias detection & rewrite","15 resume templates","Cover letter generator","Live job search","AI Interview Coach"]
+    chk = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    return "".join('<div class="hl-check">'+chk+'<span>'+item+'</span></div>' for item in items)
 
-def mini_template(name, color, active=False):
-    act = ' g-tmpl-act' if active else ''
-    return (f'<div class="g-tmpl{act}">'
-            f'<div class="g-tmpl-hdr" style="background:{color}"></div>'
-            f'<div style="padding:4px">'
-            f'<div class="g-tmpl-ln" style="width:70%"></div>'
-            f'<div class="g-tmpl-ln" style="width:50%"></div>'
-            f'<div class="g-tmpl-ln" style="width:80%"></div>'
-            f'<div class="g-tmpl-ln" style="width:60%"></div>'
-            f'</div>'
-            f'<div class="g-tmpl-badge">{name}</div>'
-            f'</div>')
+def pills(labels):
+    return "".join('<span class="hl-pill">'+l+'</span>' for l in labels)
 
-def radar_chart(skills, scores, color="00f5ff"):
-    import math
-    n = len(skills)
-    cx, cy, r = 130, 130, 100
-    grid_html = ""
-    for ring in [0.25, 0.5, 0.75, 1.0]:
-        pts = " ".join(f"{cx + r*ring*math.cos(math.pi/2 - 2*math.pi*i/n):.1f},{cy - r*ring*math.sin(math.pi/2 - 2*math.pi*i/n):.1f}" for i in range(n))
-        grid_html += f'<polygon points="{pts}" fill="none" stroke="#{color}" stroke-width="0.5" opacity="0.2"/>'
-    for i in range(n):
-        x2 = cx + r*math.cos(math.pi/2 - 2*math.pi*i/n)
-        y2 = cy - r*math.sin(math.pi/2 - 2*math.pi*i/n)
-        grid_html += f'<line x1="{cx}" y1="{cy}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="#{color}" stroke-width="0.5" opacity="0.2"/>'
-    pts_main = " ".join(f"{cx + r*(s/100)*math.cos(math.pi/2 - 2*math.pi*i/n):.1f},{cy - r*(s/100)*math.sin(math.pi/2 - 2*math.pi*i/n):.1f}" for i,(s) in enumerate(scores))
-    dot_html = ""
-    for i, s in enumerate(scores):
-        dx = cx + r*(s/100)*math.cos(math.pi/2 - 2*math.pi*i/n)
-        dy = cy - r*(s/100)*math.sin(math.pi/2 - 2*math.pi*i/n)
-        dot_html += f'<circle class="g-radar-dot" cx="{dx:.1f}" cy="{dy:.1f}" r="4" fill="#{color}" stroke="#{color}" stroke-width="1"/>'
-    label_html = ""
-    for i, sk in enumerate(skills):
-        lx = cx + (r+18)*math.cos(math.pi/2 - 2*math.pi*i/n)
-        ly = cy - (r+18)*math.sin(math.pi/2 - 2*math.pi*i/n)
-        anchor = "middle" if abs(lx-cx)<5 else ("start" if lx>cx else "end")
-        label_html += f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="{anchor}" fill="rgba(255,255,255,0.5)" font-size="8" font-family="Share Tech Mono,monospace">{sk}</text>'
-    return (f'<svg id="g-radar-svg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg" width="100%">'
-            f'{grid_html}'
-            f'<polygon id="g-radar-poly" class="g-radar-polygon" points="{pts_main}" fill="rgba(0,245,255,0.1)" stroke="#{color}" stroke-width="2"/>'
-            f'{dot_html}{label_html}'
-            f'</svg>')
+def chk_y():
+    return '<span class="hl-chk-y">&#10003;</span>'
 
-# ─────────────────────────────────────────────────────────────────
-# SECTIONS
-# ─────────────────────────────────────────────────────────────────
+def chk_n():
+    return '<span class="hl-chk-n">&mdash;</span>'
 
+def chk_p(t):
+    return '<span class="hl-chk-p">' + t + '</span>'
+
+# ─── SECTIONS ─────────────────────────────────────────────────────────────────
 def render_banner():
-    H(f'<div class="g-banner">'
-      f'<span class="g-banner-badge">// LIVE</span>'
-      f'AI Interview Coach deployed — practice with resume-based missions &amp; get instant scoring. '
-      f'<a href="{APP_URL}" target="_blank">BOOT UP &rarr;</a>'
-      f'</div>')
+    H('<div class="hl-banner">'
+      '<span class="hl-banner-badge">New</span>'
+      'AI Interview Coach is live &mdash; Practice with resume-based questions &amp; get instant scoring. '
+      '<a href="' + APP_URL + '" target="_blank">Try it free &rarr;</a>'
+      '</div>')
 
 def render_nav():
     H('<div id="sp"></div>'
-      '<canvas id="matrix-canvas"></canvas>'
-      '<div class="cyber-grid"></div>'
-
+      '<div class="hl-noise"></div>'
+      # Mobile drawer
+      '<div id="hl-drawer">'
+      '<button id="hl-drawer-close" onclick="closeDrawer()">&times;</button>'
+      '<a href="#how" onclick="closeDrawer()">How it works</a>'
+      '<a href="#analyzer" onclick="closeDrawer()">Analyzer</a>'
+      '<a href="#builder" onclick="closeDrawer()">Builder</a>'
+      '<a href="#career" onclick="closeDrawer()">Career Hub</a>'
+      '<a href="#compare" onclick="closeDrawer()">Compare</a>'
+      '<a href="#contact" onclick="closeDrawer()">Contact</a>'
+      '<a href="' + APP_URL + '" target="_blank" style="color:#0a84ff!important">Open App &rarr;</a>'
+      '</div>'
       # Toast
-      '<div id="g-toast"><div id="g-toast-dot"></div><span id="g-toast-msg"></span></div>'
-
+      '<div id="hl-toast"><div id="hl-toast-dot"></div><span id="hl-toast-msg"></span></div>'
       # Sticky CTA
-      '<div id="g-sticky">'
-      '<div class="g-sticky-inner">'
-      '<span class="g-sticky-text">// SYSTEM READY — <strong>HIRELYZER</strong> — YOUR CAREER PLATFORM</span>'
-      '<div class="g-sticky-btns">'
-      f'<a href="{APP_URL}" target="_blank" class="g-btn-primary" style="padding:10px 24px;font-size:10px">LAUNCH APP</a>'
-      '<button id="g-sticky-dismiss" onclick="window.dismissSticky()">×</button>'
+      '<div id="hl-sticky-cta">'
+      '<div class="hl-sticky-inner">'
+      '<div class="hl-sticky-text">Ready to land your next role? <span>Hirelyzer is 100% free.</span></div>'
+      '<div class="hl-sticky-btns">'
+      '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p" style="padding:10px 22px;font-size:13px">'
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
+      'Analyse my resume free</a>'
+      '<button id="hl-sticky-dismiss" onclick="dismissSticky()" title="Dismiss">&times;</button>'
       '</div></div></div>'
-
-      # Section dots
-      '<div id="g-dots">'
-      '<button class="g-dot-nav active" data-section="g-hero-anchor" title="Hero"></button>'
-      '<button class="g-dot-nav" data-section="how" title="How"></button>'
-      '<button class="g-dot-nav" data-section="analyzer" title="Analyzer"></button>'
-      '<button class="g-dot-nav" data-section="builder" title="Builder"></button>'
-      '<button class="g-dot-nav" data-section="career" title="Career"></button>'
-      '<button class="g-dot-nav" data-section="compare" title="Compare"></button>'
-      '<button class="g-dot-nav" data-section="contact" title="Contact"></button>'
+      # Section dot nav
+      '<div id="hl-dots">'
+      '<button class="hl-dot-nav" data-section="hl-hero-anchor" title="Hero"></button>'
+      '<button class="hl-dot-nav" data-section="how" title="How it works"></button>'
+      '<button class="hl-dot-nav" data-section="analyzer" title="Analyzer"></button>'
+      '<button class="hl-dot-nav" data-section="builder" title="Builder"></button>'
+      '<button class="hl-dot-nav" data-section="career" title="Career Hub"></button>'
+      '<button class="hl-dot-nav" data-section="compare" title="Compare"></button>'
+      '<button class="hl-dot-nav" data-section="contact" title="Contact"></button>'
       '</div>'
-
-      # Nav
-      '<nav class="g-nav" id="g-nav">'
-      '<div class="g-nav-inner">'
-      '<a href="#g-hero-anchor" class="g-logo">'
-      '<div class="g-logo-hex">⬡</div>'
-      'HIRELYZER'
+      # Nav bar
+      '<nav class="hl-nav" id="hl-nav">'
+      '<div class="hl-nav-inner">'
+      '<a href="#hl-hero-anchor" class="hl-logo">'
+      '<div class="hl-logo-icon">'
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '</div>HIRELYZER'
       '</a>'
-      '<div class="g-nav-links">'
-      '<a href="#how" data-nav="how">HOW IT WORKS</a>'
-      '<a href="#analyzer" data-nav="analyzer">ANALYZER</a>'
-      '<a href="#builder" data-nav="builder">BUILDER</a>'
-      '<a href="#career" data-nav="career">CAREER HUB</a>'
-      '<a href="#compare" data-nav="compare">COMPARE</a>'
+      '<div class="hl-nav-links">'
+      '<a href="#how" data-nav="how">How it works</a>'
+      '<a href="#analyzer" data-nav="analyzer">Analyzer</a>'
+      '<a href="#builder" data-nav="builder">Builder</a>'
+      '<a href="#career" data-nav="career">Career Hub</a>'
+      '<a href="#compare" data-nav="compare">Compare</a>'
       '</div>'
-      f'<a href="{APP_URL}" target="_blank" class="g-nav-cta">LAUNCH APP ▶</a>'
+      '<div class="hl-nav-right">'
+      '<button class="hl-hamburger" id="hl-hamburger" onclick="openDrawer()" aria-label="Open menu">'
+      '<span></span><span></span><span></span>'
+      '</button>'
+      '<a href="' + APP_URL + '" target="_blank" class="hl-nav-cta">'
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
+      'Try it free'
+      '</a>'
+      '</div>'
       '</div></nav>')
 
 def render_hero():
-    H('<div id="g-hero-anchor"></div>'
-      '<section class="g-hero">'
+    H('<div class="hl-hero">'
+      '<div id="hl-hero-anchor" style="position:absolute;top:0;pointer-events:none"></div>'
 
-      # Orbit rings
-      '<div class="g-orbit-ring" style="width:400px;height:400px"></div>'
-      '<div class="g-orbit-ring" style="width:600px;height:600px"></div>'
-      '<div class="g-orbit-ring" style="width:800px;height:800px"></div>'
-
-      '<div class="g-hero-content">'
-
-      '<div class="g-status-bar">'
-      '<div class="g-status-dot"></div>'
-      '// SYSTEM STATUS: ONLINE &nbsp;·&nbsp; v2.4.1 &nbsp;·&nbsp; ALL SYSTEMS GO'
+      # Aurora layers
+      '<div class="hl-aurora">'
+      '<div class="hl-aurora-1"></div>'
+      '<div class="hl-aurora-2"></div>'
+      '<div class="hl-aurora-3"></div>'
       '</div>'
 
-      '<h1 class="g-h1">'
-      'YOUR CAREER<br>'
-      f'<span class="g-h1-glitch" data-text="DESERVES">DESERVES</span><br>'
-      '<span style="color:var(--magenta);text-shadow:0 0 30px var(--magenta)">'
-      '<span id="g-typewriter">everyone</span><span class="g-cursor"></span>'
-      '</span>'
-      '<span class="g-h1-sub">// INTELLIGENT CAREER PLATFORM</span>'
-      '</h1>'
+      # Orbital rings
+      '<div class="hl-orb hl-orb-1"></div>'
+      '<div class="hl-orb-ring" style="width:560px;height:560px;top:50%;left:50%;transform:translate(-50%,-50%) translateY(-80px)"></div>'
+      '<div class="hl-orb-ring" style="width:720px;height:720px;top:50%;left:50%;transform:translate(-50%,-50%) translateY(-80px)"></div>'
 
-      '<p class="g-hero-desc">'
-      'Beat ATS systems. Eliminate bias. Land interviews at top companies. '
-      'HIRELYZER gives you the unfair advantage — powered by AI that actually works.'
-      '</p>'
+      # Particle canvas
+      '<canvas id="hl-particles"></canvas>'
 
-      '<div class="g-hud-row">'
-      '<div class="g-hud-stat">'
-      '<div class="g-hud-num" data-count="12000" data-suffix="+">0+</div>'
-      '<div class="g-hud-label">USERS DEPLOYED</div>'
-      '</div>'
-      '<div class="g-hud-stat">'
-      '<div class="g-hud-num" data-count="94" data-suffix="%">0%</div>'
-      '<div class="g-hud-label">ATS PASS RATE</div>'
-      '</div>'
-      '<div class="g-hud-stat">'
-      '<div class="g-hud-num" data-count="15">0</div>'
-      '<div class="g-hud-label">RESUME TEMPLATES</div>'
-      '</div>'
-      '<div class="g-hud-stat">'
-      '<div class="g-hud-num" data-count="3" data-suffix="s">0s</div>'
-      '<div class="g-hud-label">ATS SCAN TIME</div>'
-      '</div>'
+      # Grid + spotlight
+      '<div class="hl-hero-grid"></div>'
+      '<div id="hl-spotlight"></div>'
+      '<div class="hl-hero-fade"></div>'
+
+      '<div class="hl-hero-content">'
+      '<div class="hl-eyebrow">'
+      '<div class="hl-eyebrow-dot"></div>'
+      'AI-Powered Career Platform &mdash; 100% Free'
       '</div>'
 
-      '<div class="g-ctas">'
-      f'<a href="{APP_URL}" target="_blank" class="g-btn-primary">▶ INITIALIZE FREE</a>'
-      '<a href="#how" class="g-btn-secondary">VIEW INTEL ↓</a>'
+      '<h1 class="hl-h1">The career tools<br>everyone <span id="hl-typewriter">needs</span><span class="hl-cursor"></span></h1>'
+
+      '<p class="hl-hero-sub">ATS scoring, bias detection, 15 resume templates, live job search, and an AI interview coach &mdash; everything in one intelligent platform.</p>'
+
+      '<div class="hl-ctas">'
+      '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p" style="font-size:15px;padding:16px 36px">'
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>'
+      'Analyse my resume free'
+      '</a>'
+      '<a href="#how" class="hl-btn-g" style="font-size:15px;padding:16px 32px">'
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M10 8l6 4-6 4V8z" fill="currentColor"/></svg>'
+      'See how it works'
+      '</a>'
       '</div>'
 
-      '<div class="g-scroll-hint">'
-      '<span>SCROLL DOWN</span>'
-      '<div class="g-scroll-line"></div>'
+      '<div class="hl-hero-features">'
+      '<div class="hl-hf-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round"/></svg>ATS Scoring</div>'
+      '<div class="hl-hf-sep"></div>'
+      '<div class="hl-hf-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round"/></svg>Bias Detection</div>'
+      '<div class="hl-hf-sep"></div>'
+      '<div class="hl-hf-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round"/></svg>15 Templates</div>'
+      '<div class="hl-hf-sep"></div>'
+      '<div class="hl-hf-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round"/></svg>Job Search</div>'
+      '<div class="hl-hf-sep"></div>'
+      '<div class="hl-hf-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.2" stroke-linecap="round"/></svg>Interview Coach</div>'
       '</div>'
 
+      # Hero mock UI card
+      '<div class="hl-card">'
+      '<div class="hl-card-bar">'
+      '<div class="hl-dot" style="background:#ff453a"></div>'
+      '<div class="hl-dot" style="background:#ff9f0a"></div>'
+      '<div class="hl-dot" style="background:#30d158"></div>'
+      '<span class="hl-card-tab">hirelyzer.app &mdash; ATS Analysis</span>'
       '</div>'
-      '</section>')
+      '<div class="hl-card-body">'
+      '<div class="hl-card-grid">'
+
+      # Panel 1: ATS Score
+      '<div>'
+      '<div class="hl-ptitle"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#30d158"/></svg> ATS Score</div>'
+      '<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">'
+      + ats_ring(78) +
+      '<div>'
+      '<div style="font-size:8px;color:rgba(245,245,247,0.34);text-transform:uppercase;letter-spacing:.9px;font-weight:700;margin-bottom:4px">Status</div>'
+      '<div style="font-size:11px;color:#30d158;font-weight:700">Good &middot; Minor fixes</div>'
+      '<div style="font-size:10px;color:rgba(245,245,247,0.3);margin-top:4px">Parsed in 1.4s</div>'
+      '</div></div>'
+      + ats_bars() +
+      '</div>'
+
+      # Panel 2: Bias
+      '<div>'
+      '<div class="hl-ptitle"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#bf5af2"/></svg> Bias Analysis</div>'
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'
+      '<div style="padding:12px;background:rgba(10,132,255,0.07);border-radius:10px;border:1px solid rgba(10,132,255,0.16)"><div style="font-size:8px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.3);font-weight:700;margin-bottom:5px">Masculine</div><div style="font-size:24px;font-weight:800;color:#4db3ff">8</div></div>'
+      '<div style="padding:12px;background:rgba(191,90,242,0.07);border-radius:10px;border:1px solid rgba(191,90,242,0.16)"><div style="font-size:8px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.3);font-weight:700;margin-bottom:5px">Feminine</div><div style="font-size:24px;font-weight:800;color:#d07ef7">3</div></div>'
+      '</div>'
+      '<div style="font-size:9px;color:rgba(245,245,247,0.3);font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:9px">Flagged words</div>'
+      '<div class="hl-words"><span class="wc wc-m">driven</span><span class="wc wc-m">aggressive</span><span class="wc wc-m">dominate</span><span class="wc wc-f">nurture</span><span class="wc wc-n">deliver</span><span class="wc wc-n">execute</span></div>'
+      '<div style="padding:12px;background:rgba(48,209,88,0.07);border-radius:10px;border:1px solid rgba(48,209,88,0.18);margin-top:10px">'
+      '<div style="font-size:10px;font-weight:700;color:#30d158;margin-bottom:5px">AI Rewrite</div>'
+      '<div style="font-size:11px;color:rgba(245,245,247,0.5);line-height:1.6"><span style="text-decoration:line-through;opacity:.4">Aggressively drove</span> &rarr; <span style="color:#30d158">Accelerated results</span></div>'
+      '</div>'
+      '</div>'
+
+      # Panel 3: Fix list
+      '<div>'
+      '<div class="hl-ptitle"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#ff9f0a"/></svg> Priority Fixes</div>'
+      '<div style="padding:9px 12px;background:rgba(255,159,10,0.07);border-radius:9px;border:1px solid rgba(255,159,10,0.18);display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="#ff9f0a" stroke-width="2" stroke-linecap="round"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#ff9f0a" stroke-width="1.5" fill="none"/></svg>'
+      '<span style="font-size:12px;color:#ff9f0a;font-weight:600">Add measurable impact</span>'
+      '</div>'
+      '<div style="padding:9px 12px;background:rgba(255,159,10,0.07);border-radius:9px;border:1px solid rgba(255,159,10,0.18);display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="#ff9f0a" stroke-width="2" stroke-linecap="round"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#ff9f0a" stroke-width="1.5" fill="none"/></svg>'
+      '<span style="font-size:12px;color:#ff9f0a;font-weight:600">Missing 4 key skills</span>'
+      '</div>'
+      '<div style="padding:9px 12px;background:rgba(255,69,58,0.07);border-radius:9px;border:1px solid rgba(255,69,58,0.18);display:flex;align-items:center;gap:8px">'
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#ff453a" stroke-width="2" stroke-linecap="round"/></svg>'
+      '<span style="font-size:12px;color:#ff453a;font-weight:600">Objective outdated</span>'
+      '</div>'
+      '</div>'
+
+      '</div>'  # grid
+      '</div>'  # body
+      '</div>'  # card
+
+      # Stats
+      '<div class="hl-stats">'
+      '<div class="hl-stat"><div class="hl-stat-n" data-count="15" data-suffix="+">15+</div><div class="hl-stat-l">Templates</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n" data-count="10" data-suffix="k+">10k+</div><div class="hl-stat-l">Resumes Scored</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n">AI</div><div class="hl-stat-l">LLM Powered</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n">Free</div><div class="hl-stat-l">No Sign-up</div></div>'
+      '<div class="hl-stat"><div class="hl-stat-n" data-count="5">5</div><div class="hl-stat-l">Core Modules</div></div>'
+      '</div>'
+
+      '</div>'  # hero-content
+      '</div>')  # hero
 
 def render_how():
-    H('<div id="how"></div>'
-      '<div style="background:var(--bg2);border-top:1px solid rgba(0,245,255,0.06);border-bottom:1px solid rgba(0,245,255,0.06)">'
-      '<div class="g-section">'
-      '<div class="g-section-header">'
-      '<div class="g-section-eyebrow">MISSION BRIEFING</div>'
-      '<h2 class="g-section-h2">HOW THE <span class="accent">SYSTEM</span> WORKS</h2>'
-      '<p class="g-section-sub">Four-phase protocol to career domination. Execute in sequence.</p>'
-      '</div>'
+    H('<div id="how" style="padding:100px 0 60px;background:#000">'
+      '<div class="hl-section">'
+      '<div class="hl-divider hl-reveal">How it works</div>'
+      '<div class="hl-steps">'
 
-      '<div class="g-steps">'
-      '<div class="g-step">'
-      '<div class="g-step-num">PHASE <span style="color:var(--cyan)">01</span></div>'
-      '<div class="g-step-icon">📄</div>'
-      '<div class="g-step-title">UPLOAD RESUME</div>'
-      '<div class="g-step-desc">Drop your resume. Our scanner ingests every keyword, gap, and formatting issue in under 3 seconds.</div>'
-      '</div>'
-      '<div class="g-step">'
-      '<div class="g-step-num">PHASE <span style="color:var(--cyan)">02</span></div>'
-      '<div class="g-step-icon">⚡</div>'
-      '<div class="g-step-title">AI ANALYSIS</div>'
-      '<div class="g-step-desc">Multi-layer AI cross-references your resume against ATS algorithms and live job requirements.</div>'
-      '</div>'
-      '<div class="g-step">'
-      '<div class="g-step-num">PHASE <span style="color:var(--cyan)">03</span></div>'
-      '<div class="g-step-icon">🎯</div>'
-      '<div class="g-step-title">OPTIMIZE & BUILD</div>'
-      '<div class="g-step-desc">Rewrite. Rebuild. Choose from 15 ATS-optimized templates. Generate cover letters instantly.</div>'
-      '</div>'
-      '<div class="g-step">'
-      '<div class="g-step-num">PHASE <span style="color:var(--cyan)">04</span></div>'
-      '<div class="g-step-icon">🚀</div>'
-      '<div class="g-step-title">DEPLOY & WIN</div>'
-      '<div class="g-step-desc">Live job matching. AI interview coaching. Real-time feedback loops. You\'re ready to launch.</div>'
-      '</div>'
-      '</div>'
+      '<div class="hl-step hl-reveal hl-reveal-delay-1"><span class="hl-step-n">01</span>'
+      '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(10,132,255,0.1)"/><path d="M22 28V20M22 20L19 23M22 20L25 23" stroke="#0a84ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 30h14" stroke="#0a84ff" stroke-width="1.6" stroke-linecap="round"/><rect x="14" y="13" width="16" height="19" rx="3" stroke="#0a84ff" stroke-width="1.4" stroke-dasharray="3 2" fill="none"/></svg>'
+      '<div class="hl-step-title">Upload your resume</div>'
+      '<div class="hl-step-desc">Drop any PDF. Our parser handles messy formats, multi-column layouts, and scanned documents via OCR fallback.</div></div>'
 
-      '</div>'
-      '</div>')
+      '<div class="hl-step hl-reveal hl-reveal-delay-2"><span class="hl-step-n">02</span>'
+      '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(48,209,88,0.1)"/><circle cx="20" cy="20" r="7" stroke="#30d158" stroke-width="1.5" fill="none"/><path d="M20 17v3l2 1.5" stroke="#30d158" stroke-width="1.5" stroke-linecap="round"/><path d="M25.2 25.2l3.5 3.5" stroke="#30d158" stroke-width="1.7" stroke-linecap="round"/></svg>'
+      '<div class="hl-step-title">Instant AI analysis</div>'
+      '<div class="hl-step-desc">ATS scoring, bias detection, grammar check, keyword matching &mdash; all computed in seconds with detailed feedback.</div></div>'
+
+      '<div class="hl-step hl-reveal hl-reveal-delay-3"><span class="hl-step-n">03</span>'
+      '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(191,90,242,0.1)"/><rect x="12" y="11" width="13" height="18" rx="2.5" stroke="#bf5af2" stroke-width="1.5" fill="none"/><rect x="19" y="16" width="14" height="18" rx="2.5" fill="rgba(191,90,242,0.08)" stroke="#bf5af2" stroke-width="1.5"/><path d="M22 21h8M22 24.5h8M22 28h5" stroke="#bf5af2" stroke-width="1.3" stroke-linecap="round"/><circle cx="32" cy="13" r="4" fill="#bf5af2"/><path d="M30.5 13l1 1 2-2" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<div class="hl-step-title">Build or rewrite</div>'
+      '<div class="hl-step-desc">Use the AI rewriter or open the full Resume Builder. Choose from 15 templates, generate a cover letter, export to PDF or DOCX.</div></div>'
+
+      '<div class="hl-step hl-reveal hl-reveal-delay-3"><span class="hl-step-n">04</span>'
+      '<svg class="hl-step-icon" viewBox="0 0 44 44" fill="none"><rect width="44" height="44" rx="12" fill="rgba(255,159,10,0.1)"/><path d="M22 28c-3.31 0-6-2.69-6-6 0-4 3-8 6-9 3 1 6 5 6 9 0 3.31-2.69 6-6 6z" stroke="#ff9f0a" stroke-width="1.5" fill="none"/><circle cx="22" cy="22" r="2" fill="#ff9f0a"/><path d="M29 13l-2 2M15 13l2 2" stroke="#ff9f0a" stroke-width="1.4" stroke-linecap="round"/></svg>'
+      '<div class="hl-step-title">Apply with confidence</div>'
+      '<div class="hl-step-desc">Discover live job listings, salary benchmarks, curated courses, and practice with the AI Interview Coach before applying.</div></div>'
+
+      '</div></div></div>')
 
 def render_story_ats():
-    skills  = ["KEYWORDS","FORMAT","SKILLS","LENGTH","IMPACT","CLARITY"]
-    scores  = [88, 74, 92, 68, 85, 78]
-    radar   = radar_chart(skills, scores)
-
-    H('<div id="analyzer"></div>'
-      '<section class="g-story">'
-      '<div class="g-story-inner">'
-
+    ring = ats_ring(78)
+    bars = ats_bars()
+    p = pills(["ATS Score","6-Dimension Breakdown","Keyword Gap","Grammar Check","Downloadable Report"])
+    H('<div id="analyzer" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
+      '<div class="hl-reveal">'
+      '<div class="hl-story-num">Feature 01 &mdash; Resume Analyzer</div>'
+      '<h2 class="hl-story-h">Your resume, <span class="hl-blue">scored like a machine</span> reads it</h2>'
+      '<p class="hl-story-p">Most resumes never reach a human. Applicant Tracking Systems silently filter them on format, missing keywords, or structural issues. Hirelyzer&rsquo;s analyzer replicates how ATS parsers actually read your document &mdash; not just a surface keyword match.</p>'
+      '<p class="hl-story-p">You get a score across six dimensions, a prioritised fix list, grammar and readability signals, and a full keyword-gap report mapped to the roles you care about.</p>'
+      '<div class="hl-pills">' + p + '</div>'
+      '</div>'
+      '<div class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
+      '<div class="hl-ptitle"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" fill="#30d158"/></svg>ATS Analysis Report</div>'
+      '<div style="display:flex;align-items:center;gap:18px;margin-bottom:22px">'
+      + ring +
       '<div>'
-      '<div class="g-story-label"><div class="g-story-label-dot"></div>ATS ANALYSIS ENGINE</div>'
-      '<h2 class="g-story-h">INSTANT <span style="color:var(--cyan)">ATS SCORE</span><br>IN UNDER 3 SECONDS</h2>'
-      '<p class="g-story-p">Most resumes get filtered before a human ever sees them. Our engine simulates 50+ enterprise ATS systems — exposing exactly why you\'re being rejected and how to fix it.</p>'
-      '<div class="g-pills">'
-      + g_pill(["ATS SIMULATION","KEYWORD DENSITY","FORMAT AUDIT","BIAS SCAN","SCORE BOOST"]) +
-      '</div>'
-      '</div>'
-
-      '<div class="g-panel">'
-      '<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--cyan);letter-spacing:2px;margin-bottom:16px">// ATS ANALYSIS REPORT</div>'
-      + ats_meter("KEYWORD MATCH", 88, "var(--cyan)")
-      + ats_meter("FORMAT SCORE", 74, "var(--magenta)")
-      + ats_meter("SKILL ALIGNMENT", 92, "var(--green)")
-      + ats_meter("IMPACT METRICS", 85, "var(--orange)") +
-      '<div style="height:1px;background:var(--border);margin:16px 0"></div>'
-      + radar +
-      '</div>'
-
-      '</div>'
-      '</section>')
+      '<div style="font-size:9px;color:rgba(245,245,247,0.34);text-transform:uppercase;letter-spacing:.9px;font-weight:700;margin-bottom:4px">Overall Score</div>'
+      '<div style="font-size:11px;color:#30d158;font-weight:700">Good &middot; Minor fixes needed</div>'
+      '<div style="font-size:10px;color:rgba(245,245,247,0.3);margin-top:4px">Parsed in 1.4s</div>'
+      '</div></div>'
+      + bars +
+      '</div></div>'
+      '</div></div></div>')
 
 def render_story_bias():
-    H('<section class="g-story" style="background:rgba(255,0,255,0.01)">'
-      '<div class="g-story-inner rev">'
-
-      '<div class="g-panel">'
-      '<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--magenta);letter-spacing:2px;margin-bottom:16px">// BIAS DETECTION ACTIVE</div>'
-      '<div style="margin-bottom:16px">'
-      '<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-family:\'Share Tech Mono\',monospace">'
-      '<span style="color:var(--dim)">GENDER BIAS DETECTED</span>'
-      '<span style="color:var(--red)">HIGH RISK</span>'
+    p = pills(["Gender-coded Detection","AI Neutral Rewrite","Lexicon of 400+ Words","One-click Apply"])
+    H('<div class="hl-story-alt"><div class="hl-section"><div class="hl-story-grid">'
+      '<div style="order:2" class="hl-reveal">'
+      '<div class="hl-story-num">Feature 02 &mdash; Bias Detection</div>'
+      '<h2 class="hl-story-h">Bias-free language that <span class="hl-purp">opens every door</span></h2>'
+      '<p class="hl-story-p">Gender-coded words can unconsciously signal culture fit to recruiters. Hirelyzer scans every verb, adjective, and phrase against a curated bias lexicon of 400+ terms.</p>'
+      '<p class="hl-story-p">The AI rewriter suggests impact-neutral alternatives, preserving your achievements while broadening appeal across hiring contexts.</p>'
+      '<div class="hl-pills">' + p + '</div>'
       '</div>'
-      '<div style="background:rgba(255,0,51,0.08);border:1px solid rgba(255,0,51,0.2);padding:10px 14px;font-size:12px;color:var(--dim);font-family:\'Share Tech Mono\',monospace">'
-      '<span style="color:var(--red)">⚠</span> "aggressive go-getter" → flagged as male-coded'
+      '<div style="order:1" class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
+      '<div class="hl-ptitle"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5.5" fill="#bf5af2"/></svg>Bias Analysis Report</div>'
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">'
+      '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.15)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:6px">Masculine</div><div style="font-size:26px;font-weight:800;color:#4db3ff;letter-spacing:-1px">8</div><div style="font-size:11px;color:rgba(245,245,247,0.34)">words flagged</div></div>'
+      '<div style="padding:14px;background:rgba(191,90,242,0.06);border-radius:12px;border:1px solid rgba(191,90,242,0.15)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:6px">Feminine</div><div style="font-size:26px;font-weight:800;color:#d07ef7;letter-spacing:-1px">3</div><div style="font-size:11px;color:rgba(245,245,247,0.34)">words flagged</div></div>'
       '</div>'
+      '<div style="font-size:10px;color:rgba(245,245,247,0.34);font-weight:700;text-transform:uppercase;letter-spacing:.9px;margin-bottom:10px">Detected language</div>'
+      '<div class="hl-words"><span class="wc wc-m">driven</span><span class="wc wc-m">aggressive</span><span class="wc wc-m">dominate</span><span class="wc wc-m">champion</span><span class="wc wc-f">nurture</span><span class="wc wc-f">support</span><span class="wc wc-n">deliver</span><span class="wc wc-n">execute</span></div>'
+      '<div style="padding:14px;background:rgba(48,209,88,0.06);border-radius:12px;border:1px solid rgba(48,209,88,0.18);margin-top:4px">'
+      '<div style="font-size:11px;font-weight:700;color:#30d158;margin-bottom:6px;display:flex;align-items:center;gap:6px">'
+      '<svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#30d158" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      'AI Rewrite Applied</div>'
+      '<div style="font-size:12px;color:rgba(245,245,247,0.54);line-height:1.65"><span style="text-decoration:line-through;opacity:.45">Aggressively drove growth</span> &rarr; <span style="color:#30d158;font-weight:600">Accelerated high-impact results</span> across 3 teams</div>'
       '</div>'
-      '<div style="margin-bottom:16px">'
-      '<div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;font-family:\'Share Tech Mono\',monospace">'
-      '<span style="color:var(--dim)">AI REWRITE READY</span>'
-      '<span style="color:var(--green)">APPLYING FIX</span>'
-      '</div>'
-      '<div style="background:rgba(0,255,65,0.05);border:1px solid rgba(0,255,65,0.2);padding:10px 14px;font-size:12px;color:var(--dim);font-family:\'Share Tech Mono\',monospace">'
-      '<span style="color:var(--green)">✓</span> "results-driven professional" → neutral &amp; inclusive'
-      '</div>'
-      '</div>'
-      '<div style="background:rgba(0,245,255,0.04);border:1px solid var(--border);padding:14px;text-align:center">'
-      '<div style="font-family:\'Orbitron\',monospace;font-size:22px;font-weight:900;color:var(--cyan);text-shadow:0 0 20px var(--cyan)">93%</div>'
-      '<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--dimmer);letter-spacing:2px;margin-top:4px">BIAS ELIMINATION RATE</div>'
-      '</div>'
-      '</div>'
-
-      '<div>'
-      '<div class="g-story-label" style="color:var(--magenta)"><div class="g-story-label-dot" style="background:var(--magenta);box-shadow:0 0 8px var(--magenta)"></div>BIAS NEUTRALIZER</div>'
-      '<h2 class="g-story-h">ELIMINATE BIAS.<br><span style="color:var(--magenta)">LEVEL THE</span><br>PLAYING FIELD.</h2>'
-      '<p class="g-story-p">Hidden language patterns are silently sabotaging your applications. Our AI scans for gender, age, cultural, and socioeconomic bias — then rewrites for maximum inclusivity.</p>'
-      '<div class="g-pills" style="--pill-border:rgba(255,0,255,0.2);--pill-color:rgba(255,0,255,0.7)">'
-      + g_pill(["GENDER BIAS","AGE BIAS","CULTURAL BIAS","TONE AUDIT","AI REWRITE"]) +
-      '</div>'
-      '</div>'
-
-      '</div>'
-      '</section>')
+      '</div></div>'
+      '</div></div></div>')
 
 def render_story_builder():
-    tmpls = [
-        ("CYBER","#00f5ff",True), ("ELITE","#ff00ff",False),
-        ("EXEC","#ff9f0a",False), ("GHOST","#00ff41",False),
-        ("NEO","#7c3aed",False), ("SLATE","#64748b",False),
-        ("NOVA","#fb7185",False), ("VOID","#a78bfa",False),
-    ]
-    tmpl_html = '<div class="g-tmpl-grid">'
-    for name, color, active in tmpls:
-        tmpl_html += mini_template(name, color, active)
-    tmpl_html += '</div>'
-
-    H('<div id="builder"></div>'
-      '<section class="g-story" style="background:rgba(255,150,0,0.01)">'
-      '<div class="g-story-inner">'
-
-      '<div>'
-      '<div class="g-story-label" style="color:var(--orange)"><div class="g-story-label-dot" style="background:var(--orange);box-shadow:0 0 8px var(--orange)"></div>RESUME FORGE</div>'
-      '<h2 class="g-story-h"><span style="color:var(--orange)">15 BATTLE-TESTED</span><br>RESUME TEMPLATES</h2>'
-      '<p class="g-story-p">Every template engineered for ATS compatibility. Pick your loadout, customize your colors, and generate a cover letter in one click. No design skills required.</p>'
-      '<div class="g-pills">'
-      + g_pill(["15 TEMPLATES","ATS-OPTIMIZED","COVER LETTER AI","PDF EXPORT","1-CLICK APPLY"]) +
+    tmpl = tmpl_gallery()
+    p = pills(["15 Templates","DOCX + PDF Export","AI Cover Letter","Live Preview","ATS Single-Column"])
+    H('<div id="builder" class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
+      '<div class="hl-reveal">'
+      '<div class="hl-story-num">Feature 03 &mdash; Resume Builder</div>'
+      '<h2 class="hl-story-h">Build resumes that <span class="hl-green">look as good</span> as they parse</h2>'
+      '<p class="hl-story-p">Fifteen ATS-optimised templates &mdash; from understated minimal to executive prestige &mdash; all built on strict single-column structures that parse correctly in every major hiring platform.</p>'
+      '<p class="hl-story-p">Export to DOCX (three ATS compliance levels) or PDF. One click generates a tailored cover letter for your target company, formatted and ready to send.</p>'
+      '<div class="hl-pills">' + p + '</div>'
       '</div>'
+      '<div class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
+      '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5"/><rect x="11" y="7" width="10" height="14" rx="2" fill="rgba(48,209,88,.08)" stroke="#30d158" stroke-width="1.5"/><path d="M14 11h5M14 14h5M14 17h3" stroke="#30d158" stroke-width="1.3" stroke-linecap="round"/></svg>Template Gallery &mdash; 15 Designs</div>'
+      '<div class="hl-tmpl-grid">' + tmpl + '</div>'
+      '<div style="padding:14px;background:rgba(10,132,255,0.06);border-radius:12px;border:1px solid rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:space-between;gap:12px">'
+      '<div><div style="font-size:12px;font-weight:700;color:#0a84ff">Modern &mdash; ATS Certified</div><div style="font-size:11px;color:rgba(245,245,247,0.34);margin-top:2px">Sora &middot; Navy headings &middot; Single-column</div></div>'
+      '<a href="' + APP_URL + '" target="_blank" style="padding:8px 18px;background:#0a84ff;color:#fff;border-radius:100px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;flex-shrink:0;box-shadow:0 4px 16px rgba(10,132,255,0.35)">Use this</a>'
       '</div>'
-
-      '<div class="g-panel">'
-      '<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--orange);letter-spacing:2px;margin-bottom:16px">// TEMPLATE LOADOUT</div>'
-      + tmpl_html +
-      '<div style="height:1px;background:var(--border);margin:12px 0"></div>'
-      '<div style="display:flex;gap:10px">'
-      '<div class="g-btn-primary" style="flex:1;text-align:center;padding:10px;font-size:9px;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)">GENERATE COVER LETTER</div>'
-      '<div style="flex:1;text-align:center;padding:10px;border:1px solid var(--border);font-family:\'Orbitron\',monospace;font-size:9px;color:var(--dim);cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)">EXPORT PDF</div>'
-      '</div>'
-      '</div>'
-
-      '</div>'
-      '</section>')
+      '</div></div>'
+      '</div></div></div>')
 
 def render_story_career():
-    H('<div id="career"></div>'
-      '<section class="g-story" style="background:rgba(0,255,65,0.01)">'
-      '<div class="g-story-inner rev">'
-
-      '<div class="g-panel">'
-      '<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--green);letter-spacing:2px;margin-bottom:16px">// LIVE JOB FEED</div>'
-      + g_job_cards() +
-      '<div style="height:1px;background:var(--border);margin:12px 0"></div>'
-      '<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--dimmer);text-align:center;letter-spacing:2px">SHOWING 4 OF 2,400+ LIVE POSITIONS</div>'
+    cards = job_cards()
+    p = pills(["Live Job Listings","Salary Benchmarks","Course Recommendations","Skills Radar","Remote Filter"])
+    H('<div id="career" class="hl-story-alt"><div class="hl-section"><div class="hl-story-grid">'
+      '<div style="order:2" class="hl-reveal">'
+      '<div class="hl-story-num">Feature 04 &mdash; Career Intelligence</div>'
+      '<h2 class="hl-story-h">Jobs, salaries, courses &mdash; <span class="hl-amber">one place</span></h2>'
+      '<p class="hl-story-p">The Job Search Hub pulls live listings from LinkedIn, Naukri, Foundit, and Indeed &mdash; or uses the JSearch/RapidAPI engine with remote and employment-type filters.</p>'
+      '<p class="hl-story-p">Hirelyzer surfaces salary benchmarks by role and market, curated courses mapped to skill gaps in your resume, and prep videos &mdash; all linked to your career profile.</p>'
+      '<div class="hl-pills">' + p + '</div>'
       '</div>'
-
-      '<div>'
-      '<div class="g-story-label" style="color:var(--green)"><div class="g-story-label-dot" style="background:var(--green);box-shadow:0 0 8px var(--green)"></div>CAREER INTEL HUB</div>'
-      '<h2 class="g-story-h"><span style="color:var(--green)">REAL-TIME</span><br>JOB MATCHING<br>ENGINE</h2>'
-      '<p class="g-story-p">Stop scrolling job boards. Our engine continuously monitors 50+ platforms and surfaces roles that match your exact profile — with compatibility scores and salary intel.</p>'
-      '<div class="g-pills">'
-      + g_pill(["LIVE MATCHING","SALARY DATA","SKILL GAPS","APPLY TRACKING","COMPANY INTEL"]) +
+      '<div style="order:1" class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
+      '<div class="hl-ptitle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M2 13h20" stroke="#ff9f0a" stroke-width="1.3" stroke-linecap="round"/></svg>Job Search Hub</div>'
+      + cards +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">'
+      '<div style="padding:12px;background:rgba(255,159,10,0.06);border-radius:10px;border:1px solid rgba(255,159,10,0.15)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:5px">Avg Salary</div><div style="font-size:20px;font-weight:800;color:#ff9f0a;letter-spacing:-1px">&#8377;18&ndash;32 LPA</div><div style="font-size:11px;color:rgba(245,245,247,0.34)">Backend &middot; India</div></div>'
+      '<div style="padding:12px;background:rgba(10,132,255,0.06);border-radius:10px;border:1px solid rgba(10,132,255,0.15)"><div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:5px">Platforms</div><div style="font-size:13px;font-weight:700;color:#f5f5f7;line-height:1.7">LinkedIn &middot; Naukri<br>Foundit &middot; Indeed</div></div>'
       '</div>'
-      '</div>'
-
-      '</div>'
-      '</section>')
+      '</div></div>'
+      '</div></div></div>')
 
 def render_story_interview():
-    H('<section class="g-story" style="background:rgba(124,58,237,0.01)">'
-      '<div class="g-story-inner">'
-
+    sbars = score_bars()
+    radar = radar_svg()
+    p = pills(["Resume-based Questions","Real-time AI Scoring","Radar Chart","Session History","Downloadable Report"])
+    H('<div class="hl-story"><div class="hl-section"><div class="hl-story-grid">'
+      '<div class="hl-reveal">'
+      '<div class="hl-story-num">Feature 05 &mdash; AI Interview Coach</div>'
+      '<h2 class="hl-story-h">Practice until <span class="hl-blue">every answer</span> lands</h2>'
+      '<p class="hl-story-p">Upload your resume and Hirelyzer generates interview questions derived directly from your actual experience &mdash; not generic prompts. Answer in free text; the AI coach scores you on communication, technical depth, confidence, structure, and use of concrete examples.</p>'
+      '<p class="hl-story-p">Every session ends with a performance radar chart, a detailed Q&amp;A review, and course recommendations tied to your weakest dimensions.</p>'
+      '<div class="hl-pills">' + p + '</div>'
+      '</div>'
+      '<div class="hl-reveal hl-reveal-delay-2"><div class="hl-panel">'
+      '<div class="hl-ptitle" style="justify-content:space-between">'
+      '<div style="display:flex;align-items:center;gap:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#ff453a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>Mock Interview &middot; Session 3</div>'
+      '<div class="hl-score-badge"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#30d158"/></svg>82 / 100</div>'
+      '</div>'
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">'
       '<div>'
-      '<div class="g-story-label" style="color:#a78bfa"><div class="g-story-label-dot" style="background:#a78bfa;box-shadow:0 0 8px #a78bfa"></div>INTERVIEW SIMULATOR</div>'
-      '<h2 class="g-story-h"><span style="color:#a78bfa">AI-POWERED</span><br>INTERVIEW<br>TRAINING</h2>'
-      '<p class="g-story-p">Face questions generated from your actual resume. Get instant scoring on clarity, confidence, and content. Train until you\'re ready to dominate any interview.</p>'
-      '<div class="g-pills">'
-      + g_pill(["RESUME-BASED Q&A","INSTANT SCORING","WEAKNESS DETECTION","MOCK INTERVIEWS","FEEDBACK LOOPS"]) +
+      '<div class="hl-qa"><div class="hl-q"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="#0a84ff" stroke-width="1.5"/><path d="M12 16v-4M12 8h.01" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/></svg>Describe your most complex backend system.</div><div class="hl-a">Built a multi-tenant microservices platform handling 2M events/day using Kafka, Redis, and PostgreSQL with 40% lower P99 latency.</div></div>'
+      '<div class="hl-qa"><div class="hl-q"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="#bf5af2" stroke-width="1.5"/><path d="M12 16v-4M12 8h.01" stroke="#bf5af2" stroke-width="1.8" stroke-linecap="round"/></svg>How do you handle technical debt?</div><div class="hl-a">I prioritise tech debt as a first-class roadmap item, quantifying velocity cost before pitching refactors to stakeholders.</div></div>'
+      '<div style="margin-top:12px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.9px;color:rgba(245,245,247,0.34);font-weight:700;margin-bottom:8px">Score breakdown</div>'
+      + sbars +
+      '</div></div>'
+      '<div class="hl-radar-wrap">' + radar + '<div style="font-size:11px;color:rgba(245,245,247,0.34);margin-top:6px;text-align:center">Performance radar</div></div>'
       '</div>'
-      '</div>'
-
-      '<div class="g-panel">'
-      '<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:#a78bfa;letter-spacing:2px;margin-bottom:16px">// INTERVIEW SIM — ROUND 01</div>'
-      '<div style="margin-bottom:16px">'
-      '<div style="font-size:12px;font-weight:600;color:var(--white);margin-bottom:8px;display:flex;gap:8px;align-items:flex-start;font-family:\'Rajdhani\',sans-serif">'
-      '<span style="color:#a78bfa;font-family:\'Share Tech Mono\',monospace;font-size:10px">Q:</span>'
-      'Describe a time you led a complex technical project end-to-end.'
-      '</div>'
-      '<div style="font-size:12px;color:var(--dim);line-height:1.7;padding-left:20px;font-family:\'Rajdhani\',sans-serif">'
-      'At Anthropic, I architected a distributed pipeline handling 2M+ daily API requests — reducing latency by 40% through async processing and Redis caching...'
-      '</div>'
-      '</div>'
-      '<div style="display:flex;gap:8px;align-items:center;padding:10px 14px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.2)">'
-      '<span style="color:var(--green);font-family:\'Share Tech Mono\',monospace;font-size:10px">SCORE:</span>'
-      '<span style="font-family:\'Orbitron\',monospace;font-size:18px;font-weight:900;color:var(--green);text-shadow:0 0 15px var(--green)">92/100</span>'
-      '<span style="font-size:11px;color:var(--dim);font-family:\'Share Tech Mono\',monospace;margin-left:auto">EXCELLENT RESPONSE</span>'
-      '</div>'
-      '</div>'
-
-      '</div>'
-      '</section>')
+      '</div></div>'
+      '</div></div></div>')
 
 def render_testimonials():
-    quotes = [
-        ("Got a Google offer after 3 weeks of using this. The ATS score feature alone is worth everything.", "R. SHARMA", "SWE @ GOOGLE", "#00f5ff", "R"),
-        ("The bias detection rewrote my summary — suddenly getting 5x more callbacks.", "P. CHEN", "PM @ MICROSOFT", "#ff00ff", "P"),
-        ("Built my resume in 10 minutes. Had an interview the next day. Landed the role.", "A. PATEL", "ML ENGINEER", "#00ff41", "A"),
-        ("Interview coach trained me on my own resume. I went in confident and got an offer.", "S. KIM", "DATA SCIENTIST", "#ff9f0a", "S"),
-        ("Moved from 2% to 78% ATS pass rate. This is insane technology.", "M. OKAFOR", "BACKEND DEV", "#7c3aed", "M"),
-        ("Cover letter generator saved me 3 hours per application. No more writer's block.", "L. TORRES", "PRODUCT DESIGNER", "#fb7185", "L"),
+    testimonials = [
+        ("&ldquo;Got my ATS score up from 52 to 88 in one session. Landed 3 interviews in a week.&rdquo;", "Arjun M.", "SWE &mdash; Google", "#0a84ff"),
+        ("&ldquo;The bias rewriter caught words I had no idea were gendered. Game changer.&rdquo;", "Priya S.", "PM &mdash; Razorpay", "#bf5af2"),
+        ("&ldquo;Interview Coach is scary good. It read my actual resume and asked about my internship.&rdquo;", "Rahul D.", "Data Analyst &mdash; Zepto", "#30d158"),
+        ("&ldquo;Went from zero callbacks to 4 offers. The keyword gap report was the unlock.&rdquo;", "Sneha K.", "ML Engineer &mdash; Swiggy", "#ff9f0a"),
+        ("&ldquo;Best free tool I&rsquo;ve used. The templates are actually beautiful and ATS-safe.&rdquo;", "Amit R.", "Backend Dev &mdash; Freshworks", "#ff453a"),
+        ("&ldquo;Spotted that my resume had no skills section. Fixed in 5 min. Callback rate tripled.&rdquo;", "Nisha T.", "Frontend Dev &mdash; Meesho", "#4db3ff"),
     ]
-    items = ""
-    for q, name, role, color, letter in quotes:
-        stars = '<div class="g-ticker-stars">★ ★ ★ ★ ★</div>'
-        items += (f'<div class="g-ticker-item">'
-                  f'{stars}'
-                  f'<div class="g-ticker-quote">"{q}"</div>'
-                  f'<div class="g-ticker-author">'
-                  f'<div class="g-ticker-avatar" style="background:{color}22;color:{color}">{letter}</div>'
-                  f'<div><div class="g-ticker-name">{name}</div><div class="g-ticker-role">{role}</div></div>'
-                  f'</div></div>')
-    full = items * 2
-    H(f'<div class="g-ticker-wrap"><div class="g-ticker-track">{full}</div></div>')
+
+    def card(quote, name, role, color):
+        init = name[0]
+        return (
+            '<div class="hl-ticker-item">'
+            '<div class="hl-ticker-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>'
+            '<div class="hl-ticker-quote">' + quote + '</div>'
+            '<div class="hl-ticker-author">'
+            '<div class="hl-ticker-avatar" style="background:' + color + '22;color:' + color + ';box-shadow:0 0 12px ' + color + '22">' + init + '</div>'
+            '<div><div class="hl-ticker-name">' + name + '</div><div class="hl-ticker-role">' + role + '</div></div>'
+            '</div></div>'
+        )
+
+    cards_html = "".join(card(*t[:4]) for t in testimonials)
+    H('<div class="hl-ticker-wrap">'
+      '<div class="hl-ticker-track">'
+      + cards_html + cards_html +
+      '</div></div>')
 
 def render_compare():
-    H('<div id="compare"></div>'
-      '<div style="background:var(--bg2);border-top:1px solid rgba(0,245,255,0.06)">'
-      '<div class="g-section">'
-      '<div class="g-section-header">'
-      '<div class="g-section-eyebrow">COMPETITIVE ANALYSIS</div>'
-      '<h2 class="g-section-h2">HIRELYZER <span class="accent">VS</span> THE REST</h2>'
-      '<p class="g-section-sub">We didn\'t build another resume tool. We built a career weapon.</p>'
-      '</div>'
-
-      '<div class="g-compare-wrap">'
-      '<div class="g-compare-head">'
-      '<div class="g-ch">CAPABILITY</div>'
-      '<div class="g-ch g-ch-hl">⬡ HIRELYZER</div>'
-      '<div class="g-ch" style="text-align:center">RESUME.IO</div>'
-      '<div class="g-ch" style="text-align:center">JOBSCAN</div>'
-      '</div>'
-      + ''.join([
-          f'<div class="g-compare-row">'
-          f'<div class="g-cc"><div class="g-cc-feat">{feat}<small>{sub}</small></div></div>'
-          f'<div class="g-cc g-cc-hl g-cc-center">{ours}</div>'
-          f'<div class="g-cc g-cc-center">{r}</div>'
-          f'<div class="g-cc g-cc-center">{j}</div>'
-          f'</div>'
-          for feat, sub, ours, r, j in [
-              ("ATS Score Analysis", "Multi-system simulation", chk_y(), chk_y(), chk_y()),
-              ("Bias Detection & Rewrite", "Gender, age, cultural", chk_y(), chk_n(), chk_n()),
-              ("15 Resume Templates", "ATS-optimized designs", chk_y(), chk_y(), chk_n()),
-              ("AI Cover Letter", "Role-specific generation", chk_y(), chk_p("PAID"), chk_n()),
-              ("Live Job Matching", "Real-time 50+ platforms", chk_y(), chk_n(), chk_p("LIMITED")),
-              ("AI Interview Coach", "Resume-based questions", chk_y(), chk_n(), chk_n()),
-              ("Salary Intelligence", "Market rate data", chk_y(), chk_n(), chk_p("BASIC")),
-              ("100% Free Tier", "No credit card required", chk_y(), chk_n(), chk_n()),
-          ]
-      ]) +
-      '</div>'
-
-      '</div>'
-      '</div>')
-
-def render_features():
-    feats = [
-        ("⚡", "ATS SCANNER", "Simulate 50+ enterprise ATS systems in real-time. Know exactly why you're being filtered."),
-        ("🔍", "BIAS DETECTOR", "AI-powered language analysis catches invisible bias patterns and rewrites for inclusivity."),
-        ("📋", "TEMPLATE FORGE", "15 battle-tested templates. Every design is ATS-safe and recruiter-approved."),
-        ("✉️", "COVER LETTER AI", "Generate compelling, role-specific cover letters in one click from your resume data."),
-        ("🎯", "JOB MATCHER", "Real-time job matching across 50+ platforms with compatibility scoring and alerts."),
-        ("🎤", "INTERVIEW SIM", "Practice with AI-generated questions based on your actual resume. Score and improve."),
+    rows = [
+        ("ATS Resume Scoring",          chk_y(),       chk_n(),          chk_n()),
+        ("6-Dimension Breakdown",        chk_y(),       chk_n(),          chk_n()),
+        ("Gender Bias Detection",        chk_y(),       chk_n(),          chk_n()),
+        ("AI Neutral Rewrite",           chk_y(),       chk_n(),          chk_n()),
+        ("15 Resume Templates",          chk_y(),       chk_p("3&ndash;5"),chk_p("Limited")),
+        ("DOCX &amp; PDF Export",        chk_y(),       chk_p("PDF only"), chk_n()),
+        ("AI Cover Letter Generator",    chk_y(),       chk_n(),          chk_n()),
+        ("Live Job Search (4 platforms)",chk_y(),       chk_n(),          chk_p("1 only")),
+        ("Salary Benchmarks",            chk_y(),       chk_n(),          chk_n()),
+        ("AI Interview Coach",           chk_y(),       chk_n(),          chk_n()),
+        ("Resume-Based Questions",       chk_y(),       chk_n(),          chk_n()),
+        ("100% Free, No Sign-up",        chk_y(),       chk_p("Freemium"),chk_p("Paid")),
     ]
-    H('<div style="background:var(--bg)">'
-      '<div class="g-section">'
-      '<div class="g-section-header">'
-      '<div class="g-section-eyebrow">ARSENAL</div>'
-      '<h2 class="g-section-h2">YOUR <span class="accent">WEAPONS</span> LOADOUT</h2>'
+    header = (
+        '<div class="hl-compare-head">'
+        '<div class="hl-ch" style="padding:20px 24px">Feature</div>'
+        '<div class="hl-ch hl-ch-hl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" stroke="#0a84ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Hirelyzer</div>'
+        '<div class="hl-ch hl-cc-center">Resumeworded</div>'
+        '<div class="hl-ch hl-cc-center">Zety</div>'
+        '</div>'
+    )
+    body = "".join(
+        '<div class="hl-compare-row">'
+        '<div class="hl-cc hl-cc-feat">' + feat + '</div>'
+        '<div class="hl-cc hl-cc-hl hl-cc-center">' + hl + '</div>'
+        '<div class="hl-cc hl-cc-center">' + c2 + '</div>'
+        '<div class="hl-cc hl-cc-center">' + c3 + '</div>'
+        '</div>'
+        for feat, hl, c2, c3 in rows
+    )
+    H('<div id="compare" class="hl-compare">'
+      '<div class="hl-section">'
+      '<div class="hl-divider hl-reveal">How we compare</div>'
+      '<div style="text-align:center;margin-bottom:0" class="hl-reveal">'
+      '<h2 style="font-size:clamp(26px,3.5vw,44px);font-weight:800;letter-spacing:-2px;color:#f5f5f7;line-height:1.06">Everything in one place &mdash; <span style="color:#0a84ff">completely free</span></h2>'
+      '<div style="font-size:15px;color:rgba(245,245,247,0.5);margin-top:18px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.74;text-align:center;">No paywalls. No partial features. Hirelyzer gives you the complete career toolkit at zero cost.</div>'
       '</div>'
-      '<div class="g-feat-grid">'
-      + "".join(f'<div class="g-feat"><div class="g-feat-icon">{icon}</div><div class="g-feat-title">{title}</div><div class="g-feat-desc">{desc}</div></div>' for icon, title, desc in feats) +
-      '</div></div></div>')
+      '<div class="hl-compare-wrap hl-reveal hl-reveal-delay-2">' + header + body + '</div>'
+      '</div></div>')
+
+def render_highlights():
+    cards = [
+        ("#0a84ff","rgba(10,132,255,0.1)","rgba(10,132,255,0.04)",
+         '<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#0a84ff" stroke-width="1.5" fill="none" stroke-linecap="round"/>',
+         "ATS-Certified Scoring","Our six-dimension ATS engine parses your resume exactly as real hiring systems do — format, keywords, sections, verbs, contact info, and date consistency."),
+        ("#bf5af2","rgba(191,90,242,0.1)","rgba(191,90,242,0.04)",
+         '<circle cx="12" cy="12" r="10" stroke="#bf5af2" stroke-width="1.5" fill="none"/><path d="M12 8v4M12 16h.01" stroke="#bf5af2" stroke-width="1.8" stroke-linecap="round"/>',
+         "Bias Lexicon of 400+ Terms","A curated gender-coded word database flags masculine and feminine language patterns, then our AI rewrites every phrase to be impact-neutral and inclusive."),
+        ("#30d158","rgba(48,209,88,0.1)","rgba(48,209,88,0.04)",
+         '<rect x="3" y="3" width="10" height="14" rx="2" stroke="#30d158" stroke-width="1.5" fill="none"/><rect x="11" y="7" width="10" height="14" rx="2" fill="none" stroke="#30d158" stroke-width="1.5"/>',
+         "15 ATS-Ready Templates","Every template is single-column, structured to parse in Greenhouse, Lever, Workday, and iCIMS. Export as DOCX (3 compliance tiers) or PDF in one click."),
+        ("#ff9f0a","rgba(255,159,10,0.1)","rgba(255,159,10,0.04)",
+         '<rect x="2" y="7" width="20" height="14" rx="2" stroke="#ff9f0a" stroke-width="1.5" fill="none"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#ff9f0a" stroke-width="1.5"/><path d="M2 13h20" stroke="#ff9f0a" stroke-width="1.3" stroke-linecap="round"/>',
+         "Live Job Intelligence","Pull live listings from LinkedIn, Naukri, Foundit, and Indeed with role, location, and remote filters — plus salary benchmarks and curated skill courses."),
+        ("#ff453a","rgba(255,69,58,0.1)","rgba(255,69,58,0.04)",
+         '<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#ff453a" stroke-width="1.5" fill="none" stroke-linecap="round"/>',
+         "Resume-Based Interview Prep","Questions are generated from your actual resume — not generic prompts. Get scored across 5 competency dimensions with a radar chart and session history."),
+        ("#4db3ff","rgba(10,132,255,0.08)","rgba(10,132,255,0.03)",
+         '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#4db3ff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+         "Instant &mdash; No Sign-up","Upload a PDF and get your full ATS report, bias analysis, keyword gaps, and fix list in under 2 seconds. No account, no email, no credit card."),
+    ]
+    items = "".join(
+        '<div class="hl-highlight hl-reveal" style="--card-glow:' + glow + '">'
+        '<div class="hl-hi-icon" style="background:' + bg + ';box-shadow:0 4px 16px ' + glow + '">'
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none">' + icon + '</svg>'
+        '</div>'
+        '<div class="hl-hi-title">' + title + '</div>'
+        '<div class="hl-hi-desc">' + desc + '</div>'
+        '</div>'
+        for col, bg, glow, icon, title, desc in cards
+    )
+    H('<div class="hl-highlights">'
+      '<div class="hl-section">'
+      '<div class="hl-divider hl-reveal">Why Hirelyzer</div>'
+      '<div class="hl-highlight-grid">' + items + '</div>'
+      '</div></div>')
 
 def render_faq():
     faqs = [
-        ("Is HIRELYZER actually free?", "Yes. Core features — ATS scanning, bias detection, resume builder, and job matching — are all free. No credit card. No tricks."),
-        ("How accurate is the ATS simulation?", "Our engine simulates 50+ enterprise ATS systems with 90%+ accuracy based on real applicant tracking data and recruiter feedback loops."),
-        ("How does the bias detection work?", "We use a fine-tuned NLP model trained on 10,000+ professional documents to identify language patterns correlated with demographic signals — then suggest neutral alternatives."),
-        ("Can the AI really write my cover letter?", "Yes. Our model reads your resume, the job description, and generates a tailored cover letter that matches the company's tone. Edit before sending."),
-        ("What makes the Interview Coach different?", "Unlike generic question banks, our coach generates questions directly from your resume. So you practice the exact conversations recruiters will have about your actual experience."),
-        ("Is my data secure?", "We use end-to-end encryption. Your resume data is never sold or used to train external models. You control your data."),
+        ("Is Hirelyzer completely free?", "Yes &mdash; the core features including ATS scoring, bias detection, and job search are fully free. No credit card required to get started."),
+        ("What file formats does Hirelyzer accept?", "PDF is the primary input format. Our parser handles standard, multi-column, and OCR-scanned PDFs. Export to DOCX or PDF is available from the Resume Builder."),
+        ("How accurate is the ATS scoring?", "Our scoring engine replicates how real ATS systems parse resumes across six dimensions. We test regularly against major platforms like Greenhouse, Lever, and Workday."),
+        ("Is my resume data private?", "Your resume is processed securely and never shared with third parties or recruiters. You control your data entirely."),
+        ("How does the AI Interview Coach work?", "Upload your resume and Hirelyzer extracts key experiences to generate tailored questions. You answer in free text and our AI scores you across five competency dimensions in real-time."),
     ]
-    H('<div id="g-faq" style="background:var(--bg2);border-top:1px solid rgba(0,245,255,0.06)">'
-      '<div class="g-section">'
-      '<div class="g-section-header">'
-      '<div class="g-section-eyebrow">INTEL DATABASE</div>'
-      '<h2 class="g-section-h2">FREQUENTLY ASKED <span class="accent">QUESTIONS</span></h2>'
+    items = "".join(
+        '<div class="hl-faq-item hl-reveal">'
+        '<div class="hl-faq-q">' + q + '<div class="hl-faq-q-icon">+</div></div>'
+        '<div class="hl-faq-a">' + a + '</div>'
+        '</div>'
+        for q, a in faqs
+    )
+    H('<div class="hl-faq">'
+      '<div class="hl-section">'
+      '<div style="text-align:center;margin-bottom:0">'
+      '<div class="hl-divider hl-reveal">FAQ</div>'
+      '<h2 style="font-size:clamp(24px,3vw,40px);font-weight:800;letter-spacing:-1.8px;color:#f5f5f7;margin-bottom:0" class="hl-reveal">Frequently asked questions</h2>'
       '</div>'
-      '<div class="g-faq-list">'
-      + "".join(f'<div class="g-faq-item"><div class="g-faq-q" onclick="this.parentElement.classList.toggle(\'open\')">{q}<div class="g-faq-q-icon">+</div></div><div class="g-faq-a" style="display:none">{a}</div></div>' for q,a in faqs) +
-      '</div></div></div>')
+      '<div class="hl-faq-list">' + items + '</div>'
+      '</div></div>')
 
 def render_cta():
-    H(f'<div style="background:var(--bg)">'
-      f'<div style="max-width:1200px;margin:0 auto;padding:80px 32px 0">'
-      f'<div class="g-cta-section">'
-      f'<div class="g-cta-corner-tl"></div>'
-      f'<div class="g-cta-corner-br"></div>'
-      f'<h2 class="g-cta-h">READY TO <span style="color:var(--cyan)">DOMINATE</span><br>YOUR JOB SEARCH?</h2>'
-      f'<p class="g-cta-sub">Join 12,000+ professionals who gave themselves the unfair advantage. Free forever. No excuses.</p>'
-      f'<div class="g-cta-btns">'
-      f'<a href="{APP_URL}" target="_blank" class="g-btn-primary" style="font-size:13px;padding:18px 48px">⬡ INITIALIZE FREE — NO CREDIT CARD</a>'
-      f'</div>'
-      f'<div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:36px">'
-      f'<span style="font-family:\'Share Tech Mono\',monospace;font-size:11px;color:var(--dimmer);display:flex;align-items:center;gap:6px"><span style="color:var(--green)">✓</span> FREE FOREVER TIER</span>'
-      f'<span style="font-family:\'Share Tech Mono\',monospace;font-size:11px;color:var(--dimmer);display:flex;align-items:center;gap:6px"><span style="color:var(--green)">✓</span> NO CREDIT CARD</span>'
-      f'<span style="font-family:\'Share Tech Mono\',monospace;font-size:11px;color:var(--dimmer);display:flex;align-items:center;gap:6px"><span style="color:var(--green)">✓</span> 2 MIN SETUP</span>'
-      f'<span style="font-family:\'Share Tech Mono\',monospace;font-size:11px;color:var(--dimmer);display:flex;align-items:center;gap:6px"><span style="color:var(--green)">✓</span> FULL ATS SCAN</span>'
-      f'</div>'
-      f'</div></div></div>')
+    chk = checklist()
+    H('<div class="hl-section">'
+      '<div id="contact" class="hl-cta hl-reveal"><div class="hl-cta-glow"></div>'
+      '<div class="hl-eyebrow" style="margin:0 auto 28px"><div class="hl-eyebrow-dot"></div>Free to use &middot; No credit card required</div>'
+      '<div class="hl-cta-h">Your next job starts<br>with a better resume</div>'
+      '<div class="hl-cta-sub">'
+      'Join professionals already using Hirelyzer to pass ATS filters, remove bias, and land more interviews.'
+      '</div>'
+      '<div class="hl-cta-btns">'
+      '<a href="' + APP_URL + '" target="_blank" class="hl-btn-p" style="font-size:16px;padding:17px 40px"><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>Start for free</a>'
+      '<a href="mailto:' + SUPPORT_EMAIL + '" class="hl-btn-g" style="font-size:16px;padding:17px 34px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>Contact us</a>'
+      '</div>'
+      '<div class="hl-checks">' + chk + '</div>'
+      '</div></div>')
 
-def render_contact():
-    H(f'<div id="contact" style="background:var(--bg)">'
-      f'<div class="g-section">'
-      f'<div class="g-section-header">'
-      f'<div class="g-section-eyebrow">COMMS CHANNEL</div>'
-      f'<h2 class="g-section-h2">ESTABLISH <span class="accent">CONTACT</span></h2>'
-      f'</div>'
-      f'<div class="g-contact-card">'
-      f'<h3>SUPPORT COMMAND</h3>'
-      f'<p>Questions? Bugs? Feature requests? Open a direct line to the team.</p>'
-      f'<a href="mailto:{SUPPORT_EMAIL}" class="g-contact-email">📡 {SUPPORT_EMAIL}</a>'
-      f'<div style="margin-top:20px;font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--dimmer);letter-spacing:1px">RESPONSE TIME: &lt; 24 HOURS // MON–FRI</div>'
-      f'</div></div></div>')
+def render_contact_section():
+    H('<div class="hl-section">'
+      '<div class="hl-contact-card hl-reveal">'
+      '<div style="width:52px;height:52px;border-radius:16px;background:rgba(10,132,255,0.08);border:1px solid rgba(10,132,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 0 24px rgba(10,132,255,0.12)">'
+      '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#0a84ff" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="#0a84ff" stroke-width="1.5" fill="none"/></svg>'
+      '</div>'
+      '<h3>Get in touch</h3>'
+      '<div style="font-size:14px;color:rgba(245,245,247,0.44);line-height:1.72;margin-bottom:28px;text-align:center;">Have questions, feedback, or want to report an issue? We typically respond within 24 hours.</div>'
+      '<a href="mailto:' + SUPPORT_EMAIL + '" class="hl-contact-email">'
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#4db3ff" stroke-width="1.5" fill="none"/><polyline points="22,6 12,13 2,6" stroke="#4db3ff" stroke-width="1.5" fill="none"/></svg>'
+      + SUPPORT_EMAIL +
+      '</a>'
+      '<div class="hl-contact-meta">Support &middot; Feedback &middot; Bug reports &middot; Partnership enquiries</div>'
+      '</div></div>')
 
 def render_footer():
-    H('<footer style="background:var(--bg);border-top:1px solid rgba(0,245,255,0.06)">'
-      '<div class="g-footer">'
-      '<div>'
-      '<div style="font-family:\'Orbitron\',monospace;font-size:13px;font-weight:900;color:var(--cyan);letter-spacing:3px;text-shadow:0 0 15px var(--cyan);margin-bottom:6px">⬡ HIRELYZER</div>'
-      '<div class="g-footer-copy">© 2025 HIRELYZER. ALL SYSTEMS OPERATIONAL.</div>'
+    H('<footer style="background:#000">'
+      '<div class="hl-footer">'
+      '<div class="hl-footer-left">'
+      '<div style="display:flex;align-items:center;gap:9px;margin-bottom:2px">'
+      '<div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#1a6fff,#0044bb);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(10,132,255,0.35)">'
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
       '</div>'
-      '<div class="g-footer-links">'
-      f'<a href="{APP_URL}" target="_blank">LAUNCH APP</a>'
-      f'<a href="mailto:{SUPPORT_EMAIL}">SUPPORT</a>'
-      '<a href="#">PRIVACY</a>'
+      '<span style="font-size:13px;font-weight:800;color:rgba(245,245,247,0.6);letter-spacing:1px">HIRELYZER</span>'
       '</div>'
+      '<div class="hl-footer-copy">&copy; 2025 HIRELYZER &middot; Intelligent Career Platform</div>'
+      '<div class="hl-footer-tagline">Built for the next generation of job seekers</div>'
       '</div>'
-      '</footer>')
+      '<div class="hl-footer-links">'
+      '<a href="#">Privacy</a>'
+      '<a href="#">Terms</a>'
+      '<a href="mailto:' + SUPPORT_EMAIL + '">' + SUPPORT_EMAIL + '</a>'
+      '<a href="' + APP_URL + '" target="_blank">Open App &rarr;</a>'
+      '</div></div></footer>')
 
 def render_js():
     H('<script>'
       '(function(){'
 
-      # Matrix rain
-      'var canvas=document.getElementById("matrix-canvas");'
-      'var ctx=canvas.getContext("2d");'
-      'var cols,drops;'
-      'function initMatrix(){'
-      'canvas.width=window.innerWidth;canvas.height=window.innerHeight;'
-      'cols=Math.floor(canvas.width/16);'
-      'drops=new Array(cols).fill(0).map(function(){return Math.random()*-50;});'
-      '}'
-      'initMatrix();'
-      'var chars="01アイウエオカキクケコサシスセソタチツテトHIRELYZER".split("");'
-      'function drawMatrix(){'
-      'ctx.fillStyle="rgba(0,0,8,0.05)";ctx.fillRect(0,0,canvas.width,canvas.height);'
-      'ctx.fillStyle="#00f5ff";ctx.font="12px Share Tech Mono,monospace";'
-      'drops.forEach(function(y,i){'
-      'var c=chars[Math.floor(Math.random()*chars.length)];'
-      'ctx.fillStyle=Math.random()>0.98?"#ffffff":"#00f5ff";'
-      'ctx.fillText(c,i*16,y*16);'
-      'if(y*16>canvas.height&&Math.random()>0.975)drops[i]=0;'
-      'drops[i]+=0.5;'
-      '});'
-      '}'
-      'setInterval(drawMatrix,50);'
-      'window.addEventListener("resize",initMatrix,{passive:true});'
-
-      # Scroll progress
+      # ── Scroll progress bar ──
       'var sp=document.getElementById("sp");'
-      'function updateScroll(){'
-      'var pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;'
-      'if(sp)sp.style.width=pct+"%";'
+      'function updateProgress(){if(!sp)return;var p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;sp.style.width=Math.min(p,100)+"%";}'
+      'window.addEventListener("scroll",updateProgress,{passive:true});'
+
+      # ── Nav scroll shadow ──
+      'var nav=document.getElementById("hl-nav");'
+      'window.addEventListener("scroll",function(){if(nav){nav.classList.toggle("scrolled",window.scrollY>20);}},{passive:true});'
+
+      # ── Smooth scroll ──
+      'document.querySelectorAll("a[href^=\'#\']").forEach(function(a){'
+      'a.addEventListener("click",function(e){'
+      'var t=document.querySelector(this.getAttribute("href"));'
+      'if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth",block:"start"});}'
+      '});});'
+
+      # ── FAQ accordion ──
+      'document.querySelectorAll(".hl-faq-q").forEach(function(q){'
+      'q.addEventListener("click",function(){'
+      'var ans=this.nextElementSibling;'
+      'var icon=this.querySelector(".hl-faq-q-icon");'
+      'var open=ans.style.display==="block";'
+      'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
+      'document.querySelectorAll(".hl-faq-q-icon").forEach(function(i){i.textContent="+";});'
+      'if(!open){ans.style.display="block";icon.textContent="\u2212";}'
+      '});});'
+      'document.querySelectorAll(".hl-faq-a").forEach(function(a){a.style.display="none";});'
+
+      # ── Scroll-reveal (IntersectionObserver) ──
+      'function initReveal(){'
+      'var revealObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){e.target.classList.add("hl-animate");revealObs.unobserve(e.target);}'
+      '});},{threshold:0.08,rootMargin:"0px 0px -40px 0px"});'
+      'document.querySelectorAll(".hl-reveal").forEach(function(el){revealObs.observe(el);});'
       '}'
-      'window.addEventListener("scroll",updateScroll,{passive:true});'
+      'setTimeout(initReveal,400);'
 
-      # Sticky CTA
-      'var sticky=document.getElementById("g-sticky");'
-      'var stickyDismissed=false;'
-      'function checkSticky(){'
-      'if(stickyDismissed||!sticky)return;'
-      'var pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight);'
-      'sticky.classList.toggle("visible",pct>0.3);'
-      '}'
-      'window.addEventListener("scroll",checkSticky,{passive:true});'
-      'window.dismissSticky=function(){stickyDismissed=true;if(sticky)sticky.classList.remove("visible");};'
-
-      # Toast
-      'var toastTimer;'
-      'window.showToast=function(msg,color){'
-      'var t=document.getElementById("g-toast");var m=document.getElementById("g-toast-msg");var d=document.getElementById("g-toast-dot");'
-      'if(!t||!m)return;m.textContent=msg;if(d&&color){d.style.background=color;d.style.boxShadow="0 0 8px "+color;}'
-      't.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("show");},3000);'
-      '};'
-
-      # Stat counters
-      'function animCount(el,target,suffix){'
-      'var dur=2000,startT=null;'
-      'function step(ts){if(!startT)startT=ts;var p=Math.min((ts-startT)/dur,1);var e=1-Math.pow(1-p,3);'
-      'el.textContent=Math.round(e*target)+(suffix||"");if(p<1)requestAnimationFrame(step);}'
-      'requestAnimationFrame(step);}'
-      'var statObs=new IntersectionObserver(function(entries){'
-      'entries.forEach(function(e){if(e.isIntersecting){'
-      'var el=e.target;var c=parseInt(el.getAttribute("data-count"));var s=el.getAttribute("data-suffix")||"";'
-      'if(c){animCount(el,c,s);}statObs.unobserve(el);}});},{threshold:0.5});'
-      'document.querySelectorAll("[data-count]").forEach(function(el){statObs.observe(el);});'
-
-      # Radar
+      # ── Radar draw animation ──
       'var radarObs=new IntersectionObserver(function(entries){'
       'entries.forEach(function(e){'
       'if(e.isIntersecting){'
-      'var poly=document.getElementById("g-radar-poly");if(poly)poly.classList.add("drawn");'
-      'document.querySelectorAll(".g-radar-dot").forEach(function(d){d.classList.add("drawn");});'
-      'radarObs.unobserve(e.target);}});},{threshold:0.3});'
-      'var rv=document.getElementById("g-radar-svg");if(rv)radarObs.observe(rv);'
+      'var poly=document.getElementById("hl-radar-poly");'
+      'if(poly){poly.classList.add("drawn");}'
+      'document.querySelectorAll(".hl-radar-dot").forEach(function(d){d.classList.add("drawn");});'
+      'radarObs.unobserve(e.target);'
+      '}'
+      '});},{threshold:0.3});'
+      'var radarEl=document.getElementById("hl-radar-svg");'
+      'if(radarEl){radarObs.observe(radarEl);}'
 
-      # Nav dots
-      'var sectionIds=["g-hero-anchor","how","analyzer","builder","career","compare","contact"];'
-      'var dotObs=new IntersectionObserver(function(entries){'
+      # ── Animated stat counters ──
+      'function animateCount(el,target,suffix){'
+      'var start=0;var dur=1800;var startTime=null;'
+      'function step(ts){'
+      'if(!startTime)startTime=ts;'
+      'var progress=Math.min((ts-startTime)/dur,1);'
+      'var ease=1-Math.pow(1-progress,3);'
+      'var val=Math.round(ease*target);'
+      'el.textContent=val+(suffix||"");'
+      'if(progress<1)requestAnimationFrame(step);'
+      '}'
+      'requestAnimationFrame(step);'
+      '}'
+      'var statObs=new IntersectionObserver(function(entries){'
+      'entries.forEach(function(e){'
+      'if(e.isIntersecting){'
+      'var el=e.target;var count=parseInt(el.getAttribute("data-count"));var suf=el.getAttribute("data-suffix")||"";'
+      'if(count){animateCount(el,count,suf);}'
+      'statObs.unobserve(el);'
+      '}'
+      '});},{threshold:0.5});'
+      'document.querySelectorAll("[data-count]").forEach(function(el){statObs.observe(el);});'
+
+      # ── Sticky CTA bar ──
+      'var stickyCTA=document.getElementById("hl-sticky-cta");'
+      'var stickyDismissed=false;'
+      'function checkSticky(){'
+      'if(stickyDismissed||!stickyCTA)return;'
+      'var scrollPct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight);'
+      'stickyCTA.classList.toggle("visible",scrollPct>0.3);'
+      '}'
+      'window.addEventListener("scroll",checkSticky,{passive:true});'
+      'window.dismissSticky=function(){'
+      'stickyDismissed=true;'
+      'if(stickyCTA){stickyCTA.classList.remove("visible");}'
+      '};'
+
+      # ── Toast system ──
+      'var toastTimer;'
+      'window.showToast=function(msg,color){'
+      'var t=document.getElementById("hl-toast");'
+      'var m=document.getElementById("hl-toast-msg");'
+      'var d=document.getElementById("hl-toast-dot");'
+      'if(!t||!m)return;'
+      'm.textContent=msg;'
+      'if(d&&color){d.style.background=color;d.style.boxShadow="0 0 8px "+color;}'
+      't.classList.add("show");'
+      'clearTimeout(toastTimer);'
+      'toastTimer=setTimeout(function(){t.classList.remove("show");},3000);'
+      '};'
+
+      # ── Active nav highlight ──
+      'var sections=["hl-hero-anchor","how","analyzer","builder","career","compare","contact"];'
+      'var navLinks=document.querySelectorAll("[data-nav]");'
+      'var navObs=new IntersectionObserver(function(entries){'
       'entries.forEach(function(e){'
       'if(e.isIntersecting){'
       'var id=e.target.id;'
-      'document.querySelectorAll(".g-dot-nav").forEach(function(d){d.classList.toggle("active",d.getAttribute("data-section")===id);});'
-      '}});},{threshold:0.4});'
-      'sectionIds.forEach(function(id){var el=document.getElementById(id);if(el)dotObs.observe(el);});'
-      'document.querySelectorAll(".g-dot-nav").forEach(function(btn){'
-      'btn.addEventListener("click",function(){'
-      'var el=document.getElementById(this.getAttribute("data-section"));'
-      'if(el)el.scrollIntoView({behavior:"smooth",block:"start"});'
-      '});});'
-
-      # Typewriter
-      'var words=["everyone","engineers","designers","devs","job seekers","you"];'
-      'var tw=document.getElementById("g-typewriter");'
-      'var twIdx=0,twDel=false,twCur="everyone",twTimer;'
-      'function typeStep(){'
-      'if(!tw)return;var target=words[twIdx];'
-      'if(!twDel){twCur=target.slice(0,twCur.length+1);tw.textContent=twCur;'
-      'if(twCur===target){twDel=true;twTimer=setTimeout(typeStep,2000);return;}'
-      'twTimer=setTimeout(typeStep,90);}'
-      'else{twCur=twCur.slice(0,-1);tw.textContent=twCur;'
-      'if(twCur.length===0){twDel=false;twIdx=(twIdx+1)%words.length;twTimer=setTimeout(typeStep,300);return;}'
-      'twTimer=setTimeout(typeStep,55);}'
+      'navLinks.forEach(function(a){a.classList.toggle("hl-nav-active",a.getAttribute("data-nav")===id);});'
+      'var dots=document.querySelectorAll(".hl-dot-nav");'
+      'dots.forEach(function(d){d.classList.toggle("active",d.getAttribute("data-section")===id);});'
       '}'
-      'setTimeout(function(){twDel=true;typeStep();},2500);'
-
-      # FAQ
-      'document.querySelectorAll(".g-faq-q").forEach(function(q){'
-      'q.addEventListener("click",function(){'
-      'var item=this.parentElement;'
-      'var ans=item.querySelector(".g-faq-a");'
-      'var icon=this.querySelector(".g-faq-q-icon");'
-      'var isOpen=item.classList.contains("open");'
-      'document.querySelectorAll(".g-faq-item").forEach(function(i){'
-      'i.classList.remove("open");'
-      'var a=i.querySelector(".g-faq-a");var ic=i.querySelector(".g-faq-q-icon");'
-      'if(a)a.style.display="none";if(ic)ic.textContent="+";'
+      '});},{threshold:0.4});'
+      'sections.forEach(function(id){'
+      'var el=document.getElementById(id);'
+      'if(el){navObs.observe(el);}'
       '});'
-      'if(!isOpen){'
-      'item.classList.add("open");'
-      'if(ans)ans.style.display="block";if(icon)icon.textContent="×";'
-      '}'
+
+      # ── Section dot nav click ──
+      'document.querySelectorAll(".hl-dot-nav").forEach(function(btn){'
+      'btn.addEventListener("click",function(){'
+      'var id=this.getAttribute("data-section");'
+      'var target=document.getElementById(id);'
+      'if(target){target.scrollIntoView({behavior:"smooth",block:"start"});}'
       '});});'
+
+      # ── Mobile drawer ──
+      'window.openDrawer=function(){'
+      'document.getElementById("hl-drawer").classList.add("open");'
+      'document.getElementById("hl-hamburger").classList.add("open");'
+      'document.body.style.overflow="hidden";'
+      '};'
+      'window.closeDrawer=function(){'
+      'document.getElementById("hl-drawer").classList.remove("open");'
+      'document.getElementById("hl-hamburger").classList.remove("open");'
+      'document.body.style.overflow="";'
+      '};'
+
+      # ── Cursor spotlight on hero ──
+      'var heroEl=document.querySelector(".hl-hero");'
+      'var spotlight=document.getElementById("hl-spotlight");'
+      'if(heroEl&&spotlight){'
+      'heroEl.addEventListener("mousemove",function(e){'
+      'var rect=heroEl.getBoundingClientRect();'
+      'spotlight.style.left=(e.clientX-rect.left)+"px";'
+      'spotlight.style.top=(e.clientY-rect.top)+"px";'
+      '},{passive:true});'
+      'heroEl.addEventListener("mouseleave",function(){'
+      'spotlight.style.left="50%";spotlight.style.top="50%";'
+      '});'
+      '}'
+
+      # ── Typewriter headline ──
+      'var words=["need","engineers","designers","developers","job seekers","everyone"];'
+      'var tw=document.getElementById("hl-typewriter");'
+      'var twIdx=0;var twDeleting=false;var twCurrent="need";var twTimer;'
+      'function typeStep(){'
+      'if(!tw)return;'
+      'var target=words[twIdx];'
+      'if(!twDeleting){'
+      'twCurrent=target.slice(0,twCurrent.length+1);'
+      'tw.textContent=twCurrent;'
+      'if(twCurrent===target){twDeleting=true;twTimer=setTimeout(typeStep,2000);return;}'
+      'twTimer=setTimeout(typeStep,90);'
+      '}else{'
+      'twCurrent=twCurrent.slice(0,-1);'
+      'tw.textContent=twCurrent;'
+      'if(twCurrent.length===0){twDeleting=false;twIdx=(twIdx+1)%words.length;twTimer=setTimeout(typeStep,300);return;}'
+      'twTimer=setTimeout(typeStep,55);'
+      '}'
+      '}'
+      'setTimeout(function(){twDeleting=true;typeStep();},2500);'
+
+      # ── Particle canvas ──
+      '(function(){'
+      'var canvas=document.getElementById("hl-particles");'
+      'if(!canvas)return;'
+      'var ctx=canvas.getContext("2d");'
+      'var particles=[];'
+      'var W,H;'
+      'function resize(){'
+      'var hero=document.querySelector(".hl-hero");'
+      'if(!hero)return;'
+      'var r=hero.getBoundingClientRect();'
+      'W=canvas.width=r.width;H=canvas.height=r.height;'
+      'canvas.style.width=r.width+"px";canvas.style.height=r.height+"px";'
+      '}'
+      'function Particle(){'
+      'this.x=Math.random()*W;'
+      'this.y=Math.random()*H;'
+      'this.vx=(Math.random()-0.5)*0.3;'
+      'this.vy=(Math.random()-0.5)*0.3;'
+      'this.r=Math.random()*1.5+0.5;'
+      'this.a=Math.random()*0.4+0.05;'
+      'this.color=["rgba(10,132,255,","rgba(48,209,88,","rgba(191,90,242,"][Math.floor(Math.random()*3)];'
+      '}'
+      'Particle.prototype.update=function(){'
+      'this.x+=this.vx;this.y+=this.vy;'
+      'if(this.x<0)this.x=W;if(this.x>W)this.x=0;'
+      'if(this.y<0)this.y=H;if(this.y>H)this.y=0;'
+      '};'
+      'Particle.prototype.draw=function(){'
+      'ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);'
+      'ctx.fillStyle=this.color+this.a+")";ctx.fill();'
+      '};'
+      'resize();'
+      'for(var i=0;i<80;i++){particles.push(new Particle());}'
+      'function loop(){'
+      'ctx.clearRect(0,0,W,H);'
+      'particles.forEach(function(p){p.update();p.draw();});'
+      'requestAnimationFrame(loop);'
+      '}'
+      'loop();'
+      'window.addEventListener("resize",resize,{passive:true});'
+      '})();'
 
       '})();'
       '</script>')
 
+# ─── GAMING ENHANCEMENTS ──────────────────────────────────────────────────────
+def inject_gaming_css():
+    CSS("""
+/* ════════════════════════════════════════════════════════
+   HIRELYZER — GAMING HUD ENHANCEMENT LAYER
+   Additive overrides on top of base styles
+   ════════════════════════════════════════════════════════ */
+
+/* ── Custom Cursor System ── */
+*, *::before, *::after { cursor: none !important; }
+#hg-cursor-dot {
+  position: fixed; width: 6px; height: 6px; border-radius: 50%;
+  background: #0a84ff; pointer-events: none; z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s cubic-bezier(0.23,1,0.32,1), background 0.2s, width 0.2s, height 0.2s;
+  box-shadow: 0 0 8px #0a84ff, 0 0 20px rgba(10,132,255,0.4);
+  mix-blend-mode: normal;
+}
+#hg-cursor-ring {
+  position: fixed; width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid rgba(10,132,255,0.6); pointer-events: none; z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.14s cubic-bezier(0.23,1,0.32,1), width 0.25s cubic-bezier(0.23,1,0.32,1), height 0.25s cubic-bezier(0.23,1,0.32,1), opacity 0.2s, border-color 0.2s;
+  box-shadow: 0 0 12px rgba(10,132,255,0.15), inset 0 0 8px rgba(10,132,255,0.04);
+}
+#hg-cursor-cross-h {
+  position: fixed; height: 1px; width: 14px; background: rgba(10,132,255,0.5);
+  pointer-events: none; z-index: 99997;
+  transform: translate(-50%, -50%);
+  transition: transform 0.14s cubic-bezier(0.23,1,0.32,1), opacity 0.2s;
+}
+#hg-cursor-cross-v {
+  position: fixed; width: 1px; height: 14px; background: rgba(10,132,255,0.5);
+  pointer-events: none; z-index: 99997;
+  transform: translate(-50%, -50%);
+  transition: transform 0.14s cubic-bezier(0.23,1,0.32,1), opacity 0.2s;
+}
+body.cursor-hover #hg-cursor-ring {
+  width: 52px; height: 52px; border-color: rgba(10,132,255,0.9);
+  box-shadow: 0 0 20px rgba(10,132,255,0.25), inset 0 0 16px rgba(10,132,255,0.06);
+}
+body.cursor-hover #hg-cursor-dot {
+  width: 4px; height: 4px; background: #fff;
+  box-shadow: 0 0 6px #fff;
+}
+body.cursor-click #hg-cursor-ring {
+  width: 20px; height: 20px; border-color: rgba(48,209,88,0.9);
+  box-shadow: 0 0 16px rgba(48,209,88,0.4);
+}
+body.cursor-click #hg-cursor-dot {
+  width: 8px; height: 8px; background: #30d158;
+  box-shadow: 0 0 12px #30d158;
+}
+
+/* ── Scan-line overlay (subtle CRT effect) ── */
+#hg-scanlines {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.018) 2px,
+    rgba(0,0,0,0.018) 4px
+  );
+  opacity: 1;
+}
+
+/* ── HUD Corner Brackets on panels ── */
+.hl-panel { position: relative; }
+.hl-panel::after {
+  content: '';
+  position: absolute; inset: -1px; border-radius: inherit;
+  background: transparent;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Corner brackets via outline + clip */
+.hl-panel .hg-bracket-tl,
+.hl-panel .hg-bracket-tr,
+.hl-panel .hg-bracket-bl,
+.hl-panel .hg-bracket-br {
+  position: absolute; width: 16px; height: 16px; pointer-events: none; z-index: 10;
+}
+.hg-bracket-tl { top: -1px; left: -1px; border-top: 2px solid rgba(10,132,255,0.7); border-left: 2px solid rgba(10,132,255,0.7); }
+.hg-bracket-tr { top: -1px; right: -1px; border-top: 2px solid rgba(10,132,255,0.7); border-right: 2px solid rgba(10,132,255,0.7); }
+.hg-bracket-bl { bottom: -1px; left: -1px; border-bottom: 2px solid rgba(10,132,255,0.7); border-left: 2px solid rgba(10,132,255,0.7); }
+.hg-bracket-br { bottom: -1px; right: -1px; border-bottom: 2px solid rgba(10,132,255,0.7); border-right: 2px solid rgba(10,132,255,0.7); }
+
+/* ── Enhanced scroll reveal — staggered precision ── */
+.hl-reveal {
+  opacity: 0;
+  transform: translateY(24px) scale(0.99);
+  will-change: opacity, transform;
+}
+.hl-reveal.hl-animate {
+  animation: hgReveal 0.7s cubic-bezier(0.16,1,0.3,1) both;
+}
+.hl-reveal-delay-1.hl-animate { animation-delay: 0.09s; }
+.hl-reveal-delay-2.hl-animate { animation-delay: 0.2s; }
+.hl-reveal-delay-3.hl-animate { animation-delay: 0.31s; }
+@keyframes hgReveal {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.99); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Glitch text effect on hover for section headings ── */
+.hl-story-h {
+  transition: letter-spacing 0.3s ease;
+  position: relative;
+}
+.hl-story-h:hover { letter-spacing: -1.8px; }
+
+/* ── Enhanced button tactile feedback ── */
+.hl-btn-p {
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease !important;
+  position: relative;
+}
+.hl-btn-p::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.hl-btn-p:hover::after { opacity: 1; }
+.hl-btn-p:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 16px 48px rgba(10,132,255,0.55), 0 0 0 1px rgba(255,255,255,0.12) inset, 0 0 32px rgba(10,132,255,0.2) !important;
+}
+.hl-btn-p:active {
+  transform: scale(0.96) translateY(1px) !important;
+  box-shadow: 0 4px 16px rgba(10,132,255,0.3) !important;
+  transition: transform 0.08s ease, box-shadow 0.08s ease !important;
+}
+.hl-btn-g:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.28) !important;
+  background: rgba(255,255,255,0.08) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(255,255,255,0.04) !important;
+}
+.hl-btn-g:active { transform: scale(0.96) !important; transition: transform 0.08s ease !important; }
+.hl-nav-cta:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 8px 32px rgba(10,132,255,0.55) !important;
+}
+.hl-nav-cta:active { transform: scale(0.95) !important; }
+
+/* ── Card hover lift + glow ── */
+.hl-highlight {
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease !important;
+}
+.hl-highlight:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 32px var(--card-glow, rgba(10,132,255,0.08)) !important;
+}
+
+.hl-stat {
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s, box-shadow 0.3s !important;
+}
+.hl-stat:hover {
+  transform: translateY(-5px) scale(1.02) !important;
+  box-shadow: 0 24px 56px rgba(0,0,0,0.55), 0 0 24px rgba(10,132,255,0.12) !important;
+}
+
+.hl-ticker-item {
+  transition: border-color 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s !important;
+}
+.hl-ticker-item:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.5) !important;
+}
+
+.hl-step {
+  transition: background 0.25s, border-color 0.25s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.hl-step:hover { transform: translateY(-5px) !important; }
+
+.hl-job {
+  transition: border-color 0.2s, background 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s !important;
+}
+.hl-job:hover {
+  transform: translateX(5px) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+}
+
+.hl-panel {
+  transition: border-color 0.3s, box-shadow 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1) !important;
+}
+.hl-panel:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 60px 120px rgba(0,0,0,0.75), 0 0 60px rgba(10,132,255,0.08) !important;
+}
+
+/* ── HUD status line in nav ── */
+.hl-nav::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(10,132,255,0.4) 30%, rgba(48,209,88,0.3) 60%, transparent 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.hl-nav.scrolled::after { transform: scaleX(1); }
+
+/* ── Dot nav enhanced ── */
+.hl-dot-nav {
+  transition: background 0.3s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s !important;
+  position: relative;
+}
+.hl-dot-nav::before {
+  content: '';
+  position: absolute; inset: -4px; border-radius: 50%;
+  border: 1px solid transparent;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.hl-dot-nav.active::before { border-color: rgba(10,132,255,0.4); transform: scale(1.5); }
+.hl-dot-nav.active {
+  transform: scale(1.7) !important;
+  box-shadow: 0 0 12px var(--blue), 0 0 24px rgba(10,132,255,0.3) !important;
+}
+
+/* ── FAQ enhanced ── */
+.hl-faq-a {
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1), padding 0.3s ease !important;
+}
+.hl-faq-q-icon {
+  transition: background 0.2s, color 0.2s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+
+/* ── Scroll progress bar enhanced glow ── */
+#sp {
+  height: 2px;
+  box-shadow: 0 0 8px rgba(10,132,255,0.6), 0 0 16px rgba(48,209,88,0.3) !important;
+  filter: blur(0.3px);
+}
+
+/* ── Aurora enhanced with deeper motion ── */
+.hl-aurora-1 {
+  background: radial-gradient(circle, rgba(10,132,255,0.16) 0%, rgba(10,132,255,0.04) 50%, transparent 70%) !important;
+  filter: blur(2px);
+}
+.hl-aurora-2 {
+  background: radial-gradient(circle, rgba(48,209,88,0.1) 0%, transparent 65%) !important;
+  filter: blur(3px);
+}
+.hl-aurora-3 {
+  background: radial-gradient(circle, rgba(191,90,242,0.1) 0%, transparent 65%) !important;
+  filter: blur(2px);
+}
+
+/* ── Data bars animated ── */
+.hl-bar-fill {
+  position: relative;
+  overflow: hidden;
+}
+.hl-bar-fill::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 40%, rgba(255,255,255,0.12), transparent 60%);
+  transform: translateX(-100%);
+  animation: hgShimmer 2.5s ease-in-out infinite;
+}
+@keyframes hgShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* ── Hero card floating animation ── */
+.hl-card {
+  animation: fadeUp 0.6s 0.44s ease both, hgFloat 8s ease-in-out 1.2s infinite !important;
+}
+@keyframes hgFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── Eyebrow badge pulse glow ── */
+.hl-eyebrow {
+  animation: fadeUp 0.6s ease both, hgBadgePulse 3s ease-in-out 1s infinite !important;
+}
+@keyframes hgBadgePulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(10,132,255,0.1); }
+  50%       { box-shadow: 0 0 28px rgba(10,132,255,0.22), 0 0 48px rgba(10,132,255,0.08); }
+}
+
+/* ── Pill hover upgrade ── */
+.hl-pill {
+  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s !important;
+}
+.hl-pill:hover {
+  transform: translateY(-2px) scale(1.04) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
+}
+
+/* ── Ticker items staggered reveal ── */
+.hl-ticker-track {
+  animation: tickerScroll 36s linear infinite !important;
+}
+
+/* ── Compare table row hover ── */
+.hl-compare-row {
+  transition: background 0.2s, transform 0.2s !important;
+}
+.hl-compare-row:hover { background: rgba(10,132,255,0.03) !important; }
+
+/* ── Logo hover glow spin ── */
+.hl-logo-icon {
+  transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s !important;
+}
+.hl-logo:hover .hl-logo-icon {
+  transform: rotate(12deg) scale(1.1) !important;
+  box-shadow: 0 8px 32px rgba(10,132,255,0.65), 0 0 0 2px rgba(10,132,255,0.3) !important;
+}
+
+/* ── Contact email hover ── */
+.hl-contact-email {
+  transition: background 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.hl-contact-email:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 36px rgba(10,132,255,0.18) !important;
+}
+
+/* ── Parallax depth class ── */
+.hg-parallax-slow { will-change: transform; }
+.hg-parallax-fast { will-change: transform; }
+
+/* ── Word chip hover ── */
+.wc {
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s !important;
+  cursor: default !important;
+}
+.wc:hover { transform: translateY(-3px) scale(1.06) !important; box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important; }
+
+/* ── Section divider line animation ── */
+.hl-divider::before,
+.hl-divider::after {
+  background: linear-gradient(90deg, transparent, rgba(10,132,255,0.2), rgba(48,209,88,0.15), transparent) !important;
+  transition: opacity 0.6s !important;
+}
+
+/* ── HUD corner decorations for the hero card ── */
+.hl-card {
+  position: relative;
+}
+.hl-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(10,132,255,0.06) 0%, transparent 50%, rgba(48,209,88,0.03) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Radar dot pulse ── */
+.hl-radar-dot.drawn {
+  animation: hgRadarPulse 2.5s ease-in-out infinite !important;
+}
+@keyframes hgRadarPulse {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(10,132,255,0.8)); }
+  50%       { filter: drop-shadow(0 0 8px rgba(10,132,255,1)) drop-shadow(0 0 16px rgba(10,132,255,0.5)); }
+}
+
+/* ── Glitch line decoration ── */
+.hg-glitch-line {
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(10,132,255,0.5), transparent);
+  animation: hgGlitchLine 6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes hgGlitchLine {
+  0%, 90%, 100% { opacity: 0; transform: translateX(-100%); }
+  92%           { opacity: 1; transform: translateX(0); }
+  94%           { opacity: 0.5; transform: translateX(100%); }
+}
+
+/* ── Nav link hover underline upgrade ── */
+.hl-nav-links a::after {
+  background: linear-gradient(90deg, var(--blue), var(--green), var(--purple)) !important;
+  height: 1.5px !important;
+  box-shadow: 0 0 8px rgba(10,132,255,0.4) !important;
+}
+
+/* ── Score badge pulse ── */
+.hl-score-badge {
+  animation: hgScorePulse 3s ease-in-out infinite !important;
+}
+@keyframes hgScorePulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(48,209,88,0.12); }
+  50%       { box-shadow: 0 0 20px rgba(48,209,88,0.3), 0 0 40px rgba(48,209,88,0.1); }
+}
+
+/* ── Stat number gradient ── */
+.hl-stat-n {
+  background: linear-gradient(135deg, #f5f5f7 0%, rgba(245,245,247,0.7) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: none !important;
+}
+
+/* ── Mobile cursor disable ── */
+@media (hover: none) {
+  #hg-cursor-dot, #hg-cursor-ring, #hg-cursor-cross-h, #hg-cursor-cross-v { display: none !important; }
+  *, *::before, *::after { cursor: auto !important; }
+}
+""")
+
+
+def inject_gaming_html():
+    H("""
+<div id="hg-cursor-dot"></div>
+<div id="hg-cursor-ring"></div>
+<div id="hg-cursor-cross-h"></div>
+<div id="hg-cursor-cross-v"></div>
+<div id="hg-scanlines"></div>
+""")
+
+
+def inject_gaming_js():
+    H("""<script>
+(function() {
+  'use strict';
+
+  /* ── Custom Cursor System ── */
+  var dot   = document.getElementById('hg-cursor-dot');
+  var ring  = document.getElementById('hg-cursor-ring');
+  var crossH = document.getElementById('hg-cursor-cross-h');
+  var crossV = document.getElementById('hg-cursor-cross-v');
+
+  if (!dot || !ring) return;
+
+  var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  var rx = mx, ry = my;
+  var rafId;
+
+  document.addEventListener('mousemove', function(e) {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+    crossH.style.left = mx + 'px';
+    crossH.style.top  = my + 'px';
+    crossV.style.left = mx + 'px';
+    crossV.style.top  = my + 'px';
+  }, { passive: true });
+
+  function lerpRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    rafId = requestAnimationFrame(lerpRing);
+  }
+  lerpRing();
+
+  /* Interaction states */
+  var interactables = 'a,button,.hl-btn-p,.hl-btn-g,.hl-nav-cta,.hl-pill,.hl-step,.hl-highlight,.hl-stat,.hl-ticker-item,.hl-job,.hl-faq-q,.hl-tmpl,.hl-contact-email,.hl-dot-nav,.hl-logo,.wc';
+  document.addEventListener('mouseover', function(e) {
+    if (e.target.closest && e.target.closest(interactables)) {
+      document.body.classList.add('cursor-hover');
+    }
+  }, { passive: true });
+  document.addEventListener('mouseout', function(e) {
+    if (e.target.closest && e.target.closest(interactables)) {
+      document.body.classList.remove('cursor-hover');
+    }
+  }, { passive: true });
+  document.addEventListener('mousedown', function() {
+    document.body.classList.add('cursor-click');
+  });
+  document.addEventListener('mouseup', function() {
+    document.body.classList.remove('cursor-click');
+  });
+
+  /* ── Inject HUD brackets into panels ── */
+  function addBrackets() {
+    document.querySelectorAll('.hl-panel').forEach(function(panel) {
+      if (panel.querySelector('.hg-bracket-tl')) return;
+      ['tl','tr','bl','br'].forEach(function(pos) {
+        var b = document.createElement('div');
+        b.className = 'hg-bracket-' + pos;
+        panel.appendChild(b);
+      });
+    });
+  }
+  setTimeout(addBrackets, 600);
+
+  /* ── Parallax on hero background elements ── */
+  var heroEl = document.querySelector('.hl-hero');
+  var aurora1 = document.querySelector('.hl-aurora-1');
+  var aurora2 = document.querySelector('.hl-aurora-2');
+  var aurora3 = document.querySelector('.hl-aurora-3');
+
+  if (heroEl) {
+    heroEl.addEventListener('mousemove', function(e) {
+      var rect = heroEl.getBoundingClientRect();
+      var cx = (e.clientX - rect.left - rect.width / 2) / rect.width;
+      var cy = (e.clientY - rect.top - rect.height / 2) / rect.height;
+      if (aurora1) aurora1.style.transform = 'translate(' + (cx*28) + 'px,' + (cy*20) + 'px) scale(1.04)';
+      if (aurora2) aurora2.style.transform = 'translate(' + (-cx*22) + 'px,' + (-cy*16) + 'px) scale(1.06)';
+      if (aurora3) aurora3.style.transform = 'translate(' + (cx*18) + 'px,' + (cy*12) + 'px) scale(1.02)';
+    }, { passive: true });
+    heroEl.addEventListener('mouseleave', function() {
+      if (aurora1) aurora1.style.transform = '';
+      if (aurora2) aurora2.style.transform = '';
+      if (aurora3) aurora3.style.transform = '';
+    });
+  }
+
+  /* ── Magnetic button effect ── */
+  function addMagnet(el) {
+    el.addEventListener('mousemove', function(e) {
+      var rect = el.getBoundingClientRect();
+      var cx = e.clientX - rect.left - rect.width / 2;
+      var cy = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = 'translate(' + (cx * 0.12) + 'px,' + (cy * 0.12) + 'px) translateY(-3px) scale(1.02)';
+    });
+    el.addEventListener('mouseleave', function() {
+      el.style.transform = '';
+    });
+  }
+  setTimeout(function() {
+    document.querySelectorAll('.hl-btn-p, .hl-btn-g, .hl-nav-cta').forEach(addMagnet);
+  }, 800);
+
+  /* ── Highlight cards — track mouse for glow position ── */
+  setTimeout(function() {
+    document.querySelectorAll('.hl-highlight').forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+        var y = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
+        card.style.setProperty('--mx', x + '%');
+        card.style.setProperty('--my', y + '%');
+      });
+    });
+  }, 700);
+
+  /* ── Stat number entrance ── */
+  /* (uses existing animateCount from main JS) */
+
+  /* ── Glitch line on section headings (hover) ── */
+  setTimeout(function() {
+    document.querySelectorAll('.hl-story-h').forEach(function(h) {
+      var line = document.createElement('div');
+      line.className = 'hg-glitch-line';
+      line.style.cssText = 'top:0;';
+      h.style.position = 'relative';
+      h.style.overflow = 'hidden';
+      h.appendChild(line);
+    });
+  }, 900);
+
+  /* ── Scroll-triggered section number ticker ── */
+  var storyNums = document.querySelectorAll('.hl-story-num');
+  var numObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.style.animation = 'hgReveal 0.5s cubic-bezier(0.16,1,0.3,1) both';
+        numObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  storyNums.forEach(function(el) { numObs.observe(el); });
+
+  /* ── Ticker pause on hover (already in CSS via animation-play-state) ── */
+
+  /* ── FAQ smooth slide ── */
+  setTimeout(function() {
+    document.querySelectorAll('.hl-faq-q').forEach(function(q) {
+      q.addEventListener('click', function() {
+        var ans = this.nextElementSibling;
+        var icon = this.querySelector('.hl-faq-q-icon');
+        if (!ans) return;
+        var isOpen = ans.dataset.open === '1';
+        // Close all
+        document.querySelectorAll('.hl-faq-a').forEach(function(a) {
+          a.style.maxHeight = '0';
+          a.style.paddingTop = '0';
+          a.style.paddingBottom = '0';
+          a.style.display = 'block';
+          a.dataset.open = '0';
+        });
+        document.querySelectorAll('.hl-faq-q-icon').forEach(function(i) { i.textContent = '+'; i.style.transform = 'rotate(0deg)'; });
+        if (!isOpen) {
+          ans.style.maxHeight = ans.scrollHeight + 'px';
+          ans.style.paddingTop = '0';
+          ans.style.paddingBottom = '20px';
+          ans.dataset.open = '1';
+          icon.textContent = '−';
+          icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
+    // Init: collapse all
+    document.querySelectorAll('.hl-faq-a').forEach(function(a) {
+      a.style.display = 'block';
+      a.style.maxHeight = '0';
+      a.style.paddingBottom = '0';
+      a.style.overflow = 'hidden';
+      a.dataset.open = '0';
+    });
+  }, 1100);
+
+  /* ── Job card stagger on scroll ── */
+  setTimeout(function() {
+    var jobs = document.querySelectorAll('.hl-job');
+    jobs.forEach(function(job, i) {
+      job.style.opacity = '0';
+      job.style.transform = 'translateX(-12px)';
+      job.style.transition = 'none';
+    });
+    var jobObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var idx = Array.from(jobs).indexOf(e.target);
+          setTimeout(function() {
+            e.target.style.transition = 'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)';
+            e.target.style.opacity = '1';
+            e.target.style.transform = '';
+          }, idx * 90);
+          jobObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    jobs.forEach(function(job) { jobObs.observe(job); });
+  }, 1000);
+
+  /* ── Step cards stagger ── */
+  setTimeout(function() {
+    var steps = document.querySelectorAll('.hl-step');
+    steps.forEach(function(step) {
+      step.style.opacity = '0';
+      step.style.transform = 'translateY(20px)';
+    });
+    var stepObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var idx = Array.from(steps).indexOf(e.target);
+          setTimeout(function() {
+            e.target.style.transition = 'opacity 0.6s cubic-bezier(0.16,1,0.3,1) ' + (idx * 0.1) + 's, transform 0.6s cubic-bezier(0.16,1,0.3,1) ' + (idx * 0.1) + 's, background 0.25s, border-color 0.25s';
+            e.target.style.opacity = '1';
+            e.target.style.transform = '';
+          }, 50);
+          stepObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    steps.forEach(function(step) { stepObs.observe(step); });
+  }, 1000);
+
+  /* ── Highlight grid stagger ── */
+  setTimeout(function() {
+    var cards = document.querySelectorAll('.hl-highlight');
+    cards.forEach(function(card) {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px) scale(0.98)';
+    });
+    var cardObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var idx = Array.from(cards).indexOf(e.target);
+          setTimeout(function() {
+            e.target.style.transition = 'opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1), background 0.3s, border-color 0.3s, box-shadow 0.3s';
+            e.target.style.opacity = '1';
+            e.target.style.transform = '';
+          }, idx * 80);
+          cardObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    cards.forEach(function(card) { cardObs.observe(card); });
+  }, 1100);
+
+  /* ── Template mini-card pulse on hover ── */
+  setTimeout(function() {
+    document.querySelectorAll('.hl-tmpl').forEach(function(tmpl) {
+      tmpl.addEventListener('mouseenter', function() {
+        this.style.boxShadow = '0 0 0 1.5px rgba(10,132,255,0.5), 0 16px 40px rgba(0,0,0,0.5), 0 0 24px rgba(10,132,255,0.12)';
+      });
+      tmpl.addEventListener('mouseleave', function() {
+        if (!this.classList.contains('hl-tmpl-act')) {
+          this.style.boxShadow = '';
+        }
+      });
+    });
+  }, 900);
+
+})();
+</script>""")
+
+
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
+inject_gaming_css()
+inject_gaming_html()
 render_banner()
 render_nav()
 render_hero()
@@ -1840,9 +2536,10 @@ render_story_career()
 render_story_interview()
 render_testimonials()
 render_compare()
-render_features()
+render_highlights()
 render_faq()
 render_cta()
-render_contact()
+render_contact_section()
 render_footer()
 render_js()
+inject_gaming_js()
